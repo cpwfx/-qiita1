@@ -1,11 +1,12 @@
 package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
-	
+
+	import lazytest.MovieClipWithLabelTest;
+
 	import misc.DisplayObjectHelper;
-	
 	import misc.ViewportUtil;
-	
+
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.utils.AssetManager;
@@ -48,8 +49,10 @@ package {
 		}
 
 		private function _start():void {
-			_doHelper.locateDobj(_doHelper.createText("ABCDEFG abcdefg",DEFAULT_FONT_NAME , 24), 10, 40);
-			_doHelper.locateDobj(_doHelper.createSpriteText("HIJKLMN hijklmn",DEFAULT_FONT_NAME , 24, 100, 24), 10, 60);
+
+			var testMc:MovieClipWithLabelTest = new MovieClipWithLabelTest(DEFAULT_FONT_NAME);
+			_doHelper.locateDobj(testMc, 100, 40);
+
 		}
 
 
