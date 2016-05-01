@@ -70,8 +70,7 @@ package {
 		}
 
 		private function _start():void {
-			_locateDobj(_createText("ABCDEFG abcdefg",DEFAULT_FONT_NAME , 24), 10, 40);
-			_locateDobj(_createText("HIJKLMN hijklmn",DEFAULT_FONT_NAME , 24), 10, 60);
+			_locateDobj(_createText("Konoyouni Eiji Font ga\ntadashiku hyouji\ndekimashita!!",DEFAULT_FONT_NAME , 24), 10, 40);
 		}
 
 		private function _createText(text:String="", fontName:String=null, size:int=12, color:int=0xffffff):TextField {
