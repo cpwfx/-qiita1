@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<application xmlns="http://ns.adobe.com/air/application/21.0">
+
+    <id>Main</id>
+    <filename>Main</filename>
+    <name>Main</name>
+    <versionNumber>1.0.0</versionNumber>
+
+    <initialWindow>
+        <content>SWF file name is set automatically at compile time</content>
+        <systemChrome>standard</systemChrome>
+        <visible>true</visible>
+        <minimizable>false</minimizable>
+        <maximizable>false</maximizable>
+        <resizable>true</resizable>
+        <width>640</width><!-- ヘッダ分減ります -->
+        <height>480</height>
+        <renderMode>direct</renderMode>
+        <depthAndStencil>true</depthAndStencil>
+    </initialWindow>
+
+</application>
