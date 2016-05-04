@@ -188,35 +188,5 @@ package harayoki.starling {
 			}
 		}
 
-		/**
-		 * 文字番号一覧を範囲で返す
-		 * @param charFrom 最初の文字列
-		 * @param charTo 最後の文字列
-		 * @param out 結果を（追加で）格納するVector
-		 */
-		public static function getIdRangeByChar(charFrom:String, charTo:String = null, out:Vector.<int> = null):Vector.<int> {
-			if (charFrom == null || charFrom.length == 0) {
-				return out;
-			}
-			if (charTo == null || charTo.length == 0) {
-				charTo = charFrom;
-			}
-			return getIdRange(charFrom.charCodeAt(0), charTo.charCodeAt(0));
-		}
-
-		public static function getIdRangeForAscii(out:Vector.<int> = null):Vector.<int> {
-			return getIdRange(32, 126); // ' ' から '~'
-		}
-
-		public static function getIdRange(idFrom:int, idTo:int = -1, out:Vector.<int> = null):Vector.<int> {
-			if (!out) {
-				out = new <int>[];
-			}
-			for (var i:int = idFrom; i <= idTo; i++) {
-				out.push(i);
-			}
-			return out;
-		}
-
 	}
 }

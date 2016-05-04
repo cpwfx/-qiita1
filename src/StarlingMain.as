@@ -3,17 +3,17 @@ package {
 	import flash.geom.Rectangle;
 
 	import harayoki.starling.BitmapFontUtil;
-	
+	import harayoki.util.CharCodeUtil;
+
 	import misc.DisplayObjectHelper;
-	
 	import misc.ViewportUtil;
-	
+
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.AssetManager;
-
+	
 	public class StarlingMain extends Sprite {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
@@ -68,10 +68,12 @@ package {
 			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
 			monoSpaceFont.lineHeight = 16;
 			// 半角設定
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, BitmapFontUtil.getIdRangeForAscii());
+			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
+			// 句読点も
+			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListByLetters("、。"));
 
 			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
-			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, BitmapFontUtil.getIdRangeByChar("B","D"));
+			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
 
 			BitmapFontUtil.traceBitmapCharInfo(paddingAlphabetFont);
 
