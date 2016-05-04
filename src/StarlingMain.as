@@ -42,8 +42,6 @@ package {
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.png');
-			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.png');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
@@ -54,11 +52,15 @@ package {
 		}
 
 		private function _start():void {
-			_doHelper.locateDobj(_doHelper.createText("あい うえお　わをん、ワヲン！？", FONT_NAME_KANA, 14), 10, 40);
-			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", FONT_NAME_ALPHABET, 14), 10, 70);
-			_doHelper.locateDobj(_doHelper.createSpriteText("HIJ KLMN", FONT_NAME_DEFAULT , 14, 200, 200, 0xff0000), 10, 90, 1.0, 0);
+			_doHelper.locateDobj(
+				_doHelper.createText(
+					"あのイーハトーヴォのすきとおったカゼ、\n" +
+					"ナツでもソコにツメたさをもつアオいそら、\n" +
+					"うつくしいモリでカザられたモリーオし、\n" +
+					"コウガイのぎらぎらひかるナツのナミ。",
+					FONT_NAME_KANA)
+				, 10, 40);
 		}
-
 
 	}
 }
