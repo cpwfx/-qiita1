@@ -63,11 +63,15 @@ package {
 			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
 			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
 			BitmapFontUtil.copyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 14);
-			monoSpaceFont.lineHeight = 14;
+
+			// 固定幅フォントを作る
+			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
+			monoSpaceFont.lineHeight = 16;
+			// 半角設定
+			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, BitmapFontUtil.getIdRangeForAscii());
 
 			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
-			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, BitmapFontUtil.getIdRange("B","D"));
+			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, BitmapFontUtil.getIdRangeByChar("B","D"));
 
 			BitmapFontUtil.traceBitmapCharInfo(paddingAlphabetFont);
 
@@ -79,7 +83,7 @@ package {
 			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", subFont.name), 10, 100);
 			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうABC\nかきくDEFかきく", baseFont.name, 300, 50, null, 0, 0xff00ff), 10, 130, 1.0);
 
-			_doHelper.locateDobj(_doHelper.createText("あいうえおDEFG\n12345かきく", monoSpaceFont.name), 10, 170);
+			_doHelper.locateDobj(_doHelper.createText("あいうえおDEFGさし\n12345かき6くけこたち", monoSpaceFont.name), 10, 170);
 
 			_doHelper.locateDobj(_doHelper.createText("ABCDEFG", paddingAlphabetFont.name), 10, 200);
 		}
