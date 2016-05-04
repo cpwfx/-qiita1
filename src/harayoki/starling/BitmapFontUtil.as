@@ -1,5 +1,7 @@
 package harayoki.starling {
 	import starling.text.BitmapChar;
+	import starling.text.BitmapChar;
+	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.StringUtil;
@@ -19,6 +21,9 @@ package harayoki.starling {
 			</kernings>
 		</font>;
 
+		/**
+		 * BitmapFontをコピーする
+		 */
 		public static function cloneBitmapFont(
 			newFontName:String,
 			orgFont:BitmapFont,
@@ -27,6 +32,9 @@ package harayoki.starling {
 			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, 0, false, false, charIdlist);
 		}
 
+		/**
+		 * BitmapFontを固定幅フォントに変更してコピーする
+		 */
 		public static function cloneBitmapFontAsMonoSpaceFont(
 			newFontName:String,
 			orgFont:BitmapFont,
@@ -36,6 +44,9 @@ package harayoki.starling {
 			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, xAdvance, true, true, charIdlist);
 		}
 
+		/**
+		 * BitmapFontを詳細指定でコピーする
+		 */
 		public static function cloneBitmapFontWithDetail(newFontName:String,
 			orgFont:BitmapFont,
 			size:Number = 0,
@@ -43,7 +54,7 @@ package harayoki.starling {
 			yOffset:Number = 0,
 			xAdvanceOffset:Number = 0,
 			fixedXAdvance:Boolean = false,
-			fixedXAdvanceCenterize:Boolean = false,
+			fixedXAdvanceCenterize:Boolean = false, // fixedXAdvanceのみ有効
 			charIdlist:Vector.<int> = null
 		):BitmapFont {
 			if (!orgFont) {
@@ -64,7 +75,8 @@ package harayoki.starling {
 
 			for each(var id:int in charIdlist) {
 				var char:BitmapChar = _cloneBitmapChar(
-					orgFont.getChar(id), xOffset, yOffset, xAdvanceOffset, charIdlist, fixedXAdvance, fixedXAdvanceCenterize);
+					orgFont.getChar(id), -1, xOffset, yOffset, xAdvanceOffset, charIdlist,
+					fixedXAdvance, fixedXAdvanceCenterize);
 				fnt.addChar(id, char);
 			}
 			TextField.registerBitmapFont(fnt);
@@ -72,16 +84,51 @@ package harayoki.starling {
 			return fnt;
 		}
 
+		/**
+		 * １文字列の指定でBitmapCharを得る
+		 */
+		public static function getBitmapCharByLetter(
+			font:BitmapFont,
+			letter:String
+		):BitmapChar {
+			if(!font || !letter) {
+				return null;
+			}
+			return font.getChar(letter.charCodeAt(0));
+		}
+
+		/**
+		 * BitmapCharをコピーする
+		 * @param char コピー元
+		 * @param newId 新しいID(任意)
+		 */
+		public static function cloneBitmapChar(
+			char:BitmapChar,
+			newId:int=-1
+		):BitmapChar {
+			if(!char) {
+				return null;
+			}
+			return _cloneBitmapChar(char, newId, 0, 0, 0, null, false, false)
+		}
+
+		/**
+		 * 必要であれば一部値を書き換えつつBitmapCharをコピーする
+		 */
 		private static function _cloneBitmapChar(
 			org:BitmapChar,
-			xOffset:Number,
-			yOffset:Number,
-			xAdvanceOffset:Number,
-			idlist:Vector.<int>,
+			newId:int=-1,
+			xOffset:Number=0,
+			yOffset:Number=0,
+			xAdvanceOffset:Number=0,
+			idlistForKerning:Vector.<int>=null,
 			fixedXAdvance:Boolean = false,
 			centerizeXOffset:Boolean = false
 		):BitmapChar {
 
+			if(newId < 0) {
+				newId = org.charID;
+			}
 			var xAdvance:Number = org.xAdvance + xAdvanceOffset;
 			if (fixedXAdvance) {
 				xAdvance = xAdvanceOffset;
@@ -93,13 +140,13 @@ package harayoki.starling {
 			}
 
 			var char:BitmapChar = new BitmapChar(
-				org.charID,
+				newId,
 				org.texture,
 				xOffset,
 				org.yOffset + yOffset,
 				xAdvance
 			);
-			for each(var id:int in idlist) {
+			for each(var id:int in idlistForKerning) {
 				var kerning:Number = org.getKerning(id); // if no kerning, returns 0
 				if (kerning != 0) {
 					char.addKerning(id, kerning);
@@ -108,7 +155,10 @@ package harayoki.starling {
 			return char;
 		}
 
-		public static function copyBitmapChars(
+		/**
+		 * 他のフォントから一気にBitmapCharを取り込む
+		 */
+		public static function overWriteCopyBitmapChars(
 			target:BitmapFont,
 			copyFrom:BitmapFont,
 			overWritten:Boolean = true,
@@ -123,7 +173,7 @@ package harayoki.starling {
 				charIdlist = copyFrom.getCharIDs(_idlist);
 			}
 			for each(var id:int in charIdlist) {
-				var newChar:BitmapChar = _cloneBitmapChar(copyFrom.getChar(id), 0, yOffset, 0, charIdlist);
+				var newChar:BitmapChar = _cloneBitmapChar(copyFrom.getChar(id), -1, 0, yOffset, 0, charIdlist);
 				var currentChar:BitmapChar = target.getChar(id);
 				if (!currentChar || overWritten) {
 					target.addChar(id, newChar);
@@ -131,6 +181,9 @@ package harayoki.starling {
 			}
 		}
 
+		/**
+		 * BitmaCharの余白を更新する
+		 */
 		public static function updatePadding(
 			font:BitmapFont,
 			xOffset:Number = 0,
@@ -147,7 +200,7 @@ package harayoki.starling {
 			}
 			for each(var id:int in charIdlist) {
 				var char:BitmapChar = _cloneBitmapChar(
-					font.getChar(id), xOffset, yOffset, xAdvanceOffset, charIdlist);
+					font.getChar(id), -1, xOffset, yOffset, xAdvanceOffset, charIdlist);
 				font.addChar(id, char);
 			}
 		}
@@ -174,8 +227,35 @@ package harayoki.starling {
 			}
 			for each(var id:int in charIdlist) {
 				var char:BitmapChar = _cloneBitmapChar(
-					font.getChar(id), 0, 0, fixedWidth, charIdlist, true, centerize);
+					font.getChar(id), -1, 0, 0, fixedWidth, charIdlist, true, centerize);
 				font.addChar(id, char);
+			}
+		}
+
+		/**
+		 * あるBitmapCharでフォント文字を埋める
+		 * @param sorceBitmapChar
+		 * @param targetFont
+		 * @param targetCharIdlist
+		 * @param emptyTargetOnly
+		 */
+		public static function fillBitmapChars(
+			sorceBitmapChar:BitmapChar,
+			targetFont:BitmapFont,
+			targetCharIdlist:Vector.<int>,
+			emptyTargetOnly:Boolean = false
+		):void {
+			if(!targetFont || !sorceBitmapChar) {
+				return;
+			}
+			for each(var id:int in targetCharIdlist) {
+				if(emptyTargetOnly && targetFont.getChar(id)) {
+					// 埋める先がからでないのでskip
+					trace('emptyTargetOnly', id);
+					continue;
+				}
+				var char:BitmapChar = _cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
+				targetFont.addChar(id, char);
 			}
 		}
 

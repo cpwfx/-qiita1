@@ -10,10 +10,11 @@ package {
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
+	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.AssetManager;
-	
+
 	public class StarlingMain extends Sprite {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
@@ -62,7 +63,14 @@ package {
 
 			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
 			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
-			BitmapFontUtil.copyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
+			
+			// カナフォントに英字フォントを
+			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
+			// 一部文字を伏字に
+			BitmapFontUtil.fillBitmapChars(
+				BitmapFontUtil.getBitmapCharByLetter(baseFont, "*"),
+				baseFont,
+				CharCodeUtil.getIdListByCodeRange(100,128));
 
 			// 固定幅フォントを作る
 			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
