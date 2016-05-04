@@ -45,7 +45,7 @@ package misc {
 				trace('No bitmap font for', fontName);
 				return new Sprite();
 			}
-			fmt.size = isNaN(size) ? fnt.size : size;
+			size = isNaN(size) ? fnt.size : size;
 			if(!fmt) {
 				fmt = new TextFormat(fontName, size, color);
 				fmt.horizontalAlign = Align.LEFT;
