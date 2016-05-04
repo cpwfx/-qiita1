@@ -1,19 +1,18 @@
 package misc {
 
-	import flash.text.TextFormatAlign;
-
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Sprite;
+	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.text.TextFieldAutoSize;
 	import starling.text.TextFormat;
 	import starling.text.TextOptions;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
-
+	
 	public class DisplayObjectHelper {
 
 		private var _forDotArt:Boolean; // DOTアート対応フラグ
@@ -36,12 +35,23 @@ package misc {
 			return tf;
 		}
 
-		public function createSpriteText(text:String="", fontName:String=null, size:int=12, width:int = 100, height:int=12, color:int=0xffffff):Sprite {
+		public function createSpriteText(text:String="", fontName:String=null, size:int=10, width:int = 100, height:int=100, color:int=0xffffff, fmt:TextFormat=null):Sprite {
 
-			var fmt:TextFormat = new TextFormat(fontName, size, color);
-			fmt.horizontalAlign = TextFormatAlign.LEFT;
+			if(!fmt) {
+				fmt = new TextFormat(fontName, size, color);
+				fmt.horizontalAlign = Align.LEFT;
+				fmt.verticalAlign = Align.TOP;
+			}
 			var opt:TextOptions = new TextOptions(true, false);
-			var sp:Sprite = TextField.getBitmapFont(fontName).createSprite(width, height, text, fmt, opt);
+			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
+			if(!fnt) {
+				trace('No bitmap font for', fontName);
+				return new Sprite();
+			}
+			var sp:Sprite = fnt.createSprite(width, height, text, fmt, opt);
+			if(sp.numChildren == 0) {
+				trace('No letters in sprite for arguments :', arguments);
+			}
 			if(_forDotArt) {
 				var i:int = sp.numChildren;
 				while(i--) {

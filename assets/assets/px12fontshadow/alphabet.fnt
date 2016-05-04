@@ -1,8 +1,8 @@
 <font>
-	<info face="pxfont12shadow" size="12" smooth="0"/>
-	<common lineHeight="12" scaleW="76" scaleH="78" pages="1" />
+	<info face="alphabet" size="14" smooth="0"/>
+	<common lineHeight="14" scaleW="76" scaleH="78" pages="1" />
 	<pages>
-		<page id="0" file="pxfont12shadow.png" />
+		<page id="0" file="alphabet.png" />
 	</pages>
 	<chars count="96">
 		<char id="33" x="68" y="67" width="2" height="9" xoffset="2" yoffset="3" xadvance="3" /><!-- ! -->
@@ -99,8 +99,8 @@
 		<char id="124" x="73" y="32" width="2" height="11" xoffset="2" yoffset="1" xadvance="3" /><!-- | -->
 		<char id="125" x="0" y="15" width="6" height="11" xoffset="0" yoffset="1" xadvance="7" /><!-- } -->
 		<char id="126" x="0" y="12" width="6" height="2" xoffset="0" yoffset="2" xadvance="7" /><!-- ~ -->
-		<char id="32" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="3" /><!--   -->
-		<char id="9" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="24" /><!-- 	 -->
+		<char id="32" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="7" /><!--   -->
+		<char id="9" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="28" /><!-- 	 -->
 	</chars>
 	<kernings count="0">
 	</kernings>

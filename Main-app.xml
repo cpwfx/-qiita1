@@ -15,7 +15,7 @@
         <maximizable>false</maximizable>
         <resizable>true</resizable>
         <width>640</width><!-- ヘッダ分減ります -->
-        <height>480</height>
+        <height>1136</height>
         <renderMode>direct</renderMode>
         <depthAndStencil>true</depthAndStencil>
     </initialWindow>

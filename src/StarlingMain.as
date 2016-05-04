@@ -8,15 +8,19 @@ package {
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
+	import starling.text.TextField;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
 
-		private static const DEFAULT_FONT_NAME:String = "pxfont12shadow";
-		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320*2, 224*2);
+		private static const FONT_NAME_ALPHABET:String = "alphabet";
+		private static const FONT_NAME_KANA:String = "kana_only";
+		private static const FONT_NAME_DEFAULT:String = "alphabet";
+		private static const ZENKAKU_SPACE:String = "　";
+		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2 );
 
 		public static function start(nativeStage:Stage):void {
-			trace("Staaling version", Starling.VERSION);
+			trace("Starling version :", Starling.VERSION);
 
 			var starling:Starling = new Starling(
 				StarlingMain,
@@ -32,14 +36,16 @@ package {
 		private var _assetManager:AssetManager;
 		public function StarlingMain() {
 
-			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE);
+			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE, true);
 
 			_doHelper = new DisplayObjectHelper(Starling.current, this, true);
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-			_assetManager.enqueueWithName('app:/assets/pxfont12shadow.png');
-			_assetManager.enqueueWithName('app:/assets/pxfont12shadow.fnt');
+			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.png');
+			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
+			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.png');
+			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
 					_start();
@@ -48,8 +54,9 @@ package {
 		}
 
 		private function _start():void {
-			_doHelper.locateDobj(_doHelper.createText("ABCDEFG abcdefg",DEFAULT_FONT_NAME , 24), 10, 40);
-			_doHelper.locateDobj(_doHelper.createSpriteText("HIJKLMN hijklmn",DEFAULT_FONT_NAME , 24, 100, 24), 10, 60);
+			_doHelper.locateDobj(_doHelper.createText("あい うえお　わをん、ワヲン！？", FONT_NAME_KANA, 14), 10, 40);
+			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", FONT_NAME_ALPHABET, 14), 10, 70);
+			_doHelper.locateDobj(_doHelper.createSpriteText("HIJ KLMN", FONT_NAME_DEFAULT , 14, 200, 200, 0xff0000), 10, 90, 1.0, 0);
 		}
 
 
