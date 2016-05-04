@@ -1,9 +1,14 @@
 package harayoki.starling {
+	import flash.geom.Rectangle;
+
+	import harayoki.util.CharCodeUtil;
+
 	import starling.text.BitmapChar;
 	import starling.text.BitmapChar;
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.textures.Texture;
 	import starling.utils.StringUtil;
 
 	public class BitmapFontUtil {
@@ -20,6 +25,7 @@ package harayoki.starling {
 			<kernings count="0">
 			</kernings>
 		</font>;
+		private static var NULL_REGION:Rectangle = new Rectangle(0,0,0,0);
 
 		/**
 		 * BitmapFontをコピーする
@@ -272,13 +278,49 @@ package harayoki.starling {
 				_idlist.length = 0;
 				charIdlist = target.getCharIDs(_idlist);
 			}
-			for each(var id:int in charIdlist) {
+			trace("<Font:" + target.name + ">");
+			var len:int = charIdlist.length;
+			for (var i:int=0; i<len; i++) {
+				var id:int = charIdlist[i];
 				var char:BitmapChar = target.getChar(id);
 				if (char) {
-					trace(target.name, 'char(' + id + '):' + String.fromCharCode(id),
-						[char.width + 'x' + char.height, '[' + [char.xOffset, char.yOffset] + ']', char.xAdvance]);
+					trace("'" + String.fromCharCode(id) + "'(" + id + ") txsize:" +
+						(char.width + "*" + char.height) + " offset:" + [char.xOffset, char.yOffset] + " xAdv:"+ char.xAdvance);
 				}
 			}
+		}
+
+		/**
+		 * スペース幅を設定する
+		 */
+		public static function setSpaceWidth(font:BitmapFont, width:Number=0):void {
+			_updateSpaceWidth(font, CharCodeUtil.CODE_SPACE, width);
+		}
+
+		/**
+		 * 全角スペース幅を設定する
+		 */
+		public static function setZenkakuSpaceWidth(font:BitmapFont, width:Number=0):void {
+			_updateSpaceWidth(font, CharCodeUtil.CODE_ZENKAKU_SPACE, width);
+		}
+
+		/**
+		 * タブ幅を設定する
+		 */
+		public static function setTabWidth(font:BitmapFont, width:Number=0):void {
+			_updateSpaceWidth(font, CharCodeUtil.CODE_TAB, width);
+		}
+
+		private static function _updateSpaceWidth(font:BitmapFont, id:int, width:Number=0):void {
+			if(!font) {
+				return;
+			}
+			if(isNaN(width) || width <= 0 ) {
+				width = font.size;
+			}
+			var texture:Texture = Texture.fromTexture(font.texture, NULL_REGION);
+			var char:BitmapChar = new BitmapChar(id, texture, 0, 0, width);
+			font.addChar(id, char);
 		}
 
 	}
