@@ -1,6 +1,10 @@
 package harayoki.util {
 	public class CharCodeUtil {
 
+		public static const CODE_TAB:int = 9;
+		public static const CODE_SPACE:int = 32;
+		public static const CODE_ZENKAKU_SPACE:int = 12288;
+
 		private static var _workVector:Vector.<int> = new <int>[];
 		private static var _ASCII_RANGE:Vector.<int>;
 
