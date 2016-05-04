@@ -30,7 +30,7 @@ package harayoki.starling {
 		public static function cloneBitmapFontAsMonoSpaceFont(
 			newFontName:String,
 			orgFont:BitmapFont,
-			xAdvance: int,
+			xAdvance:Number,
 			charIdlist:Vector.<int>=null
 		):BitmapFont {
 			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, xAdvance, true, charIdlist);
@@ -40,9 +40,9 @@ package harayoki.starling {
 			newFontName:String,
 			orgFont:BitmapFont,
 			size:Number=0,
-			xOffset:int=0,
-			yOffset:int=0,
-			xAdvanceOffset:int=0,
+			xOffset:Number=0,
+			yOffset:Number=0,
+			xAdvanceOffset:Number=0,
 			fixedXAdvance:Boolean = false,
 			charIdlist:Vector.<int>=null
 
@@ -75,12 +75,15 @@ package harayoki.starling {
 
 		private static function _cloneBitmapChar(
 			org:BitmapChar,
-			xOffset:int,
-			yOffset:int,
-			xAdvanceOffset:int,
+			xOffset:Number,
+			yOffset:Number,
+			xAdvanceOffset:Number,
 			idlist:Vector.<int>,
 			fixedXAdvance:Boolean=false
 		):BitmapChar {
+
+			var xAdvance:Number = org.xAdvance;
+
 			var char:BitmapChar = new BitmapChar(
 				org.charID,
 				org.texture,
@@ -101,7 +104,7 @@ package harayoki.starling {
 			target:BitmapFont,
 			copyFrom:BitmapFont,
 			overWritten:Boolean=true,
-			yOffset:int=0,
+			yOffset:Number=0,
 			charIdlist:Vector.<int>=null):void {
 			if (!copyFrom || !target) {
 				return;
@@ -121,9 +124,9 @@ package harayoki.starling {
 
 		public static function updatePadding(
 			font:BitmapFont,
-			xOffset: int = 0,
-			yOffset: int = 0,
-			xAdvanceOffset:int = 0,
+			xOffset:Number = 0,
+			yOffset:Number = 0,
+			xAdvanceOffset:Number = 0,
 			charIdlist:Vector.<int>=null
 		):void {
 			if(!font) {
