@@ -16,7 +16,6 @@ package {
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
 		private static const FONT_NAME_KANA:String = "kana_only";
 		private static const FONT_NAME_DEFAULT:String = "alphabet";
-		private static const ZENKAKU_SPACE:String = "　";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2 );
 
 		public static function start(nativeStage:Stage):void {
@@ -54,9 +53,9 @@ package {
 		}
 
 		private function _start():void {
-			_doHelper.locateDobj(_doHelper.createText("あい うえお　わをん、ワヲン！？", FONT_NAME_KANA, 14), 10, 40);
+			_doHelper.locateDobj(_doHelper.createText("あい うえお　わをん、ワヲン！？", FONT_NAME_KANA, 16), 10, 40);
 			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", FONT_NAME_ALPHABET, 14), 10, 70);
-			_doHelper.locateDobj(_doHelper.createSpriteText("HIJ KLMN", FONT_NAME_DEFAULT , 14, 200, 200, 0xff0000), 10, 90, 1.0, 0);
+			_doHelper.locateDobj(_doHelper.createSpriteText("HIJ KLMN", FONT_NAME_DEFAULT ,14, 200, 200, 0xff0000), 50, 90, 1.0, 10);
 		}
 
 
