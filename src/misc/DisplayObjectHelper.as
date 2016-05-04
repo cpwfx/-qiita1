@@ -12,7 +12,7 @@ package misc {
 	import starling.text.TextOptions;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
-	
+
 	public class DisplayObjectHelper {
 
 		private var _forDotArt:Boolean; // DOTアート対応フラグ
@@ -25,29 +25,33 @@ package misc {
 			}
 		}
 
-		public function createText(text:String="", fontName:String=null, size:int=12, color:int=0xffffff):TextField {
+		public function createText(text:String="", fontName:String=null, size:Number=NaN, color:int=0xffffff):TextField {
+			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
+			if(!fnt) {
+				trace('No bitmap font for', fontName);
+			}
 			var fmt:TextFormat = new TextFormat(fontName, size, color);
 			fmt.horizontalAlign = Align.LEFT;
-			fmt.size = size;
+			fmt.size = isNaN(size) ? fnt.size : size;
 			var tf:TextField = new TextField(10, 10, text, fmt);
 			tf.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
 			tf.pixelSnapping = _forDotArt;
 			return tf;
 		}
 
-		public function createSpriteText(text:String="", fontName:String=null, size:int=10, width:int = 100, height:int=100, color:int=0xffffff, fmt:TextFormat=null):Sprite {
-
+		public function createSpriteText(text:String="", fontName:String=null, size:int=NaN, width:int = 100, height:int=100, color:int=0xffffff, fmt:TextFormat=null):Sprite {
+			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
+			if(!fnt) {
+				trace('No bitmap font for', fontName);
+				return new Sprite();
+			}
+			fmt.size = isNaN(size) ? fnt.size : size;
 			if(!fmt) {
 				fmt = new TextFormat(fontName, size, color);
 				fmt.horizontalAlign = Align.LEFT;
 				fmt.verticalAlign = Align.TOP;
 			}
 			var opt:TextOptions = new TextOptions(true, false);
-			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
-			if(!fnt) {
-				trace('No bitmap font for', fontName);
-				return new Sprite();
-			}
 			var sp:Sprite = fnt.createSprite(width, height, text, fmt, opt);
 			if(sp.numChildren == 0) {
 				trace('No letters in sprite for arguments :', arguments);
