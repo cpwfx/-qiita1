@@ -19,28 +19,33 @@ package harayoki.starling {
 			</kernings>
 		</font>;
 
-		public static function cloneBitmapFont(newFontName:String,
-											   orgFont:BitmapFont,
-											   charIdlist:Vector.<int> = null):BitmapFont {
+		public static function cloneBitmapFont(
+			newFontName:String,
+			orgFont:BitmapFont,
+			charIdlist:Vector.<int> = null
+		):BitmapFont {
 			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, 0, false, false, charIdlist);
 		}
 
-		public static function cloneBitmapFontAsMonoSpaceFont(newFontName:String,
-															  orgFont:BitmapFont,
-															  xAdvance:Number,
-															  charIdlist:Vector.<int> = null):BitmapFont {
+		public static function cloneBitmapFontAsMonoSpaceFont(
+			newFontName:String,
+			orgFont:BitmapFont,
+			xAdvance:Number,
+			charIdlist:Vector.<int> = null
+		):BitmapFont {
 			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, xAdvance, true, true, charIdlist);
 		}
 
 		public static function cloneBitmapFontWithDetail(newFontName:String,
-														 orgFont:BitmapFont,
-														 size:Number = 0,
-														 xOffset:Number = 0,
-														 yOffset:Number = 0,
-														 xAdvanceOffset:Number = 0,
-														 fixedXAdvance:Boolean = false,
-														 fixedXAdvanceCenterize:Boolean = false,
-														 charIdlist:Vector.<int> = null):BitmapFont {
+			orgFont:BitmapFont,
+			size:Number = 0,
+			xOffset:Number = 0,
+			yOffset:Number = 0,
+			xAdvanceOffset:Number = 0,
+			fixedXAdvance:Boolean = false,
+			fixedXAdvanceCenterize:Boolean = false,
+			charIdlist:Vector.<int> = null
+		):BitmapFont {
 			if (!orgFont) {
 				return null;
 			}
@@ -67,13 +72,15 @@ package harayoki.starling {
 			return fnt;
 		}
 
-		private static function _cloneBitmapChar(org:BitmapChar,
-												 xOffset:Number,
-												 yOffset:Number,
-												 xAdvanceOffset:Number,
-												 idlist:Vector.<int>,
-												 fixedXAdvance:Boolean = false,
-												 centerizeXOffset:Boolean = false):BitmapChar {
+		private static function _cloneBitmapChar(
+			org:BitmapChar,
+			xOffset:Number,
+			yOffset:Number,
+			xAdvanceOffset:Number,
+			idlist:Vector.<int>,
+			fixedXAdvance:Boolean = false,
+			centerizeXOffset:Boolean = false
+		):BitmapChar {
 
 			var xAdvance:Number = org.xAdvance + xAdvanceOffset;
 			if (fixedXAdvance) {
@@ -101,11 +108,13 @@ package harayoki.starling {
 			return char;
 		}
 
-		public static function copyBitmapChars(target:BitmapFont,
-											   copyFrom:BitmapFont,
-											   overWritten:Boolean = true,
-											   yOffset:Number = 0,
-											   charIdlist:Vector.<int> = null):void {
+		public static function copyBitmapChars(
+			target:BitmapFont,
+			copyFrom:BitmapFont,
+			overWritten:Boolean = true,
+			yOffset:Number = 0,
+			charIdlist:Vector.<int> = null
+		):void {
 			if (!copyFrom || !target) {
 				return;
 			}
@@ -122,11 +131,13 @@ package harayoki.starling {
 			}
 		}
 
-		public static function updatePadding(font:BitmapFont,
-											 xOffset:Number = 0,
-											 yOffset:Number = 0,
-											 xAdvanceOffset:Number = 0,
-											 charIdlist:Vector.<int> = null):void {
+		public static function updatePadding(
+			font:BitmapFont,
+			xOffset:Number = 0,
+			yOffset:Number = 0,
+			xAdvanceOffset:Number = 0,
+			charIdlist:Vector.<int> = null
+		):void {
 			if (!font) {
 				return;
 			}
@@ -148,10 +159,12 @@ package harayoki.starling {
 		 * @param centerize 文字を真ん中よせにするか
 		 * @param charIdlist 対象文字番号の一覧
 		 */
-		public static function setFixedWidth(font:BitmapFont,
-											 fixedWidth:Number,
-											 centerize:Boolean = true,
-											 charIdlist:Vector.<int> = null):void {
+		public static function setFixedWidth(
+			font:BitmapFont,
+			fixedWidth:Number,
+			centerize:Boolean = true,
+			charIdlist:Vector.<int> = null
+		):void {
 			if (!font) {
 				return;
 			}
