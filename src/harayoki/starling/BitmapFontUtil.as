@@ -19,23 +19,28 @@ package harayoki.starling {
 			</kernings>
 		</font>;
 
-		public static function cloneBitmapFont(originFontName:String, newFontName:String, size:int=-1):BitmapFont {
-			var org:BitmapFont = TextField.getBitmapFont(originFontName);
-			if(!org) {
+		public static function cloneBitmapFont(
+			newFontName:String,
+			orgFont:BitmapFont,
+			size:Number=0,
+			yOffset:int=0
+			):BitmapFont
+		{
+			if(!orgFont) {
 				return null;
 			}
 
 			_fontxml.info.@face = StringUtil.clean(newFontName);
-			_fontxml.info.@size = isNaN(size) || size <=0 ? org.size : size;
-			var fnt:BitmapFont = new BitmapFont(org.texture, _fontxml);
-			fnt.lineHeight = org.lineHeight;
-			fnt.smoothing = org.smoothing;
-			fnt.baseline = org.baseline;
+			_fontxml.info.@size = isNaN(size) || size <=0 ? orgFont.size : size;
+			var fnt:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
+			fnt.lineHeight = orgFont.lineHeight;
+			fnt.baseline = orgFont.baseline;
+			fnt.smoothing = orgFont.smoothing;
 
 			_idlist.length = 0;
-			org.getCharIDs(_idlist);
+			orgFont.getCharIDs(_idlist);
 			for each(var id:int in _idlist) {
-				var char:BitmapChar = _cloneBitmapChar(org.getChar(id), _idlist);
+				var char:BitmapChar = _cloneBitmapChar(orgFont.getChar(id), yOffset, _idlist);
 				fnt.addChar(id, char);
 			}
 			TextField.registerBitmapFont(fnt);
@@ -43,12 +48,12 @@ package harayoki.starling {
 			return fnt;
 		}
 
-		private static function _cloneBitmapChar(org:BitmapChar, idlist:Vector.<int>):BitmapChar {
+		private static function _cloneBitmapChar(org:BitmapChar, yOffset:int, idlist:Vector.<int>):BitmapChar {
 			var char:BitmapChar = new BitmapChar(
 				org.charID,
 				org.texture,
 				org.xOffset,
-				org.yOffset,
+				org.yOffset + yOffset,
 				org.xAdvance
 			);
 			for each(var id:int in idlist) {
@@ -60,5 +65,43 @@ package harayoki.starling {
 			return char;
 		}
 
+		public static function copyBitmapChars(
+			target:BitmapFont,
+			copyFrom:BitmapFont,
+			overWritten:Boolean=true,
+			yOffset:int=0,
+			charIdlist:Vector.<int>=null):void {
+			if (!copyFrom || !target) {
+				return;
+			}
+			if (!charIdlist) {
+				_idlist.length = 0;
+				charIdlist = copyFrom.getCharIDs(_idlist);
+			}
+			for each(var id:int in charIdlist) {
+				var newChar:BitmapChar = _cloneBitmapChar(copyFrom.getChar(id), yOffset, charIdlist);
+				var currentChar:BitmapChar = target.getChar(id);
+				if(!currentChar || overWritten) {
+					target.addChar(id, newChar);
+				}
+			}
+		}
+
+		public static function traceBitmapCharInfo(target:BitmapFont,charIdlist:Vector.<int>=null) {
+			if (!target) {
+				return;
+			}
+			if (!charIdlist) {
+				_idlist.length = 0;
+				charIdlist = target.getCharIDs(_idlist);
+			}
+			for each(var id:int in charIdlist) {
+				var char:BitmapChar = target.getChar(id);
+				if(char) {
+					trace(target.name,'char(' + id + '):' + String.fromCharCode(id),
+						[char.width+'x'+char.height,'[' + [char.xOffset,char.yOffset] + ']',char.xAdvance]);
+				}
+			}
+		}
 	}
 }
