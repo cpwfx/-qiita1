@@ -25,27 +25,35 @@ package misc {
 			}
 		}
 
-		public function createText(text:String="", fontName:String=null, size:Number=NaN, color:int=0xffffff):TextField {
+		public function createText(text:String="", fontName:String=null, size:Number=0, color:int=0xffffff):TextField {
 			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
 			if(!fnt) {
 				trace('No bitmap font for', fontName);
 			}
 			var fmt:TextFormat = new TextFormat(fontName, size, color);
 			fmt.horizontalAlign = Align.LEFT;
-			fmt.size = isNaN(size) ? fnt.size : size;
+			fmt.size = isNaN(size) || size <= 0 ? fnt.size : size;
 			var tf:TextField = new TextField(10, 10, text, fmt);
 			tf.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
 			tf.pixelSnapping = _forDotArt;
 			return tf;
 		}
 
-		public function createSpriteText(text:String="", fontName:String=null, size:int=NaN, width:int = 100, height:int=100, color:int=0xffffff, fmt:TextFormat=null):Sprite {
+		public function createSpriteText(
+			text:String="",
+			fontName:String=null,
+			width:int = 100,
+			height:int=100,
+			fmt:TextFormat=null,
+			size:Number=0,
+			color:int=0xffffff
+		):Sprite {
 			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
 			if(!fnt) {
 				trace('No bitmap font for', fontName);
 				return new Sprite();
 			}
-			size = isNaN(size) ? fnt.size : size;
+			size = isNaN(size) || size <= 0 ? fnt.size : size;
 			if(!fmt) {
 				fmt = new TextFormat(fontName, size, color);
 				fmt.horizontalAlign = Align.LEFT;
@@ -54,7 +62,7 @@ package misc {
 			var opt:TextOptions = new TextOptions(true, false);
 			var sp:Sprite = fnt.createSprite(width, height, text, fmt, opt);
 			if(sp.numChildren == 0) {
-				trace('No letters in sprite for arguments :', arguments);
+				trace('No letters in sprite, may be textbox is too small.\narguments :', arguments);
 			}
 			if(_forDotArt) {
 				var i:int = sp.numChildren;
