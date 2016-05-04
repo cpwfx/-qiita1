@@ -20,6 +20,7 @@ package {
 		private static const FONT_NAME_MONO1:String = "mono_space1";
 		private static const FONT_NAME_MONO2:String = "mono_space2";
 		private static const FONT_NAME_YOHAKU:String = "yohaku";
+		private static const FONT_NAME_SPACES:String = "spaces";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -73,6 +74,12 @@ package {
 				CharCodeUtil.getIdListByLetters("ヨハクオオメ！"));
 			BitmapFontUtil.traceBitmapCharInfo(yohakuFont);
 
+			// スペース系の幅調整
+			var spacesFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_SPACES, baseFont);
+			BitmapFontUtil.setSpaceWidth(spacesFont, 6);
+			BitmapFontUtil.setZenkakuSpaceWidth(spacesFont, 14);
+			BitmapFontUtil.setTabWidth(spacesFont, 48);
+
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText("これは、プロポーショナル！なフォントです。", baseFont.name, 320),
 				10, 40);
@@ -88,6 +95,12 @@ package {
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText("これは、イチブだけヨハクオオメ！\nの、フォントです。", yohakuFont.name, 320),
 				10, 100);
+
+			_doHelper.locateDobj(
+				_doHelper.createSpriteText("は ん か く ス ペ ー ス 、\n" +
+					"ぜ　ん　か　く　ス　ペ　ー　ス　、\n" +
+					"タ	ブ	も	じ	。", spacesFont.name, 320, 100, null, 0, 0xffffcc),
+				10, 140);
 
 			// まだフォントに記号がなかった
 			//_doHelper.locateDobj(
