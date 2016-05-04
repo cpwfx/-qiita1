@@ -24,7 +24,7 @@ package harayoki.starling {
 			orgFont:BitmapFont,
 			charIdlist:Vector.<int>=null
 		):BitmapFont {
-			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, 0, false, charIdlist);
+			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, 0, false, false, charIdlist);
 		}
 
 		public static function cloneBitmapFontAsMonoSpaceFont(
@@ -33,7 +33,7 @@ package harayoki.starling {
 			xAdvance:Number,
 			charIdlist:Vector.<int>=null
 		):BitmapFont {
-			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, xAdvance, true, charIdlist);
+			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, xAdvance, true, true, charIdlist);
 		}
 
 		public static function cloneBitmapFontWithDetail(
@@ -43,7 +43,8 @@ package harayoki.starling {
 			xOffset:Number=0,
 			yOffset:Number=0,
 			xAdvanceOffset:Number=0,
-			fixedXAdvance:Boolean = false,
+			fixedXAdvance:Boolean=false,
+			fixedXAdvanceCenterize:Boolean=false,
 			charIdlist:Vector.<int>=null
 
 		):BitmapFont {
@@ -65,7 +66,7 @@ package harayoki.starling {
 
 			for each(var id:int in charIdlist) {
 				var char:BitmapChar = _cloneBitmapChar(
-					orgFont.getChar(id), xOffset, yOffset, xAdvanceOffset, charIdlist, fixedXAdvance);
+					orgFont.getChar(id), xOffset, yOffset, xAdvanceOffset, charIdlist, fixedXAdvance, fixedXAdvanceCenterize);
 				fnt.addChar(id, char);
 			}
 			TextField.registerBitmapFont(fnt);
@@ -79,17 +80,26 @@ package harayoki.starling {
 			yOffset:Number,
 			xAdvanceOffset:Number,
 			idlist:Vector.<int>,
-			fixedXAdvance:Boolean=false
+			fixedXAdvance:Boolean=false,
+			centerizeXOffset:Boolean=false
 		):BitmapChar {
 
-			var xAdvance:Number = org.xAdvance;
+			var xAdvance:Number = org.xAdvance + xAdvanceOffset;
+			if(fixedXAdvance) {
+				xAdvance = xAdvanceOffset;
+			}
+			if(centerizeXOffset) {
+				xOffset = Math.max(0, (xAdvance - org.width)*0.5);
+			} else {
+				xOffset = org.xOffset + xOffset;
+			}
 
 			var char:BitmapChar = new BitmapChar(
 				org.charID,
 				org.texture,
-				org.xOffset + xOffset,
+				xOffset,
 				org.yOffset + yOffset,
-				fixedXAdvance ? xAdvanceOffset : org.xAdvance + xAdvanceOffset
+				xAdvance
 			);
 			for each(var id:int in idlist) {
 				var kerning:Number = org.getKerning(id); // if no kerning, returns 0
