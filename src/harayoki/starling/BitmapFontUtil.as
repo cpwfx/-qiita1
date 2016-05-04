@@ -7,7 +7,10 @@ package harayoki.starling {
 	import starling.text.BitmapChar;
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
+	import starling.text.BitmapFont;
+	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.textures.SubTexture;
 	import starling.textures.Texture;
 	import starling.utils.StringUtil;
 
@@ -69,10 +72,10 @@ package harayoki.starling {
 
 			_fontxml.info.@face = StringUtil.clean(newFontName);
 			_fontxml.info.@size = isNaN(size) || size <= 0 ? orgFont.size : size;
-			var fnt:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
-			fnt.lineHeight = orgFont.lineHeight;
-			fnt.baseline = orgFont.baseline;
-			fnt.smoothing = orgFont.smoothing;
+			var font:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
+			font.lineHeight = orgFont.lineHeight;
+			font.baseline = orgFont.baseline;
+			font.smoothing = orgFont.smoothing;
 
 			if (!charIdlist) {
 				_idlist.length = 0;
@@ -83,11 +86,55 @@ package harayoki.starling {
 				var char:BitmapChar = _cloneBitmapChar(
 					orgFont.getChar(id), -1, xOffset, yOffset, xAdvanceOffset, charIdlist,
 					fixedXAdvance, fixedXAdvanceCenterize);
-				fnt.addChar(id, char);
+				font.addChar(id, char);
 			}
-			TextField.registerBitmapFont(fnt);
+			TextField.registerBitmapFont(font);
 
-			return fnt;
+			return font;
+		}
+
+		/**
+		 * 空のBitmapFontを直接作る
+		 */
+		public static function createEmptyFont(
+			fontName:String,
+			size:Number,
+			lineHeight:Number=0,
+			texture:Texture=null
+		):BitmapFont {
+			_fontxml.info.@face = StringUtil.clean(fontName);
+			_fontxml.info.@size = size;
+			if(!texture) {
+				texture = Texture.empty(1,1);
+			}
+			var font:BitmapFont = new BitmapFont(texture, _fontxml);
+			font.lineHeight = isNaN(lineHeight) || lineHeight <= 0 ? size : lineHeight;
+			TextField.registerBitmapFont(font);
+			return font;
+		}
+
+		/**
+		 * (サブ)テクスチャから直接BitmapCharを作ってフォントに登録する
+		 * @param font 対象フォント
+		 * @param charCodeOrCharStr 文字コードもしくは1文字
+		 * @param texture テクスチャ（サブテクスチャ推奨)
+		 * @param xOffset 任意
+		 * @param yOffset 任意
+		 * @param width 任意、デフォルトでテクスチャの横幅
+		 */
+		public static function addBitmapCharByTexture(
+			font:BitmapFont, charCodeOrCharStr:Object, texture:Texture, xOffset:Number=0, yOffset:Number=0, width:Number = -1
+		):BitmapChar {
+			var id:int;
+			if(charCodeOrCharStr is int) {
+				id = charCodeOrCharStr as int;
+			} else {
+				id = (charCodeOrCharStr+"").charCodeAt(0);
+			}
+			trace(id, texture);
+			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.width : width);
+			font.addChar(id, char);
+			return char;
 		}
 
 		/**

@@ -1,0 +1,18 @@
+<TextureAtlas name="colorbars" imagePath="colorbars.png">
+  <SubTexture name="mx/F" x="4" y="0" width="2" height="2"/>
+  <SubTexture name="mx/E" x="0" y="24" width="2" height="2"/>
+  <SubTexture name="mx/D" x="4" y="24" width="2" height="2"/>
+  <SubTexture name="mx/C" x="0" y="8" width="2" height="2"/>
+  <SubTexture name="mx/B" x="0" y="4" width="2" height="2"/>
+  <SubTexture name="mx/A" x="0" y="20" width="2" height="2"/>
+  <SubTexture name="mx/9" x="0" y="28" width="2" height="2"/>
+  <SubTexture name="mx/8" x="0" y="0" width="2" height="2"/>
+  <SubTexture name="mx/7" x="0" y="12" width="2" height="2"/>
+  <SubTexture name="mx/6" x="4" y="12" width="2" height="2"/>
+  <SubTexture name="mx/5" x="0" y="16" width="2" height="2"/>
+  <SubTexture name="mx/4" x="4" y="4" width="2" height="2"/>
+  <SubTexture name="mx/3" x="4" y="8" width="2" height="2"/>
+  <SubTexture name="mx/2" x="4" y="20" width="2" height="2"/>
+  <SubTexture name="mx/1" x="4" y="28" width="2" height="2"/>
+  <SubTexture name="mx/0" x="4" y="16" width="2" height="2"/>
+</TextureAtlas>
