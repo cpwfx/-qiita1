@@ -1,6 +1,7 @@
 package harayoki.util {
 	public class CharCodeUtil {
 
+		private static var _workVector:Vector.<int> = new <int>[];
 		private static var _ASCII_RANGE:Vector.<int>;
 
 		/**
@@ -28,9 +29,15 @@ package harayoki.util {
 			if (!out) {
 				out = new <int>[];
 			}
+			_workVector.length = 0;
 			var i:int = letters.length;
 			while(i--) {
-				out.push(letters.charCodeAt(i));
+				var code:int = letters.charCodeAt(i);
+				// 重複をはぶいて一覧に追加
+				if(_workVector.indexOf(code) == -1) {
+					out.push(code);
+				}
+				_workVector.push(code)
 			}
 			return out;
 		}
