@@ -1,6 +1,8 @@
 package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
+
+	import harayoki.starling.BitmapFontUtil;
 	
 	import misc.DisplayObjectHelper;
 	
@@ -8,14 +10,14 @@ package {
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
-	import starling.text.TextField;
+	import starling.text.BitmapFont;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
 		private static const FONT_NAME_KANA:String = "kana_only";
-		private static const FONT_NAME_DEFAULT:String = "alphabet";
+		private static const FONT_NAME_DEFAULT:String = "default_font";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -53,9 +55,12 @@ package {
 		}
 
 		private function _start():void {
+
+			BitmapFontUtil.cloneBitmapFont(FONT_NAME_ALPHABET, FONT_NAME_DEFAULT, 4);
+
 			_doHelper.locateDobj(_doHelper.createText("あい うえお　わをん、ワヲン！？", FONT_NAME_KANA), 10, 40);
 			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", FONT_NAME_ALPHABET), 10, 70);
-			_doHelper.locateDobj(_doHelper.createSpriteText("HIJ KLMN", FONT_NAME_DEFAULT, 200, 200, null, 0, 0xff00ff), 100, 90, 2.0, 0.2);
+			_doHelper.locateDobj(_doHelper.createSpriteText("HIJ KLMN", FONT_NAME_DEFAULT, 200, 200, null, 12, 0xff00ff), 100, 90, 1.0, 0.2);
 		}
 
 
