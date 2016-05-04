@@ -88,6 +88,26 @@ package {
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText("これは、イチブだけヨハクオオメ！\nの、フォントです。", yohakuFont.name, 320),
 				10, 100);
+
+			// まだフォントに記号がなかった
+			//_doHelper.locateDobj(
+			//	_doHelper.createSpriteText([
+			//			"　　 ∩＿＿＿∩",
+			//			"　　 | ノ　　　　　 ヽ",
+			//			"　　/　　●　　　● |",
+			//			"　 |　　　　( _●_)　 ミ",
+			//			"　彡､　　　|∪|　　､｀＼",
+			//			"/　＿＿　 ヽノ　/´>　 )",
+			//			"(＿＿＿）　　　/　(_／",
+			//			"　|　　　　　　 /",
+			//			"　|　　／＼　＼",
+			//			"　|　/　　　 )　 )",
+			//			"　∪　　　 （　 ＼",
+			//			"　　　　　　 ＼＿) "
+			//		].join("\n"),
+			//		monoSpaceFont2.name, 320),
+			//	10, 120);
+
 		}
 
 
