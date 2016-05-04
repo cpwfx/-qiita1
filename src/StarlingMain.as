@@ -63,14 +63,14 @@ package {
 			monoSpaceFont1.lineHeight = 16;
 
 			// 固定幅フォント(一部半角)を作る
-			var monoSpaceFont2:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_MONO2, baseFont);
+			var monoSpaceFont2:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_MONO2, monoSpaceFont1);
 			BitmapFontUtil.setFixedWidth(monoSpaceFont2, 8, true, CharCodeUtil.getIdListByLetters("、。！？"));
 
 			// 一部余白多めにしたフォントを作る
 			var padding:int = 8;
 			var yohakuFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_YOHAKU, baseFont);
 			BitmapFontUtil.updatePadding(yohakuFont, padding, 0, padding*2,
-				CharCodeUtil.getIdListByLetters("ヨハクオオメ"));
+				CharCodeUtil.getIdListByLetters("ヨハクオオメ！"));
 			BitmapFontUtil.traceBitmapCharInfo(yohakuFont);
 
 			_doHelper.locateDobj(
@@ -86,7 +86,7 @@ package {
 				10, 80);
 
 			_doHelper.locateDobj(
-				_doHelper.createSpriteText("これは、イチブだけヨハクオオメ！の\nフォントです。", yohakuFont.name, 320),
+				_doHelper.createSpriteText("これは、イチブだけヨハクオオメ！\nの、フォントです。", yohakuFont.name, 320),
 				10, 100);
 		}
 
