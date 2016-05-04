@@ -22,10 +22,31 @@ package harayoki.starling {
 		public static function cloneBitmapFont(
 			newFontName:String,
 			orgFont:BitmapFont,
+			charIdlist:Vector.<int>=null
+		):BitmapFont {
+			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, 0, false, charIdlist);
+		}
+
+		public static function cloneBitmapFontAsMonoSpaceFont(
+			newFontName:String,
+			orgFont:BitmapFont,
+			xAdvance: int,
+			charIdlist:Vector.<int>=null
+		):BitmapFont {
+			return cloneBitmapFontWithDetail(newFontName, orgFont, 0, 0, 0, xAdvance, true, charIdlist);
+		}
+
+		public static function cloneBitmapFontWithDetail(
+			newFontName:String,
+			orgFont:BitmapFont,
 			size:Number=0,
-			yOffset:int=0
-			):BitmapFont
-		{
+			xOffset:int=0,
+			yOffset:int=0,
+			xAdvanceOffset:int=0,
+			fixedXAdvance:Boolean = false,
+			charIdlist:Vector.<int>=null
+
+		):BitmapFont {
 			if(!orgFont) {
 				return null;
 			}
@@ -37,10 +58,14 @@ package harayoki.starling {
 			fnt.baseline = orgFont.baseline;
 			fnt.smoothing = orgFont.smoothing;
 
-			_idlist.length = 0;
-			orgFont.getCharIDs(_idlist);
-			for each(var id:int in _idlist) {
-				var char:BitmapChar = _cloneBitmapChar(orgFont.getChar(id), yOffset, _idlist);
+			if (!charIdlist) {
+				_idlist.length = 0;
+				charIdlist = orgFont.getCharIDs(_idlist);
+			}
+
+			for each(var id:int in charIdlist) {
+				var char:BitmapChar = _cloneBitmapChar(
+					orgFont.getChar(id), xOffset, yOffset, xAdvanceOffset, charIdlist, fixedXAdvance);
 				fnt.addChar(id, char);
 			}
 			TextField.registerBitmapFont(fnt);
@@ -48,13 +73,20 @@ package harayoki.starling {
 			return fnt;
 		}
 
-		private static function _cloneBitmapChar(org:BitmapChar, yOffset:int, idlist:Vector.<int>):BitmapChar {
+		private static function _cloneBitmapChar(
+			org:BitmapChar,
+			xOffset:int,
+			yOffset:int,
+			xAdvanceOffset:int,
+			idlist:Vector.<int>,
+			fixedXAdvance:Boolean=false
+		):BitmapChar {
 			var char:BitmapChar = new BitmapChar(
 				org.charID,
 				org.texture,
-				org.xOffset,
+				org.xOffset + xOffset,
 				org.yOffset + yOffset,
-				org.xAdvance
+				fixedXAdvance ? xAdvanceOffset : org.xAdvance + xAdvanceOffset
 			);
 			for each(var id:int in idlist) {
 				var kerning:Number = org.getKerning(id); // if no kerning, returns 0
@@ -79,11 +111,32 @@ package harayoki.starling {
 				charIdlist = copyFrom.getCharIDs(_idlist);
 			}
 			for each(var id:int in charIdlist) {
-				var newChar:BitmapChar = _cloneBitmapChar(copyFrom.getChar(id), yOffset, charIdlist);
+				var newChar:BitmapChar = _cloneBitmapChar(copyFrom.getChar(id), 0, yOffset, 0, charIdlist);
 				var currentChar:BitmapChar = target.getChar(id);
 				if(!currentChar || overWritten) {
 					target.addChar(id, newChar);
 				}
+			}
+		}
+
+		public static function updatePadding(
+			font:BitmapFont,
+			xOffset: int = 0,
+			yOffset: int = 0,
+			xAdvanceOffset:int = 0,
+			charIdlist:Vector.<int>=null
+		):void {
+			if(!font) {
+				return;
+			}
+			if (!charIdlist) {
+				_idlist.length = 0;
+				charIdlist = font.getCharIDs(_idlist);
+			}
+			for each(var id:int in charIdlist) {
+				var char:BitmapChar = _cloneBitmapChar(
+					font.getChar(id), xOffset, yOffset, xAdvanceOffset , charIdlist);
+				font.addChar(id, char);
 			}
 		}
 
@@ -99,9 +152,25 @@ package harayoki.starling {
 				var char:BitmapChar = target.getChar(id);
 				if(char) {
 					trace(target.name,'char(' + id + '):' + String.fromCharCode(id),
-						[char.width+'x'+char.height,'[' + [char.xOffset,char.yOffset] + ']',char.xAdvance]);
+						[char.width + 'x' + char.height, '[' + [char.xOffset, char.yOffset] + ']', char.xAdvance]);
 				}
 			}
+		}
+
+		public static function getIdRange(charFrom:String, charTo:String=null, out:Vector.<int>=null):Vector.<int> {
+			if(!out) {
+				out = new <int>[];
+			}
+			if(charFrom == null || charFrom.length ==0) {
+				return out;
+			}
+			if(charTo == null || charTo.length == 0) {
+				charTo = charFrom;
+			}
+			for(var i:int=charFrom.charCodeAt(0);i<=charTo.charCodeAt(0);i++) {
+				out.push(i);
+			}
+			return out;
 		}
 	}
 }

@@ -18,7 +18,8 @@ package {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
 		private static const FONT_NAME_KANA:String = "kana_only";
-		private static const FONT_NAME:String = "default_font";
+		private static const FONT_NAME_MONO:String = "mono_space";
+		private static const FONT_NAME_PADDING:String = "mono_padding";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -61,17 +62,26 @@ package {
 
 			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
 			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
-			var newFont:BitmapFont = baseFont;//BitmapFontUtil.cloneBitmapFont(FONT_NAME, baseFont);
-			BitmapFontUtil.copyBitmapChars(newFont, subFont, true, newFont.lineHeight - subFont.lineHeight + 1);
+			BitmapFontUtil.copyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
+			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 14);
+			monoSpaceFont.lineHeight = 14;
+
+			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
+			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, BitmapFontUtil.getIdRange("B","D"));
+
+			BitmapFontUtil.traceBitmapCharInfo(paddingAlphabetFont);
 
 			_doHelper.locateDobj(
 				_doHelper.createText("ここは、カナフォント！\n" +
 					"Koko ha eiji font.\n" +
-					"ま　ぜ　て　も HEIKI です!", newFont.name),
+					"ま　ぜ　て　も HEIKI です!", baseFont.name),
 				10, 40);
 			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", subFont.name), 10, 100);
-			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうABC\nかきくDEFかきく", newFont.name, 300, 50, null, 0, 0xff00ff), 10, 130, 1.0);
+			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうABC\nかきくDEFかきく", baseFont.name, 300, 50, null, 0, 0xff00ff), 10, 130, 1.0);
 
+			_doHelper.locateDobj(_doHelper.createText("あいうえおDEFG\n12345かきく", monoSpaceFont.name), 10, 170);
+
+			_doHelper.locateDobj(_doHelper.createText("ABCDEFG", paddingAlphabetFont.name), 10, 200);
 		}
 
 
