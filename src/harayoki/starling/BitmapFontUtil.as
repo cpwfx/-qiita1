@@ -4,13 +4,8 @@ package harayoki.starling {
 	import harayoki.util.CharCodeUtil;
 
 	import starling.text.BitmapChar;
-	import starling.text.BitmapChar;
-	import starling.text.BitmapChar;
-	import starling.text.BitmapFont;
-	import starling.text.BitmapFont;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	import starling.textures.SubTexture;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.StringUtil;
@@ -20,7 +15,7 @@ package harayoki.starling {
 		private static var _idlist:Vector.<int> = new <int>[];
 		private static var _fontxml:XML = <font>
 			<info face="dummy" size="1" smooth="1"/>
-			<common lineHeight="1" scaleW="1" scaleH="1" pages="1"/>
+			<common lineHeight="1" scaleW="1" scaleH="1" pages="1" base="1"/>
 			<pages>
 				<page id="0" file="dummy.png"/>
 			</pages>
@@ -29,7 +24,8 @@ package harayoki.starling {
 			<kernings count="0">
 			</kernings>
 		</font>;
-		private static var NULL_REGION:Rectangle = new Rectangle(0,0,0,0);
+		private static var _dummyTexture:Texture;
+		private static const NULL_REGION:Rectangle = new Rectangle(0,0,0,0);
 
 		/**
 		 * BitmapFontをコピーする
@@ -73,6 +69,7 @@ package harayoki.starling {
 
 			_fontxml.info.@face = StringUtil.clean(newFontName);
 			_fontxml.info.@size = (isNaN(size) || size <= 0) ? "" + orgFont.size : "" + size;
+			_fontxml.info.@base = _fontxml.info.@size;
 			var font:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
 			font.lineHeight = orgFont.lineHeight;
 			font.baseline = orgFont.baseline;
@@ -106,8 +103,12 @@ package harayoki.starling {
 		):BitmapFont {
 			_fontxml.info.@face = StringUtil.clean(fontName);
 			_fontxml.info.@size = size + "";
+			_fontxml.info.@base = _fontxml.info.@size;
 			if(!texture) {
-				texture = Texture.empty(1,1);
+				if(!_dummyTexture) {
+					_dummyTexture = Texture.empty(1,1,true,false,false,1.0);
+				}
+				texture = _dummyTexture;
 			}
 			var font:BitmapFont = new BitmapFont(texture, _fontxml);
 			font.lineHeight = isNaN(lineHeight) || lineHeight <= 0 ? size : lineHeight;
@@ -343,7 +344,7 @@ package harayoki.starling {
 				[
 					"size:"+target.size,
 					"lineheight:"+target.lineHeight,
-					"baselie:"+target.baseline,
+					"baseline:"+target.baseline,
 					"smoothing:"+target.smoothing,
 					"offsetX:"+target.offsetX,
 					"offsetY:"+target.offsetY,
