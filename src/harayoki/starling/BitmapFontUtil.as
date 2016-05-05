@@ -12,6 +12,7 @@ package harayoki.starling {
 	import starling.text.TextField;
 	import starling.textures.SubTexture;
 	import starling.textures.Texture;
+	import starling.textures.TextureSmoothing;
 	import starling.utils.StringUtil;
 
 	public class BitmapFontUtil {
@@ -71,7 +72,7 @@ package harayoki.starling {
 			}
 
 			_fontxml.info.@face = StringUtil.clean(newFontName);
-			_fontxml.info.@size = isNaN(size) || size <= 0 ? orgFont.size : size;
+			_fontxml.info.@size = (isNaN(size) || size <= 0) ? "" + orgFont.size : "" + size;
 			var font:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
 			font.lineHeight = orgFont.lineHeight;
 			font.baseline = orgFont.baseline;
@@ -100,15 +101,17 @@ package harayoki.starling {
 			fontName:String,
 			size:Number,
 			lineHeight:Number=0,
+			smoothing:Boolean=false,
 			texture:Texture=null
 		):BitmapFont {
 			_fontxml.info.@face = StringUtil.clean(fontName);
-			_fontxml.info.@size = size;
+			_fontxml.info.@size = size + "";
 			if(!texture) {
 				texture = Texture.empty(1,1);
 			}
 			var font:BitmapFont = new BitmapFont(texture, _fontxml);
 			font.lineHeight = isNaN(lineHeight) || lineHeight <= 0 ? size : lineHeight;
+			font.smoothing = smoothing ? TextureSmoothing.BILINEAR : TextureSmoothing.NONE;
 			TextField.registerBitmapFont(font);
 			return font;
 		}
@@ -131,7 +134,6 @@ package harayoki.starling {
 			} else {
 				id = (charCodeOrCharStr+"").charCodeAt(0);
 			}
-			trace(id, texture);
 			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.width : width);
 			font.addChar(id, char);
 			return char;
@@ -304,7 +306,6 @@ package harayoki.starling {
 			for each(var id:int in targetCharIdlist) {
 				if(emptyTargetOnly && targetFont.getChar(id)) {
 					// 埋める先がからでないのでskip
-					trace('emptyTargetOnly', id);
 					continue;
 				}
 				var char:BitmapChar = _cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
@@ -321,11 +322,19 @@ package harayoki.starling {
 			if (!target) {
 				return;
 			}
+			_idlist.length = 0;
+			var numChar:int = target.getCharIDs(_idlist).length;
 			if (!charIdlist) {
 				_idlist.length = 0;
 				charIdlist = target.getCharIDs(_idlist);
 			}
-			trace("<Font:" + target.name + ">");
+			trace("<Font:" + target.name,
+				[
+					"size:"+target.size,
+					"lineheight:"+target.lineHeight,
+					"smoothing:"+target.smoothing
+				] + ">");
+			trace("(numChar:" + numChar + ")" );
 			var len:int = charIdlist.length;
 			for (var i:int=0; i<len; i++) {
 				var id:int = charIdlist[i];
