@@ -328,20 +328,35 @@ package harayoki.starling {
 				_idlist.length = 0;
 				charIdlist = target.getCharIDs(_idlist);
 			}
+			var texture:Texture = target.texture;
+			function getTextureInfo(texture:Texture):String {
+				if(texture) {
+					return "(" + texture + " " + [
+						"size:"+texture.width+"*"+texture.height,
+						"scale:"+texture.scale
+					].join(" ") + ")";
+				} else {
+					return "(N/A)";
+				}
+			}
 			trace("<Font:" + target.name,
 				[
 					"size:"+target.size,
 					"lineheight:"+target.lineHeight,
-					"smoothing:"+target.smoothing
-				] + ">");
-			trace("(numChar:" + numChar + ")" );
+					"baselie:"+target.baseline,
+					"smoothing:"+target.smoothing,
+					"offsetX:"+target.offsetX,
+					"offsetY:"+target.offsetY,
+					"numChar:" + numChar,
+					"\n\ttexture:"+getTextureInfo(texture),
+				].join(" ") + ">");
 			var len:int = charIdlist.length;
 			for (var i:int=0; i<len; i++) {
 				var id:int = charIdlist[i];
 				var char:BitmapChar = target.getChar(id);
 				if (char) {
-					trace("'" + String.fromCharCode(id) + "'(" + id + ") txsize:" +
-						(char.width + "*" + char.height) + " offset:" + [char.xOffset, char.yOffset] + " xAdv:"+ char.xAdvance);
+					trace("'" + String.fromCharCode(id) + "'(" + id + ") texture:" +
+						getTextureInfo(char.texture) + " offset:" + [char.xOffset, char.yOffset] + " xAdv:"+ char.xAdvance);
 				}
 			}
 		}
