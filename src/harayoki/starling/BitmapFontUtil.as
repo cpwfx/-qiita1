@@ -98,19 +98,15 @@ package harayoki.starling {
 			fontName:String,
 			size:Number,
 			lineHeight:Number=0,
-			smoothing:Boolean=false,
-			texture:Texture=null
+			smoothing:Boolean=false
 		):BitmapFont {
 			_fontxml.info.@face = StringUtil.clean(fontName);
 			_fontxml.info.@size = size + "";
 			_fontxml.info.@base = _fontxml.info.@size;
-			if(!texture) {
-				if(!_dummyTexture) {
-					_dummyTexture = Texture.empty(1,1,true,false,false,1.0);
-				}
-				texture = _dummyTexture;
+			if(!_dummyTexture) {
+				_dummyTexture = Texture.empty(1,1,true,false,false,1.0);
 			}
-			var font:BitmapFont = new BitmapFont(texture, _fontxml);
+			var font:BitmapFont = new BitmapFont(_dummyTexture, _fontxml);
 			font.lineHeight = isNaN(lineHeight) || lineHeight <= 0 ? size : lineHeight;
 			font.smoothing = smoothing ? TextureSmoothing.BILINEAR : TextureSmoothing.NONE;
 			TextField.registerBitmapFont(font);
@@ -118,16 +114,15 @@ package harayoki.starling {
 		}
 
 		/**
-		 * (サブ)テクスチャから直接BitmapCharを作ってフォントに登録する
-		 * @param font 対象フォント
+		 * テクスチャから直接BitmapCharを作る
 		 * @param charCodeOrCharStr 文字コードもしくは1文字
 		 * @param texture テクスチャ（サブテクスチャ推奨)
 		 * @param xOffset 任意
 		 * @param yOffset 任意
 		 * @param width 任意、デフォルトでテクスチャの横幅
 		 */
-		public static function addBitmapCharByTexture(
-			font:BitmapFont, charCodeOrCharStr:Object, texture:Texture, xOffset:Number=0, yOffset:Number=0, width:Number = -1
+		public static function createBitmapCharByTexture(
+			charCodeOrCharStr:Object, texture:Texture, xOffset:Number=0, yOffset:Number=0, width:Number = -1
 		):BitmapChar {
 			var id:int;
 			if(charCodeOrCharStr is int) {
@@ -136,8 +131,26 @@ package harayoki.starling {
 				id = (charCodeOrCharStr+"").charCodeAt(0);
 			}
 			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.width : width);
-			font.addChar(id, char);
 			return char;
+		}
+
+		/**
+		 * BitmapCharをフォントに登録する
+		 * @param font 対象フォント
+		 * @param char BitmapChar
+		 * @param id idを変える場合指定
+		 * @param noCharClone idを変える場合にcharをcloneしない
+		 *        (大量に同じCharを登録する場合のメモリ節約用：誤動作の可能性あり)
+		 */
+		public static function addBitmapCharToFont(
+			font:BitmapFont, char:BitmapChar, id:int=-1, noCharClone:Boolean= true):void {
+			if(!font) {
+				return;
+			}
+			if(id != -1 && id != char.charID && !noCharClone) {
+				char = _cloneBitmapChar(char, id);
+			}
+			font.addChar(char.charID, char);
 		}
 
 		/**
@@ -290,16 +303,19 @@ package harayoki.starling {
 
 		/**
 		 * あるBitmapCharでフォント文字を埋める
-		 * @param sorceBitmapChar
-		 * @param targetFont
-		 * @param targetCharIdlist
-		 * @param emptyTargetOnly
+		 * @param sorceBitmapChar コピー元BitmapChar
+		 * @param targetFont 対象フォント
+		 * @param targetCharIdlist 置き換えターゲットとなるID一覧
+		 * @param emptyTargetOnly すでに登録済みのCharは上書きしない
+		 * @param noCharClone idを変える場合にcharをcloneしない
+		 *        (大量に同じCharを登録する場合のメモリ節約用：誤動作の可能性あり)
 		 */
 		public static function fillBitmapChars(
 			sorceBitmapChar:BitmapChar,
 			targetFont:BitmapFont,
 			targetCharIdlist:Vector.<int>,
-			emptyTargetOnly:Boolean = false
+			emptyTargetOnly:Boolean = false,
+			noCharClone:Boolean = true
 		):void {
 			if(!targetFont || !sorceBitmapChar) {
 				return;
@@ -309,7 +325,8 @@ package harayoki.starling {
 					// 埋める先がからでないのでskip
 					continue;
 				}
-				var char:BitmapChar = _cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
+				var char:BitmapChar = noCharClone ? sorceBitmapChar :
+					_cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
 				targetFont.addChar(id, char);
 			}
 		}

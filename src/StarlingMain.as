@@ -9,12 +9,12 @@ package {
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
-	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.text.TextFormat;
+	import starling.text.TextOptions;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.AssetManager;
@@ -73,12 +73,17 @@ package {
 			
 			// カナフォントに英字フォントを
 			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
+
 			// 一部文字を伏字に
-			var tofuChar:BitmapChar = new BitmapChar(1, _assetManager.getTexture("font_tofu"), 0, 0, 16);
+			var tofuChar:BitmapChar =
+				BitmapFontUtil.createBitmapCharByTexture(-1 , _assetManager.getTexture("tofu"), 0, 4, 12);
 			BitmapFontUtil.fillBitmapChars(
 				tofuChar,
-				baseFont,
-				CharCodeUtil.getIdListByCodeRange(1,128));
+				subFont,
+				CharCodeUtil.getIdListByCharRange("あ","お"),
+				true
+			);
+			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうえあDEF", subFont.name, 200), 10, 200);
 
 			// 固定幅フォントを作る
 			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
@@ -92,42 +97,41 @@ package {
 			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
 
 			// カラーチップフォント
-			function setColorTexture(colorName:String):void {
+			function setColorTexture(font:BitmapFont, colorName:String):void {
 				var texture:Texture = _assetManager.getTexture("mx/"+colorName);
-				BitmapFontUtil.addBitmapCharByTexture(colorTipFont, colorName, texture, 0, 0, 2.25);
+				BitmapFontUtil.addBitmapCharToFont(
+					font, BitmapFontUtil.createBitmapCharByTexture(colorName, texture, 0, 0, 2));
 			}
-			var colorTipFont:BitmapFont = BitmapFontUtil.createEmptyFont(FONT_NAME_COLORCHIP ,2, 2.25);
-			colorTipFont.smoothing = TextureSmoothing.NONE;
-
-			trace(colorTipFont.size);
-
-			setColorTexture("0");
-			setColorTexture("1");
-			setColorTexture("2");
-			setColorTexture("3");
-			setColorTexture("4");
-			setColorTexture("5");
-			setColorTexture("6");
-			setColorTexture("7");
-			setColorTexture("8");
-			setColorTexture("9");
-			setColorTexture("A");
-			setColorTexture("B");
-			setColorTexture("C");
-			setColorTexture("D");
-			setColorTexture("E");
-			setColorTexture("F");
+			var colorTipFont1:BitmapFont = BitmapFontUtil.createEmptyFont(FONT_NAME_COLORCHIP ,2, 2);
+			colorTipFont1.smoothing = TextureSmoothing.NONE;
+			var cf:BitmapFont = colorTipFont1;
+			setColorTexture(cf, "0");
+			setColorTexture(cf, "1");
+			setColorTexture(cf, "2");
+			setColorTexture(cf, "3");
+			setColorTexture(cf, "4");
+			setColorTexture(cf, "5");
+			setColorTexture(cf, "6");
+			setColorTexture(cf, "7");
+			setColorTexture(cf, "8");
+			setColorTexture(cf, "9");
+			setColorTexture(cf, "A");
+			setColorTexture(cf, "B");
+			setColorTexture(cf, "C");
+			setColorTexture(cf, "D");
+			setColorTexture(cf, "E");
+			setColorTexture(cf, "F");
 
 			var colorTipFont2:BitmapFont =
-				BitmapFontUtil.cloneBitmapFontWithDetail(FONT_NAME_COLORCHIP2, colorTipFont, 2);
-			BitmapFontUtil.setFixedWidth(colorTipFont2, 2);
-			colorTipFont2.lineHeight = 2;
+				BitmapFontUtil.cloneBitmapFont(FONT_NAME_COLORCHIP2, colorTipFont1);
+			BitmapFontUtil.setFixedWidth(colorTipFont2, 2.25);
+			colorTipFont2.lineHeight = 2.25;
 
-			_doHelper.locateDobj(
-				_doHelper.createText("ここは、カナフォント！\n" +
-					"Koko ha eiji font.\n" +
-					"ま　ぜ　て　も HEIKI です!", baseFont.name),
-				10, 40);
+//			_doHelper.locateDobj(
+//				_doHelper.createText("ここは、カナフォント！\n" +
+//					"Koko ha eiji font.\n" +
+//					"ま　ぜ　て　も HEIKI です!", baseFont.name),
+//				10, 160);
 
 //			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", subFont.name), 10, 100);
 //			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうABC\nかきくDEFかきく", baseFont.name, 300, 50, null, 0, 0xffffff), 10, 130, 1.0);
@@ -136,7 +140,14 @@ package {
 //
 //			_doHelper.locateDobj(_doHelper.createText("ABCDEFG", paddingAlphabetFont.name), 10, 200);
 
-			_doHelper.locateDobj(_doHelper.createSpriteText("STAGE 9-1", baseFont.name, 300, 50, null, 32, 0xffffff), 60, 20);
+			var emoji:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("1", _assetManager.getTexture("oukan"),0, 3);
+			BitmapFontUtil.addBitmapCharToFont(monoSpaceFont, emoji);
+			_doHelper.locateDobj(_doHelper.createSpriteText("STAGE 1-A", monoSpaceFont.name, 300, 50, 32, 0xffffff), 60, 20);
+
+			BitmapFontUtil.traceBitmapCharInfo(subFont);
+			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
+			BitmapFontUtil.traceBitmapCharInfo(colorTipFont1);
+			BitmapFontUtil.traceBitmapCharInfo(colorTipFont2);
 
 			var chara:String = [
 				"000888888000",
@@ -160,12 +171,11 @@ package {
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
 					chara,
-					colorTipFont.name,
+					colorTipFont1.name,
 					80,
 					80,
-					null,
-					2
-				), 30, 80);
+					4
+				), 50, 80);
 
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
@@ -173,9 +183,19 @@ package {
 					colorTipFont2.name,
 					80,
 					120,
-					null,
-					2
-				), 90, 80);
+					4
+				), 110, 80 + 8);
+
+			_doHelper.locateDobj(
+				_doHelper.createSpriteText(
+					chara,
+					monoSpaceFont.name,
+					120,
+					260,
+					16,
+					0x66ffff
+				), 170, 60).scaleY = 0.5;
+
 		}
 
 

@@ -190,7 +190,8 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">alphabet.png</key>
             <key type="filename">colorbars/colorbars.png</key>
-            <key type="filename">font_tofu.png</key>
+            <key type="filename">emoji/oukan.png</key>
+            <key type="filename">emoji/tofu.png</key>
             <key type="filename">kana_only.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -202,7 +203,7 @@
             <filename>kana_only.png</filename>
             <filename>alphabet.png</filename>
             <filename>colorbars</filename>
-            <filename>font_tofu.png</filename>
+            <filename>emoji</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
