@@ -13,8 +13,6 @@ package {
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	import starling.text.TextFormat;
-	import starling.text.TextOptions;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.AssetManager;
@@ -22,11 +20,6 @@ package {
 	public class StarlingMain extends Sprite {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
-		private static const FONT_NAME_KANA:String = "kana_only";
-		private static const FONT_NAME_MONO:String = "mono_space";
-		private static const FONT_NAME_PADDING:String = "mono_padding";
-		private static const FONT_NAME_COLORCHIP:String = "colorchip";
-		private static const FONT_NAME_COLORCHIP2:String = "colorchip2";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -52,12 +45,8 @@ package {
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-//			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.png');
-//			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.png');
 			_assetManager.enqueueWithName('app:/assets/atlas.png');
 			_assetManager.enqueueWithName('app:/assets/atlas.xml');
-			_assetManager.enqueueWithName('app:/assets/colorbars.xml');
-			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
@@ -68,133 +57,30 @@ package {
 
 		private function _start():void {
 
-			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
-			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
-			
-			// カナフォントに英字フォントを
-			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
+			var eijiFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
 
-			// 一部文字を伏字に
+			// 絵文字の上書き登録
+			var emoji:BitmapChar = // "1"の文字に[王冠画像]を上書き登録
+				BitmapFontUtil.createBitmapCharByTexture("1", _assetManager.getTexture("oukan"),0, 0, 16 + 2);
+			BitmapFontUtil.addBitmapCharToFont(eijiFont, emoji);
+
+			// 未定義文字をまとめてトウフに
 			var tofuChar:BitmapChar =
-				BitmapFontUtil.createBitmapCharByTexture(-1 , _assetManager.getTexture("tofu"), 0, 4, 12);
+				BitmapFontUtil.createBitmapCharByTexture(
+					0 , _assetManager.getTexture("tofu"), 0, 4, 12); // charcodeはなんでもいい
 			BitmapFontUtil.fillBitmapChars(
 				tofuChar,
-				subFont,
-				CharCodeUtil.getIdListByCharRange("あ","お"),
-				true
+				eijiFont,
+				CharCodeUtil.getIdListByCodeRange(0x3000, 0x30ff), //ひらがなとカタカナの範囲
+				true, // 上書きしない設定
+				true  // BitmapCharを使いまわす設定
 			);
-			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうえあDEF", subFont.name, 200), 10, 200);
 
-			// 固定幅フォントを作る
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
-			monoSpaceFont.lineHeight = 16;
-			// 半角設定
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
-			// 句読点も
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListByLetters("、。"));
+			// フォント情報trace
+			BitmapFontUtil.traceBitmapCharInfo(eijiFont);
 
-			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
-			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
-
-			// カラーチップフォント
-			function setColorTexture(font:BitmapFont, colorName:String):void {
-				var texture:Texture = _assetManager.getTexture("mx/"+colorName);
-				BitmapFontUtil.addBitmapCharToFont(
-					font, BitmapFontUtil.createBitmapCharByTexture(colorName, texture, 0, 0, 2));
-			}
-			var colorTipFont1:BitmapFont = BitmapFontUtil.createEmptyFont(FONT_NAME_COLORCHIP ,2, 2);
-			colorTipFont1.smoothing = TextureSmoothing.NONE;
-			var cf:BitmapFont = colorTipFont1;
-			setColorTexture(cf, "0");
-			setColorTexture(cf, "1");
-			setColorTexture(cf, "2");
-			setColorTexture(cf, "3");
-			setColorTexture(cf, "4");
-			setColorTexture(cf, "5");
-			setColorTexture(cf, "6");
-			setColorTexture(cf, "7");
-			setColorTexture(cf, "8");
-			setColorTexture(cf, "9");
-			setColorTexture(cf, "A");
-			setColorTexture(cf, "B");
-			setColorTexture(cf, "C");
-			setColorTexture(cf, "D");
-			setColorTexture(cf, "E");
-			setColorTexture(cf, "F");
-
-			var colorTipFont2:BitmapFont =
-				BitmapFontUtil.cloneBitmapFont(FONT_NAME_COLORCHIP2, colorTipFont1);
-			BitmapFontUtil.setFixedWidth(colorTipFont2, 2.25);
-			colorTipFont2.lineHeight = 2.25;
-
-//			_doHelper.locateDobj(
-//				_doHelper.createText("ここは、カナフォント！\n" +
-//					"Koko ha eiji font.\n" +
-//					"ま　ぜ　て　も HEIKI です!", baseFont.name),
-//				10, 160);
-
-//			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", subFont.name), 10, 100);
-//			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうABC\nかきくDEFかきく", baseFont.name, 300, 50, null, 0, 0xffffff), 10, 130, 1.0);
-
-//			_doHelper.locateDobj(_doHelper.createText("あいうえおDEFGさし\n12345かき6くけこたち", monoSpaceFont.name), 10, 170);
-//
-//			_doHelper.locateDobj(_doHelper.createText("ABCDEFG", paddingAlphabetFont.name), 10, 200);
-
-			var emoji:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("1", _assetManager.getTexture("oukan"),0, 3);
-			BitmapFontUtil.addBitmapCharToFont(monoSpaceFont, emoji);
-			_doHelper.locateDobj(_doHelper.createSpriteText("STAGE 1-A", monoSpaceFont.name, 300, 50, 32, 0xffffff), 60, 20);
-
-			BitmapFontUtil.traceBitmapCharInfo(subFont);
-			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
-			BitmapFontUtil.traceBitmapCharInfo(colorTipFont1);
-			BitmapFontUtil.traceBitmapCharInfo(colorTipFont2);
-
-			var chara:String = [
-				"000888888000",
-				"008888888880",
-				"00CCCAACA000",
-				"0CACAAACAAA0",
-				"0CACCAAACAAA",
-				"0CCAAAACCCC0",
-				"000AAAAAAA00",
-				"00CC8CCC0000",
-				"0CCC8CC8CCC0",
-				"CCCC8888CCCC",
-				"AAC8A88A8CAA",
-				"AAA888888AAA",
-				"AA88888888AA",
-				"008880088800",
-				"0CCC0000CCC0",
-				"CCCC0000CCCC",
-			].join("\n");
-
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					chara,
-					colorTipFont1.name,
-					80,
-					80,
-					4
-				), 50, 80);
-
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					chara,
-					colorTipFont2.name,
-					80,
-					120,
-					4
-				), 110, 80 + 8);
-
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					chara,
-					monoSpaceFont.name,
-					120,
-					260,
-					16,
-					0x66ffff
-				), 170, 60).scaleY = 0.5;
+			_doHelper.locateDobj(_doHelper.createSpriteText("STAGE 1-A", eijiFont.name, 300, 50, 16, 0xffffff), 50, 20);
+			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうえあ〜ワヲンDEF", eijiFont.name, 200), 50, 40);
 
 		}
 
