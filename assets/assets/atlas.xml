@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:69b491d472d214238337e5e80789eb6c:7185867749d1b813a96282072bada092:cde709370900f12288f3449eded86f07$ -->
-<TextureAtlas imagePath="atlas.png" width="228" height="151">
-    <SubTexture name="alphabet" x="151" y="1" width="76" height="78"/>
-    <SubTexture name="colorbars" x="151" y="81" width="7" height="31" frameX="0" frameY="0" frameWidth="8" frameHeight="32"/>
+<!-- $TexturePacker:SmartUpdate:b6df0cc8f2b4fa6187fe04ca89cc8d02:89ba9779c68249e051ec82cb51e0d850:cde709370900f12288f3449eded86f07$ -->
+<TextureAtlas imagePath="atlas.png" width="188" height="231">
+    <SubTexture name="alphabet" x="1" y="152" width="76" height="78"/>
+    <SubTexture name="colorbars" x="151" y="1" width="7" height="31" frameX="0" frameY="0" frameWidth="8" frameHeight="32"/>
     <SubTexture name="kana_only" x="1" y="1" width="148" height="149"/>
-    <SubTexture name="oukan" x="151" y="114" width="16" height="13"/>
-    <SubTexture name="tofu" x="151" y="129" width="8" height="8"/>
+    <SubTexture name="maptip" x="79" y="152" width="108" height="54"/>
+    <SubTexture name="oukan" x="79" y="208" width="16" height="13"/>
+    <SubTexture name="tofu" x="97" y="208" width="8" height="8"/>
 </TextureAtlas>

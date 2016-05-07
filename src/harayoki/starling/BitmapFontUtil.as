@@ -333,21 +333,91 @@ package harayoki.starling {
 		}
 
 		/**
-		 * アトラス画像から一括でフォントを作る
+		 * アトラス画像から一括でフォントを作る(真ん中よせ)
+		 * @param fontName 作成するフォント名
 		 * @param assetManager アセットマネージャ参照
 		 * @param textureNamePrefix フォントのテクスチャ名のprefix
-		 * @param fontName 作成するフォント名
 		 * @param size 作成するフォントサイズ
+		 * @param width 1文字の横幅(真ん中よせ計算に使われる)
 		 * @param lineHeight ラインハイト
+		 * @param paddingX 文字間隔
 		 * @param smoothing スムージング設定
 		 */
-		public static function createBitmapFontFromTextures(
+		public static function createBitmapFontFromTextureAtlasAsMonoSpaceFont(
+			fontName:String,
 			assetManager:AssetManager,
 			textureNamePrefix:String,
+			size:Number,
+			width:Number,
+			lineHeight:Number=0,
+			paddingX:Number=0,
+			smoothing:Boolean=false
+		):BitmapFont{
+			return createBitmapFontFromTextureAtlasDetailed(
+				fontName,
+				assetManager,
+				textureNamePrefix,
+				size,
+				lineHeight,
+				paddingX,
+				smoothing,
+				width,
+				size
+			);
+		}
+
+		/**
+		 * アトラス画像から一括でフォントを作る
+		 * @param fontName 作成するフォント名
+		 * @param assetManager アセットマネージャ参照
+		 * @param textureNamePrefix フォントのテクスチャ名のprefix
+		 * @param size 作成するフォントサイズ
+		 * @param lineHeight ラインハイト
+		 * @param paddingX 文字間隔
+		 * @param smoothing スムージング設定
+		 */
+		public static function createBitmapFontFromTextureAtlas(
 			fontName:String,
+			assetManager:AssetManager,
+			textureNamePrefix:String,
 			size:Number,
 			lineHeight:Number=0,
+			paddingX:Number=0,
 			smoothing:Boolean=false
+		):BitmapFont{
+			return createBitmapFontFromTextureAtlasDetailed(
+				fontName,
+				assetManager,
+				textureNamePrefix,
+				size,
+				lineHeight,
+				paddingX,
+				smoothing
+			);
+		}
+
+		/**
+		 * アトラス画像から一括でフォントを作る(詳細指定)
+		 * @param fontName 作成するフォント名
+		 * @param assetManager アセットマネージャ参照
+		 * @param textureNamePrefix フォントのテクスチャ名のprefix
+		 * @param size 作成するフォントサイズ
+		 * @param lineHeight ラインハイト
+		 * @param paddingX 文字間隔
+		 * @param smoothing スムージング設定
+		 * @param width 横サイズ 真ん中よせ計算に使われる
+		 * @param height 縦サイズ 真ん中よせ計算に使われる
+		 */
+		public static function createBitmapFontFromTextureAtlasDetailed(
+			fontName:String,
+			assetManager:AssetManager,
+			textureNamePrefix:String,
+			size:Number,
+			lineHeight:Number=0,
+			paddingX:Number=0,
+			smoothing:Boolean=false,
+			width:Number=0,
+			height:Number=0
 		):BitmapFont {
 			var font:BitmapFont = createEmptyFont(fontName, size, lineHeight, smoothing);
 			var textureNames:Vector.<String> = assetManager.getTextureNames(textureNamePrefix);
@@ -357,15 +427,24 @@ package harayoki.starling {
 			for each(var textureName:String in textureNames) {
 				var texture:Texture = assetManager.getTexture(textureName);
 				var charName:String = textureName.slice(textureNamePrefix.length);
+				var offsetX:Number = 0;
+				if(width > 0) {
+					offsetX = (width - texture.width) * 0.5;
+				}
+				var offsetY:Number = 0;
+				if(height > 0) {
+					offsetY = (height - texture.height) * 0.5;
+				}
+				var advanceX = width <=0 ? texture.width + paddingX : width + paddingX;
 				if(charName.length == 1) {
 					// １文字の場合はその文字として登録
-					char = createBitmapCharByTexture(charName, texture, 0, 0, texture.width);
+					char = createBitmapCharByTexture(charName, texture, offsetX, offsetY, advanceX);
 				} else if (charName.indexOf("0x") == 0){
 					// 0xから始まる場合は
-					char = createBitmapCharByTexture(parseInt(charName, 16), texture, 0, 0, texture.width);
+					char = createBitmapCharByTexture(parseInt(charName, 16), texture, offsetX, offsetY, advanceX);
 				} else {
 					// そうでない場合は直接コード番号として扱う
-					char = createBitmapCharByTexture(Number(charName), texture, 0, 0, texture.width);
+					char = createBitmapCharByTexture(Number(charName), texture, offsetX, offsetY, advanceX);
 				}
 				if(font.getChar(char.charID)) {
 					trace("Error : font for "+char.charID+ " is already exist.");

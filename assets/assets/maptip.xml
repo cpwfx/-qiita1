@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:ec4d1b937176ef5547b058ab1cbb566b:074fe1cfbf72d7f6573563d3b6826db0:b043528e3471b40092f1d6af4a2e8bb0$ -->
+<TextureAtlas imagePath="maptip.png" width="108" height="54">
+    <SubTexture name="map1/0x31" x="91" y="34" width="8" height="8"/>
+    <SubTexture name="map1/48" x="91" y="19" width="16" height="13"/>
+    <SubTexture name="map1/A" x="1" y="1" width="16" height="16"/>
+    <SubTexture name="map1/B" x="1" y="19" width="16" height="16"/>
+    <SubTexture name="map1/C" x="1" y="37" width="16" height="16"/>
+    <SubTexture name="map1/D" x="19" y="1" width="16" height="16"/>
+    <SubTexture name="map1/E" x="19" y="19" width="16" height="16"/>
+    <SubTexture name="map1/F" x="19" y="37" width="16" height="16"/>
+    <SubTexture name="map1/G" x="37" y="1" width="16" height="16"/>
+    <SubTexture name="map1/H" x="37" y="19" width="16" height="16"/>
+    <SubTexture name="map1/I" x="37" y="37" width="16" height="16"/>
+    <SubTexture name="map1/J" x="55" y="1" width="16" height="16"/>
+    <SubTexture name="map1/K" x="55" y="19" width="16" height="16"/>
+    <SubTexture name="map1/L" x="55" y="37" width="16" height="16"/>
+    <SubTexture name="map1/M" x="73" y="1" width="16" height="16"/>
+    <SubTexture name="map1/N" x="91" y="1" width="16" height="16"/>
+    <SubTexture name="map1/O" x="73" y="19" width="16" height="16"/>
+    <SubTexture name="map1/P" x="73" y="37" width="16" height="16"/>
+</TextureAtlas>

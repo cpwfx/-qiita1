@@ -52,11 +52,10 @@ package {
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-//			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.png');
-//			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.png');
 			_assetManager.enqueueWithName('app:/assets/atlas.png');
 			_assetManager.enqueueWithName('app:/assets/atlas.xml');
 			_assetManager.enqueueWithName('app:/assets/colorbars.xml');
+			_assetManager.enqueueWithName('app:/assets/maptip.xml');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
@@ -73,18 +72,7 @@ package {
 			
 			// カナフォントに英字フォントを
 			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
-
-			// 一部文字を伏字に
-			var tofuChar:BitmapChar =
-				BitmapFontUtil.createBitmapCharByTexture(-1 , _assetManager.getTexture("tofu"), 0, 4, 12);
-			BitmapFontUtil.fillBitmapChars(
-				tofuChar,
-				subFont,
-				CharCodeUtil.getIdListByCharRange("あ","お"),
-				true
-			);
-			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうえあDEF", subFont.name, 200), 10, 200);
-
+			
 			// 固定幅フォントを作る
 			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
 			monoSpaceFont.lineHeight = 16;
@@ -97,37 +85,39 @@ package {
 			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
 
 			// カラーチップフォント
-			var colorTipFont1:BitmapFont = BitmapFontUtil.createBitmapFontFromTextures(_assetManager, "hoge", "mx/", 2);
-			colorTipFont1.smoothing = TextureSmoothing.NONE;
+			var colorTipFont1:BitmapFont =
+				BitmapFontUtil.createBitmapFontFromTextureAtlas("colorchip", _assetManager, "mx/", 2);
 
-			var colorTipFont2:BitmapFont =
-				BitmapFontUtil.cloneBitmapFont(FONT_NAME_COLORCHIP2, colorTipFont1);
-			BitmapFontUtil.setFixedWidth(colorTipFont2, 2.25);
-			colorTipFont2.lineHeight = 2.25;
-			
+			// マップチップフォント
+			var mapchip:BitmapFont =
+				BitmapFontUtil.createBitmapFontFromTextureAtlasAsMonoSpaceFont(
+					"mapchip", _assetManager, "map1/" , 16, 16, 16 );
+			BitmapFontUtil.setSpaceWidth(mapchip, 16);
 
+			var mapall:String = [
+				"ABCDEFGHIJKLMNOP",
+				"",
+				"01",
+			].join("\n");
 
-//			_doHelper.locateDobj(
-//				_doHelper.createText("ここは、カナフォント！\n" +
-//					"Koko ha eiji font.\n" +
-//					"ま　ぜ　て　も HEIKI です!", baseFont.name),
-//				10, 160);
-
-//			_doHelper.locateDobj(_doHelper.createText("ABC DEFG", subFont.name), 10, 100);
-//			_doHelper.locateDobj(_doHelper.createSpriteText("ABCあいうABC\nかきくDEFかきく", baseFont.name, 300, 50, null, 0, 0xffffff), 10, 130, 1.0);
-
-//			_doHelper.locateDobj(_doHelper.createText("あいうえおDEFGさし\n12345かき6くけこたち", monoSpaceFont.name), 10, 170);
-//
-//			_doHelper.locateDobj(_doHelper.createText("ABCDEFG", paddingAlphabetFont.name), 10, 200);
-
-			var emoji:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("1", _assetManager.getTexture("oukan"),0, 3);
-			BitmapFontUtil.addBitmapCharToFont(monoSpaceFont, emoji);
-			_doHelper.locateDobj(_doHelper.createSpriteText("STAGE 1-A", monoSpaceFont.name, 300, 50, 32, 0xffffff), 60, 20);
-
-//			BitmapFontUtil.traceBitmapCharInfo(subFont);
-//			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
-//			BitmapFontUtil.traceBitmapCharInfo(colorTipFont1);
-//			BitmapFontUtil.traceBitmapCharInfo(colorTipFont2);
+			var map:String = [
+				"CCCCIIIIIIIIAAAA",
+				"CCCIIIIIIAAAAMAA",
+				"CCCCIIIAAAAAAAAA",
+				"CCIIIAAAAOAAAAOA",
+				"CCIIIIAAAAAAAAAA",
+				"CCCIIIIAAAAAAAAA",
+				"CCCCCIIAAAAOAAAA",
+				"CCCCCCCIIAAAAAOA",
+				"CCCCCCCCCIIAAAAA",
+				"CCCCCCCCCCCEGGGG",
+				"CCCCCCCCCCCCLLHL",
+				"CCCCCCCCCCCCLPDP",
+				"JJJCCCCCCCCCLDDD",
+				"BBJJCCCCCCCCLDKD",
+				"BNBJJCCCCCCCLDDF",
+				"BBBJJCCCCCCCPPPP",
+			].join("\n");
 
 			var chara:String = [
 				"000888888000",
@@ -153,28 +143,38 @@ package {
 					chara,
 					colorTipFont1.name,
 					80,
-					80,
-					4
-				), 50, 80);
+					80
+				), 100, 5, 1);
 
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
-					chara,
-					colorTipFont2.name,
-					80,
-					120,
-					4
-				), 110, 80 + 8);
+					mapall,
+					mapchip.name,
+					300,
+					100
+				), 10, 40, 1);
+
+			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", subFont, 16);
+			BitmapFontUtil.setSpaceWidth(tempFont, 16);
+			_doHelper.locateDobj(
+				_doHelper.createSpriteText(
+					mapall,
+					tempFont.name,
+					300,
+					100,
+					14
+				), 10, 40 + 16, 1);
+
 
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
-					chara,
-					monoSpaceFont.name,
-					120,
-					260,
-					16,
-					0x66ffff
-				), 170, 60).scaleY = 0.5;
+					map,
+					mapchip.name,
+					300,
+					600
+				), 10, 110, 1);
+
+			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
 		}
 

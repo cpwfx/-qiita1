@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.2.0</string>
         <key>fileName</key>
-        <string>/Users/harayoki/Documents/github/qiita1/resource/atlas/atlas.tps</string>
+        <string>/Users/harayoki/Documents/github/qiita1/resource/atlas/maptip.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -56,7 +56,7 @@
         <key>jxrCompressionLevel</key>
         <uint>0</uint>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">PngQuantHigh</enum>
+        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -80,7 +80,7 @@
         <key>textureSubPath</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png8</enum>
+        <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -141,7 +141,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../assets/assets/atlas.xml</filename>
+                <filename>maptip.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -188,12 +188,24 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">alphabet.png</key>
-            <key type="filename">colorbars/colorbars.png</key>
-            <key type="filename">emoji/oukan.png</key>
-            <key type="filename">emoji/tofu.png</key>
-            <key type="filename">kana_only.png</key>
-            <key type="filename">maptip.png</key>
+            <key type="filename">_ignore_/maptip/map1/0x31.png</key>
+            <key type="filename">_ignore_/maptip/map1/48.png</key>
+            <key type="filename">_ignore_/maptip/map1/A.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/B.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/C.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/D.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/E.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/F.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/G.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/H.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/I.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/J.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/K.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/L.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/M.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/N.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/O.jpg</key>
+            <key type="filename">_ignore_/maptip/map1/P.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -201,11 +213,7 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>kana_only.png</filename>
-            <filename>alphabet.png</filename>
-            <filename>colorbars</filename>
-            <filename>emoji</filename>
-            <filename>maptip.png</filename>
+            <filename>_ignore_/maptip</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
