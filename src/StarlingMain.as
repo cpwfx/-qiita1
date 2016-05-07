@@ -3,30 +3,22 @@ package {
 	import flash.geom.Rectangle;
 
 	import harayoki.starling.BitmapFontUtil;
-	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
-	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	import starling.text.TextFormat;
-	import starling.text.TextOptions;
-	import starling.textures.Texture;
-	import starling.textures.TextureSmoothing;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
-		private static const FONT_NAME_KANA:String = "kana_only";
-		private static const FONT_NAME_MONO:String = "mono_space";
-		private static const FONT_NAME_PADDING:String = "mono_padding";
+		private static const FONT_NAME_MONO:String = "momnospace";
 		private static const FONT_NAME_COLORCHIP:String = "colorchip";
-		private static const FONT_NAME_COLORCHIP2:String = "colorchip2";
+		private static const FONT_NAME_MAPCHIP:String = "mapchip";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -67,39 +59,32 @@ package {
 
 		private function _start():void {
 
-			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
-			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
-			
-			// カナフォントに英字フォントを
-			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
-			
-			// 固定幅フォントを作る
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
-			monoSpaceFont.lineHeight = 16;
-			// 半角設定
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
-			// 句読点も
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListByLetters("、。"));
+			var font:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
 
-			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
-			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
+			// 固定幅フォントを作る
+			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, font, 16);
+			monoSpaceFont.lineHeight = 16;
 
 			// カラーチップフォント
 			var colorTipFont1:BitmapFont =
-				BitmapFontUtil.createBitmapFontFromTextureAtlas("colorchip", _assetManager, "mx/", 2);
+				BitmapFontUtil.createBitmapFontFromTextureAtlas(FONT_NAME_COLORCHIP, _assetManager, "mx/", 2);
 
 			// マップチップフォント
 			var mapchip:BitmapFont =
 				BitmapFontUtil.createBitmapFontFromTextureAtlasAsMonoSpaceFont(
-					"mapchip", _assetManager, "map1/" , 16, 16, 16 );
-			BitmapFontUtil.setSpaceWidth(mapchip, 16);
+					FONT_NAME_MAPCHIP, _assetManager, "map1/" , 16, 16, 16 );
+			BitmapFontUtil.setSpaceWidth(mapchip, 16); //スペースの設定
 
+			BitmapFontUtil.traceBitmapCharInfo(mapchip);
+
+			// A〜Pのサンプル表示データ
 			var mapall:String = [
 				"ABCDEFGHIJKLMNOP",
 				"",
 				"01",
 			].join("\n");
 
+			// マップデータ
 			var map:String = [
 				"CCCCIIIIIIIIAAAA",
 				"CCCIIIIIIAAAAMAA",
@@ -119,6 +104,7 @@ package {
 				"BBBJJCCCCCCCPPPP",
 			].join("\n");
 
+			// キャラデータ
 			var chara:String = [
 				"000888888000",
 				"008888888880",
@@ -138,6 +124,7 @@ package {
 				"CCCC0000CCCC",
 			].join("\n");
 
+			// キャラ表示
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
 					chara,
@@ -146,6 +133,7 @@ package {
 					80
 				), 100, 5, 1);
 
+			// マップチップ表示
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
 					mapall,
@@ -154,7 +142,8 @@ package {
 					100
 				), 10, 40, 1);
 
-			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", subFont, 16);
+			// マップチップに対応する英字を表示
+			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", monoSpaceFont, 16);
 			BitmapFontUtil.setSpaceWidth(tempFont, 16);
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
@@ -164,8 +153,8 @@ package {
 					100,
 					14
 				), 10, 40 + 16, 1);
-
-
+			
+			// マップ表示
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
 					map,
@@ -173,8 +162,6 @@ package {
 					300,
 					600
 				), 10, 110, 1);
-
-			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
 		}
 
