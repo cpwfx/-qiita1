@@ -48,7 +48,6 @@ package {
 			_assetManager.enqueueWithName('app:/assets/atlas.xml');
 			_assetManager.enqueueWithName('app:/assets/colorbars.xml');
 			_assetManager.enqueueWithName('app:/assets/maptip.xml');
-			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
@@ -153,7 +152,7 @@ package {
 					100,
 					14
 				), 10, 40 + 16, 1);
-			
+
 			// マップ表示
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
