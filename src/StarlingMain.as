@@ -10,13 +10,8 @@ package {
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
-	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	import starling.text.TextFormat;
-	import starling.text.TextOptions;
-	import starling.textures.Texture;
-	import starling.textures.TextureSmoothing;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
@@ -118,33 +113,6 @@ package {
 				"BNBJJCCCCCCCLDDF",
 				"BBBJJCCCCCCCPPPP",
 			].join("\n");
-
-			var chara:String = [
-				"000888888000",
-				"008888888880",
-				"00CCCAACA000",
-				"0CACAAACAAA0",
-				"0CACCAAACAAA",
-				"0CCAAAACCCC0",
-				"000AAAAAAA00",
-				"00CC8CCC0000",
-				"0CCC8CC8CCC0",
-				"CCCC8888CCCC",
-				"AAC8A88A8CAA",
-				"AAA888888AAA",
-				"AA88888888AA",
-				"008880088800",
-				"0CCC0000CCC0",
-				"CCCC0000CCCC",
-			].join("\n");
-
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					chara,
-					colorTipFont1.name,
-					80,
-					80
-				), 100, 5, 1);
 
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
