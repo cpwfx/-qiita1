@@ -97,35 +97,15 @@ package {
 			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
 
 			// カラーチップフォント
-			function setColorTexture(font:BitmapFont, colorName:String):void {
-				var texture:Texture = _assetManager.getTexture("mx/"+colorName);
-				BitmapFontUtil.addBitmapCharToFont(
-					font, BitmapFontUtil.createBitmapCharByTexture(colorName, texture, 0, 0, 2));
-			}
-			var colorTipFont1:BitmapFont = BitmapFontUtil.createEmptyFont(FONT_NAME_COLORCHIP ,2, 2);
+			var colorTipFont1:BitmapFont = BitmapFontUtil.createBitmapFontFromTextures(_assetManager, "hoge", "mx/", 2);
 			colorTipFont1.smoothing = TextureSmoothing.NONE;
-			var cf:BitmapFont = colorTipFont1;
-			setColorTexture(cf, "0");
-			setColorTexture(cf, "1");
-			setColorTexture(cf, "2");
-			setColorTexture(cf, "3");
-			setColorTexture(cf, "4");
-			setColorTexture(cf, "5");
-			setColorTexture(cf, "6");
-			setColorTexture(cf, "7");
-			setColorTexture(cf, "8");
-			setColorTexture(cf, "9");
-			setColorTexture(cf, "A");
-			setColorTexture(cf, "B");
-			setColorTexture(cf, "C");
-			setColorTexture(cf, "D");
-			setColorTexture(cf, "E");
-			setColorTexture(cf, "F");
 
 			var colorTipFont2:BitmapFont =
 				BitmapFontUtil.cloneBitmapFont(FONT_NAME_COLORCHIP2, colorTipFont1);
 			BitmapFontUtil.setFixedWidth(colorTipFont2, 2.25);
 			colorTipFont2.lineHeight = 2.25;
+			
+
 
 //			_doHelper.locateDobj(
 //				_doHelper.createText("ここは、カナフォント！\n" +
@@ -144,10 +124,10 @@ package {
 			BitmapFontUtil.addBitmapCharToFont(monoSpaceFont, emoji);
 			_doHelper.locateDobj(_doHelper.createSpriteText("STAGE 1-A", monoSpaceFont.name, 300, 50, 32, 0xffffff), 60, 20);
 
-			BitmapFontUtil.traceBitmapCharInfo(subFont);
-			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
-			BitmapFontUtil.traceBitmapCharInfo(colorTipFont1);
-			BitmapFontUtil.traceBitmapCharInfo(colorTipFont2);
+//			BitmapFontUtil.traceBitmapCharInfo(subFont);
+//			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
+//			BitmapFontUtil.traceBitmapCharInfo(colorTipFont1);
+//			BitmapFontUtil.traceBitmapCharInfo(colorTipFont2);
 
 			var chara:String = [
 				"000888888000",

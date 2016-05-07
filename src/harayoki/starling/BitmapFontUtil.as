@@ -8,6 +8,7 @@ package harayoki.starling {
 	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
+	import starling.utils.AssetManager;
 	import starling.utils.StringUtil;
 
 	public class BitmapFontUtil {
@@ -329,6 +330,52 @@ package harayoki.starling {
 					_cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
 				targetFont.addChar(id, char);
 			}
+		}
+
+		/**
+		 * アトラス画像から一括でフォントを作る
+		 * @param assetManager アセットマネージャ参照
+		 * @param textureNamePrefix フォントのテクスチャ名のprefix
+		 * @param fontName 作成するフォント名
+		 * @param size 作成するフォントサイズ
+		 * @param lineHeight ラインハイト
+		 * @param smoothing スムージング設定
+		 */
+		public static function createBitmapFontFromTextures(
+			assetManager:AssetManager,
+			textureNamePrefix:String,
+			fontName:String,
+			size:Number,
+			lineHeight:Number=0,
+			smoothing:Boolean=false
+		):BitmapFont {
+			var font:BitmapFont = createEmptyFont(fontName, size, lineHeight, smoothing);
+			var textureNames:Vector.<String> = assetManager.getTextureNames(textureNamePrefix);
+			trace("textureNames", textureNames);
+			var char:BitmapChar;
+			var charNames:Vector.<String> = new <String>[];
+			for each(var textureName:String in textureNames) {
+				var texture:Texture = assetManager.getTexture(textureName);
+				var charName:String = textureName.slice(textureNamePrefix.length);
+				if(charName.length == 1) {
+					// １文字の場合はその文字として登録
+					char = createBitmapCharByTexture(charName, texture, 0, 0, texture.width);
+				} else if (charName.indexOf("0x") == 0){
+					// 0xから始まる場合は
+					char = createBitmapCharByTexture(parseInt(charName, 16), texture, 0, 0, texture.width);
+				} else {
+					// そうでない場合は直接コード番号として扱う
+					char = createBitmapCharByTexture(Number(charName), texture, 0, 0, texture.width);
+				}
+				if(font.getChar(char.charID)) {
+					trace("Error : font for "+char.charID+ " is already exist.");
+				} else {
+					charNames.push(charName);
+					addBitmapCharToFont(font, char);
+				}
+			}
+			trace("created bitmap chars :", charNames);
+			return font;
 		}
 
 		/**
