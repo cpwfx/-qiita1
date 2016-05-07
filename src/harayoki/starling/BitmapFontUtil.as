@@ -140,7 +140,7 @@ package harayoki.starling {
 		 * @param char BitmapChar
 		 * @param id idを変える場合指定
 		 * @param noCharClone idを変える場合にcharをcloneしない
-		 *        (大量に同じCharを登録する場合のメモリ節約用：誤動作の可能性あり)
+		 *        (大量に同じCharを登録する場合のメモリ節約用：登録IDとのずれが起きるので誤動作の可能性あり)
 		 */
 		public static function addBitmapCharToFont(
 			font:BitmapFont, char:BitmapChar, id:int=-1, noCharClone:Boolean= true):void {
@@ -308,7 +308,7 @@ package harayoki.starling {
 		 * @param targetCharIdlist 置き換えターゲットとなるID一覧
 		 * @param emptyTargetOnly すでに登録済みのCharは上書きしない
 		 * @param noCharClone idを変える場合にcharをcloneしない
-		 *        (大量に同じCharを登録する場合のメモリ節約用：誤動作の可能性あり)
+		 *        (大量に同じCharを登録する場合のメモリ節約用：登録IDとのずれが起きるので誤動作の可能性あり)
 		 */
 		public static function fillBitmapChars(
 			sorceBitmapChar:BitmapChar,
