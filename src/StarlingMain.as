@@ -1,5 +1,4 @@
 package {
-	import flash.display.Bitmap;
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
@@ -9,6 +8,7 @@ package {
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.text.BitmapFont;
 	import starling.textures.Texture;
@@ -115,7 +115,7 @@ package {
 				"0CCC0000CCC0",
 				"CCCC0000CCCC",
 			].join("\n");
-			
+
 			// Starling入れ込みフォントで表示
 			var defaultFont:BitmapFont = new BitmapFont();
 			_doHelper.locateDobj(
@@ -148,8 +148,13 @@ package {
 					4
 				), 110, 80 + 8);
 
-		}
+			// カラーバーの参考表示
+			var texture:Texture = _assetManager.getTexture("mx/1"); // mx/1がアトラスのパーツ名
+			var image:Image = new Image(texture.root); // アトラスパーツの元テクスチャを使う
+			image.textureSmoothing = TextureSmoothing.NONE;
+			_doHelper.locateDobj(image, 260, 60, 4.0);
 
+		}
 
 	}
 }
