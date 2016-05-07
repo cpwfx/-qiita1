@@ -123,14 +123,14 @@ package {
 				"CCCC0000CCCC",
 			].join("\n");
 
-			// キャラ表示
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					chara,
-					colorTipFont1.name,
-					80,
-					80
-				), 100, 5, 1);
+			//// キャラ表示
+			//_doHelper.locateDobj(
+			//	_doHelper.createSpriteText(
+			//		chara,
+			//		colorTipFont1.name,
+			//		80,
+			//		80
+			//	), 100, 5, 1);
 
 			// マップチップ表示
 			_doHelper.locateDobj(
