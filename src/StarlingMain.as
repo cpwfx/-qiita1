@@ -2,6 +2,8 @@ package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
+	import harayoki.starling.BitmapFontTextFieldForScore;
+
 	import harayoki.starling.BitmapFontUtil;
 	import harayoki.util.CharCodeUtil;
 
@@ -10,6 +12,7 @@ package {
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
+	import starling.events.Event;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.AssetManager;
@@ -142,7 +145,17 @@ package {
 					600
 				), 10, 110, 1);
 
-			BitmapFontUtil.traceBitmapCharInfo(mapchip);
+//			BitmapFontUtil.traceBitmapCharInfo(mapchip);
+
+			var score:BitmapFontTextFieldForScore
+				= new BitmapFontTextFieldForScore(monoSpaceFont.name, "00000000", "0");
+			_doHelper.locateDobj(score, 100, 0);
+
+			var count:int = 0;
+			addEventListener(Event.ENTER_FRAME, function(ev:*){
+				count++;
+				score.setTextWithPadding(count + "");
+			});
 
 		}
 
