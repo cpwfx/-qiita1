@@ -172,6 +172,7 @@ package harayoki.starling {
 				if(!char) {
 					// missing chara
 					image.visible = false;
+					return;
 				}
 				image.visible = true;
 				var texture:Texture = char.texture;
