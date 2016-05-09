@@ -3,9 +3,7 @@ package {
 	import flash.geom.Rectangle;
 
 	import harayoki.starling.BitmapFontTextFieldFixedLocation;
-
 	import harayoki.starling.BitmapFontUtil;
-	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
 	import misc.ViewportUtil;
@@ -21,11 +19,7 @@ package {
 	public class StarlingMain extends Sprite {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
-		private static const FONT_NAME_KANA:String = "kana_only";
 		private static const FONT_NAME_MONO:String = "mono_space";
-		private static const FONT_NAME_PADDING:String = "mono_padding";
-		private static const FONT_NAME_COLORCHIP:String = "colorchip";
-		private static const FONT_NAME_COLORCHIP2:String = "colorchip2";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -53,9 +47,6 @@ package {
 
 			_assetManager.enqueueWithName('app:/assets/atlas.png');
 			_assetManager.enqueueWithName('app:/assets/atlas.xml');
-			_assetManager.enqueueWithName('app:/assets/colorbars.xml');
-			_assetManager.enqueueWithName('app:/assets/maptip.xml');
-			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
@@ -66,98 +57,57 @@ package {
 
 		private function _start():void {
 
-			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
-			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
-			
-			// カナフォントに英字フォントを
-			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
-			
+			// アルファベットフォント(プロポーショナル)を得る
+			var font:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
+
 			// 固定幅フォントを作る
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
-			monoSpaceFont.lineHeight = 16;
-			// 半角設定
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
-			// 句読点も
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListByLetters("、。"));
+			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, font, 8);
+			monoSpaceFont.lineHeight = 8;
+			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
 
-			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
-			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
-
-			// カラーチップフォント
-			var colorTipFont1:BitmapFont =
-				BitmapFontUtil.createBitmapFontFromTextureAtlas("colorchip", _assetManager, "mx/", 2);
-
-			// マップチップフォント
-			var mapchip:BitmapFont =
-				BitmapFontUtil.createBitmapFontFromTextureAtlasAsMonoSpaceFont(
-					"mapchip", _assetManager, "map1/" , 16, 16, 16 );
-			BitmapFontUtil.setSpaceWidth(mapchip, 16);
-
-			var mapall:String = [
-				"ABCDEFGHIJKLMNOP",
-				"",
-				"01",
-			].join("\n");
-
-			var map:String = [
-				"CCCCIIIIIIIIAAAA",
-				"CCCIIIIIIAAAAMAA",
-				"CCCCIIIAAAAAAAAA",
-				"CCIIIAAAAOAAAAOA",
-				"CCIIIIAAAAAAAAAA",
-				"CCCIIIIAAAAAAAAA",
-				"CCCCCIIAAAAOAAAA",
-				"CCCCCCCIIAAAAAOA",
-				"CCCCCCCCCIIAAAAA",
-				"CCCCCCCCCCCEGGGG",
-				"CCCCCCCCCCCCLLHL",
-				"CCCCCCCCCCCCLPDP",
-				"JJJCCCCCCCCCLDDD",
-				"BBJJCCCCCCCCLDKD",
-				"BNBJJCCCCCCCLDDF",
-				"BBBJJCCCCCCCPPPP",
-			].join("\n");
-
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					mapall,
-					mapchip.name,
-					300,
-					100
-				), 10, 40, 1);
-
-			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", subFont, 16);
-			BitmapFontUtil.setSpaceWidth(tempFont, 16);
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					mapall,
-					tempFont.name,
-					300,
-					100,
-					14
-				), 10, 40 + 16, 1);
-
-
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
-					map,
-					mapchip.name,
-					300,
-					600
-				), 10, 110, 1);
-
-//			BitmapFontUtil.traceBitmapCharInfo(mapchip);
-
-			var score:BitmapFontTextFieldFixedLocation
+			// デフォルト右寄せ空白埋め
+			var score0:BitmapFontTextFieldFixedLocation
 				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000");
-			score.paddingChr = "0";
-			score.align = Align.RIGHT;
-			_doHelper.locateDobj(score, 100, 0);
+			_doHelper.locateDobj(score0, 40, 25);
+
+			// 左寄せ寄せ空白埋め
+			var score1:BitmapFontTextFieldFixedLocation
+				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000", 0xccffff);
+			score1.align = Align.LEFT;
+			_doHelper.locateDobj(score1, 40, 50);
+
+			// 右寄せ0埋め
+			var score2:BitmapFontTextFieldFixedLocation
+				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000", 0xffffcc);
+			score2.paddingChr = "0";
+			score2.align = Align.RIGHT;
+			_doHelper.locateDobj(score2, 40, 75);
+
+			// 左寄せ0埋め
+			var score3:BitmapFontTextFieldFixedLocation
+				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000", 0xffccff);
+			score3.paddingChr = "0";
+			score3.align = Align.LEFT;
+			_doHelper.locateDobj(score3, 40, 100);
+
+			// 数字以外を含む
+			var time:BitmapFontTextFieldFixedLocation
+				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00:00", 0xcccccc);
+			time.paddingChr = "0";
+			time.align = Align.LEFT;
+			_doHelper.locateDobj(time, 40, 125);
 
 			var count:int = 0;
 			addEventListener(Event.ENTER_FRAME, function(ev:*){
-				count++;
-				score.setTextWithPadding(count + "");
+				count = (count + 1) % 100000000;
+				var text = (""  + count);
+				score0.setTextWithPadding(text);
+				score1.setTextWithPadding(text);
+				score2.setTextWithPadding(text);
+				score3.setTextWithPadding(text);
+
+				text = ("00" + (count % 100)).slice(-2);
+				time.setText(text + ":" + text);
 			});
 
 		}
