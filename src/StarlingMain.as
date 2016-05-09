@@ -2,7 +2,7 @@ package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
-	import harayoki.starling.BitmapFontTextFieldForScore;
+	import harayoki.starling.BitmapFontTextFieldFixedLocation;
 
 	import harayoki.starling.BitmapFontUtil;
 	import harayoki.util.CharCodeUtil;
@@ -15,6 +15,7 @@ package {
 	import starling.events.Event;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
@@ -147,8 +148,10 @@ package {
 
 //			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
-			var score:BitmapFontTextFieldForScore
-				= new BitmapFontTextFieldForScore(monoSpaceFont.name, "00000000", "0");
+			var score:BitmapFontTextFieldFixedLocation
+				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000");
+			score.paddingChr = "0";
+			score.align = Align.RIGHT;
 			_doHelper.locateDobj(score, 100, 0);
 
 			var count:int = 0;

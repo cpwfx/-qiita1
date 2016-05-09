@@ -10,7 +10,7 @@ package harayoki.starling {
 	import starling.textures.Texture;
 	import starling.utils.Align;
 
-	public class BitmapFontTextFieldForScore extends Sprite{
+	public class BitmapFontTextFieldFixedLocation extends Sprite{
 
 		private static const TEXT_BOX_WIDTH:int = 99999; // 十分に大きく
 		private static const TEXT_BOX_HEIGHT:int = 99999; // 十分に大きく
@@ -32,8 +32,8 @@ package harayoki.starling {
 		 * @param size
 		 * @param color
 		 */
-		public function BitmapFontTextFieldForScore(
-			fontName:String, formatString:String, paddingChar:String=" ", color:Number=0xffffff, size:Number = 0) {
+		public function BitmapFontTextFieldFixedLocation(
+			fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0) {
 			_font = TextField.getBitmapFont(fontName);
 			if(!_font) {
 				throw(new Error("invalid font name : " + fontName));
@@ -41,10 +41,46 @@ package harayoki.starling {
 			_formatString = formatString;
 			_textFormat = new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
 			_images = new <Image>[];
-			setPaddingChr(paddingChar);
+			_setPaddingStr(" ");
 			_setup();
 		}
 
+		// 初期テキストレイアウト
+		private function _setup():void {
+			var sp:Sprite = _font.createSprite(TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT, _formatString, _textFormat);
+			_locateImages(sp, _images); // ここで中身だけ取り出して
+			sp.dispose(); //すぐ廃棄...無駄があるが、BitmapFontTextFieldForScore自体がDisplayObjectである方が使いやすい
+		}
+
+		// 文字スプライトを自身の中に配置し直す
+		private function _locateImages(sp:Sprite, images:Vector.<Image>):void {
+			while(sp.numChildren) {
+				var dobj:DisplayObject = sp.getChildAt(0);
+				var image:Image = dobj as Image;
+				// trace(image.width);
+				if(image) {
+					image.textureSmoothing = _font.smoothing;
+					images.push(image);
+					addChild(image);
+				} else {
+					// imageしかないはず
+					trace("Unexpected display object found.")
+					sp.removeChild(dobj);
+				}
+			}
+			// images.sort(_sortFunc); //offsetYがある場合におかしくなるので利用しない事にする
+		}
+
+		// 上から、左からの優先順位でソートし直す
+		private function _sortFunc(a:DisplayObject, b:DisplayObject):int {
+			if(a.y > b.y) return 1;
+			if(a.y < b.y) return -1;
+			return a.x - b.x;
+		}
+
+		/**
+		 * 廃棄処理
+		 */
 		public override function dispose():void {
 			_textFormat = null;
 			_font = null;
@@ -64,18 +100,32 @@ package harayoki.starling {
 		}
 
 		/**
-		 * パディングに使う文字を指定する
+		 * パディング文字を指定する
 		 * @param paddingChr パディング１文字
 		 */
-		public function setPaddingChr(paddingChr:String=" ") :void {
-			paddingChr += " "; // 0文字対策
-			paddingChr = paddingChr.charAt(0); // 最初の文字だけ有効
+		public function set paddingChr(value:String) :void {
+			_setPaddingStr(value);
+		}
+
+		private function _setPaddingStr(value:String=" "):void {
+			value += " "; // 0文字対策
+			value = value.charAt(0); // 最初の文字だけ有効
 			_paddingStr = "";
 			var i:int = _formatString.length;
 			while(i--) {
-				// _paddingStrはpaddingChrが並んだもの
-				_paddingStr += paddingChr;
+				// _paddingStrはpaddingChrが並んだもの なんども使うので先に作っておく
+				_paddingStr += value;
 			}
+		}
+
+		/**
+		 * パディング文字を得る
+		 */
+		public function get paddingChr():String {
+			if(!_paddingStr || _paddingStr.length == 0) {
+				_setPaddingStr(" ");
+			}
+			return _paddingStr;
 		}
 
 		/**
@@ -85,6 +135,9 @@ package harayoki.starling {
 			return _text;
 		}
 
+		/**
+		 * テキストを隙間を自動で埋める処理とともに設定する
+		 */
 		public function setTextWithPadding(text:String):void {
 			var len:int = _formatString.length;
 			if(align == Align.RIGHT) {
@@ -97,6 +150,9 @@ package harayoki.starling {
 			setText(text);
 		}
 
+		/**
+		 * テキストを直接指定する
+		 */
 		public function setText(text:String) {
 			if (_text == text) {
 				return;
@@ -106,6 +162,7 @@ package harayoki.starling {
 			_updateText();
 		}
 
+		// 表示文字のアップデート
 		private function _updateText():void {
 			for(var i:int=0; i<_images.length; i++) {
 				// trace(_text.charAt(i));
@@ -129,38 +186,6 @@ package harayoki.starling {
 			}
 		}
 
-		// 初期テキストレイアウト
-		private function _setup():void {
-			var sp:Sprite = _font.createSprite(TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT, _formatString, _textFormat);
-			_locateImages(sp, _images); // ここで中身だけ取り出して
-			sp.dispose(); //すぐ廃棄...無駄があるが、BitmapFontTextFieldForScore自体がDisplayObjectである方が使いやすい
-		}
-
-		// 文字スプライトを自身の中に配置し直す
-		private function _locateImages(sp:Sprite, images:Vector.<Image>):void {
-			while(sp.numChildren) {
-				var dobj:DisplayObject = sp.getChildAt(0);
-				var image:Image = dobj as Image;
-				trace(image.width);
-				if(image) {
-					image.textureSmoothing = _font.smoothing;
-					images.push(image);
-					addChild(image);
-				} else {
-					// imageしかないはず
-					trace("Unexpected display object found.")
-					sp.removeChild(dobj);
-				}
-			}
-			// images.sort(_sortFunc); //offsetYがある場合におかしくなるので利用しない事にする
-		}
-
-		// 上から、左からの優先順位でソートし直す
-		private function _sortFunc(a:DisplayObject, b:DisplayObject):int {
-			if(a.y > b.y) return 1;
-			if(a.y < b.y) return -1;
-			return a.x - b.x;
-		}
 
 	}
 }
