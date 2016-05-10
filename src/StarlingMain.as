@@ -59,7 +59,7 @@ package {
 		}
 
 		private function _start():void {
-			_showTexts(false, false);
+			_showTexts(true, false);
 		}
 
 		private function _showTexts(showInfoText:Boolean, useTexField:Boolean):void {
