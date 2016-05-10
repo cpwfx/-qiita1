@@ -4,6 +4,7 @@ package {
 
 	import harayoki.starling.BitmapFontTextFieldFixedLocation;
 	import harayoki.starling.BitmapFontUtil;
+	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
 	import misc.ViewportUtil;
@@ -20,6 +21,7 @@ package {
 
 		private static const FONT_NAME_ALPHABET:String = "alphabet";
 		private static const FONT_NAME_MONO:String = "mono_space";
+		private static const FONT_NAME_KANA:String = "kana_only";
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		public static function start(nativeStage:Stage):void {
@@ -48,6 +50,7 @@ package {
 			_assetManager.enqueueWithName('app:/assets/atlas.png');
 			_assetManager.enqueueWithName('app:/assets/atlas.xml');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
+			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
 					_start();
@@ -57,45 +60,54 @@ package {
 
 		private function _start():void {
 
+			// カナフォントを得る
+			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
 			// アルファベットフォント(プロポーショナル)を得る
-			var font:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
+			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
+			// カナフォントに英字フォントを合体
+			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
 
 			// 固定幅フォントを作る
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, font, 8);
+			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
 			monoSpaceFont.lineHeight = 8;
 			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
+			// 半角設定
+			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
 
 			// デフォルト右寄せ空白埋め
 			var score0:BitmapFontTextFieldFixedLocation
-				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000");
-			_doHelper.locateDobj(score0, 40, 25);
+				= new BitmapFontTextFieldFixedLocation(baseFont.name, "00000000");
+			_doHelper.locateDobj(score0, 160, 25);
+			_doHelper.locateDobj(_doHelper.createSpriteText("デフォルト ヒダリよせ", baseFont.name, 200), 20, 25);
 
 			// 左寄せ寄せ空白埋め
 			var score1:BitmapFontTextFieldFixedLocation
-				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000", 0xccffff);
-			score1.align = Align.LEFT;
-			_doHelper.locateDobj(score1, 40, 50);
+				= new BitmapFontTextFieldFixedLocation(baseFont.name, "00000000", 0xccffff);
+			score1.align = Align.RIGHT;
+			_doHelper.locateDobj(score1, 160, 50);
+			_doHelper.locateDobj(_doHelper.createSpriteText("ミギよせ", baseFont.name, 200), 20, 50);
 
 			// 右寄せ0埋め
 			var score2:BitmapFontTextFieldFixedLocation
-				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000", 0xffffcc);
+				= new BitmapFontTextFieldFixedLocation(baseFont.name, "00000000", 0xffffcc);
 			score2.paddingChr = "0";
 			score2.align = Align.RIGHT;
-			_doHelper.locateDobj(score2, 40, 75);
+			_doHelper.locateDobj(score2, 160, 75);
+			_doHelper.locateDobj(_doHelper.createSpriteText("ミギよせ&ゼロうめ", baseFont.name, 200), 20, 75);
 
 			// 左寄せ0埋め
 			var score3:BitmapFontTextFieldFixedLocation
-				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00000000", 0xffccff);
-			score3.paddingChr = "0";
+				= new BitmapFontTextFieldFixedLocation(baseFont.name, "00000000", 0xffccff);
+			score3.paddingChr = "*";
 			score3.align = Align.LEFT;
-			_doHelper.locateDobj(score3, 40, 100);
+			_doHelper.locateDobj(score3, 160, 100);
+			_doHelper.locateDobj(_doHelper.createSpriteText("ヒダリよせ&ゼロうめ", baseFont.name, 200), 20, 100);
 
 			// 数字以外を含む
 			var time:BitmapFontTextFieldFixedLocation
-				= new BitmapFontTextFieldFixedLocation(monoSpaceFont.name, "00:00", 0xcccccc);
-			time.paddingChr = "0";
-			time.align = Align.LEFT;
-			_doHelper.locateDobj(time, 40, 125);
+				= new BitmapFontTextFieldFixedLocation(baseFont.name, "00:00", 0xcccccc);
+			_doHelper.locateDobj(time, 160, 125);
+			_doHelper.locateDobj(_doHelper.createSpriteText("スウジいがいをふくむ", baseFont.name, 200), 20, 125);
 
 			var count:int = 0;
 			addEventListener(Event.ENTER_FRAME, function(ev:*){
