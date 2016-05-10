@@ -12,6 +12,12 @@ package harayoki.starling {
 
 	public class BitmapFontTextFieldFixedLocation extends Sprite{
 
+		/**
+		 * インスタンスを生成する
+		 * ※ テストに使うためのメソッドで、特にこのメソッドを経由してインスタンス化する必要は無い
+		 * @param forTest パフォーマンス比較テスト用に通常のテキストフィールドを使うインスタンスを返すか
+		 *         他パラメータは通常のコンストラクタ利用時と同じ
+		 */
 		public static function createInstance(
 			forTest:Boolean, fontName:String, formatString:String, color:Number=0xffffff,
 			size:Number=0, width:int=0, height:int=0
@@ -31,15 +37,16 @@ package harayoki.starling {
 		private var _text:String = "";
 		private var _images:Vector.<Image>;
 
+		// テキストのAlign設定 "right" or "left"
 		public var align:String = "left";
 
 		/**
-		 *
-		 * @param fontName
-		 * @param formatString
-		 * @pram paddingChar
-		 * @param size
-		 * @param color
+		 * @param fontName フォント名
+		 * @param formatString  "00000"などテキストのレイアウト決定に使う文字の並び 実際に表示はされない
+		 * @param size フォントサイズ(デフォルトフォントのデフォルトサイズ)
+		 * @param color フォントカラー
+		 * @param width テキストBOXの横幅 指定し無いと十分な大きさが取られる（よって、自動改行されない）
+		 * @param height テキストBOXの縦幅
 		 */
 		public function BitmapFontTextFieldFixedLocation(
 			fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0, width:int=0, height:int=0) {
@@ -57,6 +64,8 @@ package harayoki.starling {
 				height <=0 ? TEXT_BOX_HEIGHT : height,
 				_formatString,
 				textFormat);
+
+			setText("");
 		}
 
 		// 初期テキストレイアウト
@@ -210,7 +219,7 @@ import starling.text.TextField;
 import starling.text.TextFormat;
 
 /**
- * 比較用に通常のTextFieldをあつかうclass
+ * パフォーマンス比較テスト用に通常のTextFieldをあつかうclass
  */
 internal class TestClass extends BitmapFontTextFieldFixedLocation {
 
