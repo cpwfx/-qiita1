@@ -12,12 +12,18 @@ package harayoki.starling {
 
 	public class BitmapFontTextFieldFixedLocation extends Sprite{
 
+		public static function createInstance(forTest:Boolean, fontName:String, formatString:String, color:Number=0xffffff, size:Number=0):BitmapFontTextFieldFixedLocation {
+			if(forTest) {
+				return new TestClass(fontName, formatString, color, size);
+			}
+			return new BitmapFontTextFieldFixedLocation(fontName, formatString, color, size);
+		}
+
 		private static const TEXT_BOX_WIDTH:int = 99999; // 十分に大きく
 		private static const TEXT_BOX_HEIGHT:int = 99999; // 十分に大きく
 
 		private var _font:BitmapFont;
 		private var _formatString:String;
-		private var _textFormat:TextFormat;
 		private var _paddingStr:String;
 		private var _text:String = "";
 		private var _images:Vector.<Image>;
@@ -39,15 +45,15 @@ package harayoki.starling {
 				throw(new Error("invalid font name : " + fontName));
 			}
 			_formatString = formatString;
-			_textFormat = new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
+			var textFormat:TextFormat = new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
 			_images = new <Image>[];
 			_setPaddingStr(" ");
-			_setup();
+			_setup(TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT, _formatString, textFormat);
 		}
 
 		// 初期テキストレイアウト
-		private function _setup():void {
-			var sp:Sprite = _font.createSprite(TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT, _formatString, _textFormat);
+		protected function _setup(w:int, h:int, text:String, format:TextFormat):void {
+			var sp:Sprite = _font.createSprite(w, h, text, format);
 			_locateImages(sp, _images); // ここで中身だけ取り出して
 			sp.dispose(); //すぐ廃棄...無駄があるが、BitmapFontTextFieldForScore自体がDisplayObjectである方が使いやすい
 		}
@@ -82,7 +88,6 @@ package harayoki.starling {
 		 * 廃棄処理
 		 */
 		public override function dispose():void {
-			_textFormat = null;
 			_font = null;
 			_removeImages();
 			_images = null;
@@ -159,11 +164,11 @@ package harayoki.starling {
 			}
 			// trace(text);
 			_text = text;
-			_updateText();
+			_updateText(_text);
 		}
 
 		// 表示文字のアップデート
-		private function _updateText():void {
+		protected function _updateText(text:String):void {
 			for(var i:int=0; i<_images.length; i++) {
 				// trace(_text.charAt(i));
 				var id:int = _text.charCodeAt(i);
@@ -188,5 +193,31 @@ package harayoki.starling {
 		}
 
 
+	}
+}
+
+import harayoki.starling.BitmapFontTextFieldFixedLocation;
+
+import starling.text.TextField;
+import starling.text.TextFormat;
+
+/**
+ * 比較用に通常のTextFieldをあつかうclass
+ */
+internal class TestClass extends BitmapFontTextFieldFixedLocation {
+
+	private var _tfForTest:TextField;
+
+	public function TestClass(fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0) {
+		super(fontName, formatString, color, size);
+	}
+
+	protected override function _setup(w:int, h:int, text:String, format:TextFormat):void {
+		_tfForTest = new TextField(w, h, text, format);
+		addChild(_tfForTest);
+	}
+
+	protected override function _updateText(text:String):void {
+		_tfForTest.text = text;
 	}
 }
