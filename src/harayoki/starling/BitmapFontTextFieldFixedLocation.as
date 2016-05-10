@@ -12,11 +12,14 @@ package harayoki.starling {
 
 	public class BitmapFontTextFieldFixedLocation extends Sprite{
 
-		public static function createInstance(forTest:Boolean, fontName:String, formatString:String, color:Number=0xffffff, size:Number=0):BitmapFontTextFieldFixedLocation {
+		public static function createInstance(
+			forTest:Boolean, fontName:String, formatString:String, color:Number=0xffffff,
+			size:Number=0, width:int=0, height:int=0
+		):BitmapFontTextFieldFixedLocation {
 			if(forTest) {
-				return new TestClass(fontName, formatString, color, size);
+				return new TestClass(fontName, formatString, color, size, width, height);
 			}
-			return new BitmapFontTextFieldFixedLocation(fontName, formatString, color, size);
+			return new BitmapFontTextFieldFixedLocation(fontName, formatString, color, size, width, height);
 		}
 
 		private static const TEXT_BOX_WIDTH:int = 99999; // 十分に大きく
@@ -39,16 +42,21 @@ package harayoki.starling {
 		 * @param color
 		 */
 		public function BitmapFontTextFieldFixedLocation(
-			fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0) {
+			fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0, width:int=0, height:int=0) {
 			_font = TextField.getBitmapFont(fontName);
 			if(!_font) {
 				throw(new Error("invalid font name : " + fontName));
 			}
 			_formatString = formatString;
-			var textFormat:TextFormat = new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
+			var textFormat:TextFormat =
+				new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
 			_images = new <Image>[];
 			_setPaddingStr(" ");
-			_setup(TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT, _formatString, textFormat);
+			_setup(
+				width <= 0 ? TEXT_BOX_WIDTH : width,
+				height <=0 ? TEXT_BOX_HEIGHT : height,
+				_formatString,
+				textFormat);
 		}
 
 		// 初期テキストレイアウト
@@ -208,8 +216,11 @@ internal class TestClass extends BitmapFontTextFieldFixedLocation {
 
 	private var _tfForTest:TextField;
 
-	public function TestClass(fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0) {
-		super(fontName, formatString, color, size);
+	public function TestClass(
+		fontName:String, formatString:String, color:Number=0xffffff,
+		size:Number = 0, width:int=0, height:int=0
+	) {
+		super(fontName, formatString, color, size, width, height);
 	}
 
 	protected override function _setup(w:int, h:int, text:String, format:TextFormat):void {
