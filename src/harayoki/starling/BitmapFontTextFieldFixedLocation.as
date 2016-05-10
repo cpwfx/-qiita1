@@ -22,7 +22,7 @@ package harayoki.starling {
 		private var _text:String = "";
 		private var _images:Vector.<Image>;
 
-		public var align:String = "right";
+		public var align:String = "left";
 
 		/**
 		 *
