@@ -18,6 +18,7 @@
           <map>
             <entry key="compiler.locale" value="ja_JP" />
           </map>
+          <option name="additionalOptions" value="-advanced-telemetry" />
         </compiler-options>
         <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app.xml" package-file-name="qiita1" />
         <packaging-android />
