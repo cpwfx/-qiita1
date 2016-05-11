@@ -10,6 +10,7 @@ package {
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
+	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.AssetManager;
@@ -46,7 +47,8 @@ package {
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.png');
+			_assetManager.enqueueWithName('app:/assets/atlas.png');
+			_assetManager.enqueueWithName('app:/assets/atlas.xml');
 			_assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
@@ -58,6 +60,11 @@ package {
 		private function _start():void {
 
 			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
+
+			//余白多めのドット文字を取り込む
+			var dot:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("・", _assetManager.getTexture("dot12x12"), -2, 5, 12);
+			BitmapFontUtil.addBitmapCharToFont(baseFont, dot, dot.charID);
+			BitmapFontUtil.traceBitmapCharInfo(baseFont);
 
 			// 固定幅フォントを作る
 			var monoSpaceFont1:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO1, baseFont, 16);
@@ -81,19 +88,19 @@ package {
 			BitmapFontUtil.setTabWidth(spacesFont, 48);
 
 			_doHelper.locateDobj(
-				_doHelper.createSpriteText("これは、プロポーショナル！なフォントです。", baseFont.name, 320),
+				_doHelper.createSpriteText("これ・は、プロポーショナル！なフォントです。", baseFont.name, 320),
 				10, 40);
 
 			_doHelper.locateDobj(
-				_doHelper.createSpriteText("これは、おなじハバ！のフォントです。", monoSpaceFont1.name, 320),
+				_doHelper.createSpriteText("これ・は、おなじハバ！のフォントです。", monoSpaceFont1.name, 320),
 				10, 60);
 
 			_doHelper.locateDobj(
-				_doHelper.createSpriteText("これは、いちぶハンカク！のフォントです。", monoSpaceFont2.name, 320),
+				_doHelper.createSpriteText("これ・は、いちぶハンカク！のフォントです。", monoSpaceFont2.name, 320),
 				10, 80);
 
 			_doHelper.locateDobj(
-				_doHelper.createSpriteText("これは、イチブだけヨハクオオメ！\nの、フォントです。", yohakuFont.name, 320),
+				_doHelper.createSpriteText("これ・は、イチブだけヨハクオオメ！\nの、フォントです。", yohakuFont.name, 320),
 				10, 100);
 
 			_doHelper.locateDobj(
