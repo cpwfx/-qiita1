@@ -131,7 +131,7 @@ package harayoki.starling {
 			} else {
 				id = (charCodeOrCharStr+"").charCodeAt(0);
 			}
-			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.width : width);
+			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.frameWidth : width);
 			return char;
 		}
 
@@ -204,7 +204,7 @@ package harayoki.starling {
 				xAdvance = xAdvanceOffset;
 			}
 			if (centerizeXOffset) {
-				xOffset = Math.max(0, (xAdvance - org.width) * 0.5);
+				xOffset = Math.max(0, (xAdvance - org.texture.frameWidth) * 0.5);
 			} else {
 				xOffset = org.xOffset + xOffset;
 			}
@@ -429,13 +429,13 @@ package harayoki.starling {
 				var charName:String = textureName.slice(textureNamePrefix.length);
 				var offsetX:Number = 0;
 				if(width > 0) {
-					offsetX = (width - texture.width) * 0.5;
+					offsetX = (width - texture.frameWidth) * 0.5;
 				}
 				var offsetY:Number = 0;
 				if(height > 0) {
 					offsetY = (height - texture.height) * 0.5;
 				}
-				var advanceX = width <=0 ? texture.width + paddingX : width + paddingX;
+				var advanceX = width <=0 ? texture.frameWidth + paddingX : width + paddingX;
 				if(charName.length == 1) {
 					// １文字の場合はその文字として登録
 					char = createBitmapCharByTexture(charName, texture, offsetX, offsetY, advanceX);
@@ -476,7 +476,7 @@ package harayoki.starling {
 			function getTextureInfo(texture:Texture):String {
 				if(texture) {
 					return "(" + texture + " " + [
-						"size:"+texture.width+"*"+texture.height,
+						"size:"+texture.frameWidth+"*"+texture.frameHeight,
 						"scale:"+texture.scale
 					].join(" ") + ")";
 				} else {
