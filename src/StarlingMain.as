@@ -82,7 +82,7 @@ package {
 			trace(dotChar.xOffset, dotChar.yOffset, dotChar.width);
 			BitmapFontUtil.addBitmapCharToFont(baseFont, dotChar);
 
-			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
+			BitmapFontUtil.traceBitmapCharInfo(baseFont);
 
 			// デフォルト右寄せ空白埋め
 			var score0:BitmapFontTextFieldFixedLocation
