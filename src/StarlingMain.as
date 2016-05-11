@@ -12,6 +12,7 @@ package {
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.Align;
@@ -73,9 +74,15 @@ package {
 			// 固定幅フォントを作る
 			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
 			monoSpaceFont.lineHeight = 8;
-			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
 			// 半角設定
 			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
+
+			// 余白付きドットを合成
+			var dotChar:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("・", _assetManager.getTexture("dot16x16"), 0, 0, 16);
+			trace(dotChar.xOffset, dotChar.yOffset, dotChar.width);
+			BitmapFontUtil.addBitmapCharToFont(baseFont, dotChar);
+
+			BitmapFontUtil.traceBitmapCharInfo(monoSpaceFont);
 
 			// デフォルト右寄せ空白埋め
 			var score0:BitmapFontTextFieldFixedLocation
@@ -118,7 +125,7 @@ package {
 				_doHelper.createSpriteText("スウジいがいをふくむ", baseFont.name, 200, 100, 0, 0x999999), 20, 125);
 
 			// メッセージ表示処理
-			var message:String = "じゅげむ　じゅげむ　ごこうのすりきれ" +
+			var message:String = "・じゅげむ　じゅげむ　ごこうのすりきれ" +
 				"かいじゃりすいぎょの　すいぎょうまつ" +
 				"うんらいまつ　ふうらいまつ" +
 				"くうねるところにすむところ" +
@@ -128,7 +135,7 @@ package {
 				"ぐーりんだいのぽんぽこぴーの" +
 				"ぽんぽこなーの" +
 				"ちょうきゅうめいのちょうすけ" +
-				"　　　　　　　　　　　　　　";
+				"・・・・・　　　　　　　　　";
 
 			var messageBox:BitmapFontTextFieldFixedLocation =
 				BitmapFontTextFieldFixedLocation.createInstance(useTexField, baseFont.name,
