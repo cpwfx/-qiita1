@@ -476,7 +476,8 @@ package harayoki.starling {
 			function getTextureInfo(texture:Texture):String {
 				if(texture) {
 					return "(" + texture + " " + [
-						"size:"+texture.frameWidth+"*"+texture.frameHeight,
+						"size:"+texture.width+"*"+texture.height,
+						"framesize:"+texture.frameWidth+"*"+texture.frameHeight,
 						"scale:"+texture.scale
 					].join(" ") + ")";
 				} else {
