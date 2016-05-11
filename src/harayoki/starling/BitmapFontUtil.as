@@ -4,11 +4,11 @@ package harayoki.starling {
 	import harayoki.util.CharCodeUtil;
 
 	import starling.text.BitmapChar;
-	import starling.text.BitmapChar;
-	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.textures.Texture;
+	import starling.textures.TextureSmoothing;
+	import starling.utils.AssetManager;
 	import starling.utils.StringUtil;
 
 	public class BitmapFontUtil {
@@ -16,7 +16,7 @@ package harayoki.starling {
 		private static var _idlist:Vector.<int> = new <int>[];
 		private static var _fontxml:XML = <font>
 			<info face="dummy" size="1" smooth="1"/>
-			<common lineHeight="1" scaleW="1" scaleH="1" pages="1"/>
+			<common lineHeight="1" scaleW="1" scaleH="1" pages="1" base="1"/>
 			<pages>
 				<page id="0" file="dummy.png"/>
 			</pages>
@@ -25,7 +25,8 @@ package harayoki.starling {
 			<kernings count="0">
 			</kernings>
 		</font>;
-		private static var NULL_REGION:Rectangle = new Rectangle(0,0,0,0);
+		private static var _dummyTexture:Texture;
+		private static const NULL_REGION:Rectangle = new Rectangle(0,0,0,0);
 
 		/**
 		 * BitmapFontをコピーする
@@ -68,11 +69,12 @@ package harayoki.starling {
 			}
 
 			_fontxml.info.@face = StringUtil.clean(newFontName);
-			_fontxml.info.@size = isNaN(size) || size <= 0 ? orgFont.size : size;
-			var fnt:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
-			fnt.lineHeight = orgFont.lineHeight;
-			fnt.baseline = orgFont.baseline;
-			fnt.smoothing = orgFont.smoothing;
+			_fontxml.info.@size = (isNaN(size) || size <= 0) ? "" + orgFont.size : "" + size;
+			_fontxml.info.@base = _fontxml.info.@size;
+			var font:BitmapFont = new BitmapFont(orgFont.texture, _fontxml);
+			font.lineHeight = orgFont.lineHeight;
+			font.baseline = orgFont.baseline;
+			font.smoothing = orgFont.smoothing;
 
 			if (!charIdlist) {
 				_idlist.length = 0;
@@ -83,11 +85,73 @@ package harayoki.starling {
 				var char:BitmapChar = _cloneBitmapChar(
 					orgFont.getChar(id), -1, xOffset, yOffset, xAdvanceOffset, charIdlist,
 					fixedXAdvance, fixedXAdvanceCenterize);
-				fnt.addChar(id, char);
+				font.addChar(id, char);
 			}
-			TextField.registerBitmapFont(fnt);
+			TextField.registerBitmapFont(font);
 
-			return fnt;
+			return font;
+		}
+
+		/**
+		 * 空のBitmapFontを直接作る
+		 */
+		public static function createEmptyFont(
+			fontName:String,
+			size:Number,
+			lineHeight:Number=0,
+			smoothing:Boolean=false
+		):BitmapFont {
+			_fontxml.info.@face = StringUtil.clean(fontName);
+			_fontxml.info.@size = size + "";
+			_fontxml.info.@base = _fontxml.info.@size;
+			if(!_dummyTexture) {
+				_dummyTexture = Texture.empty(1,1,true,false,false,1.0);
+			}
+			var font:BitmapFont = new BitmapFont(_dummyTexture, _fontxml);
+			font.lineHeight = isNaN(lineHeight) || lineHeight <= 0 ? size : lineHeight;
+			font.smoothing = smoothing ? TextureSmoothing.BILINEAR : TextureSmoothing.NONE;
+			TextField.registerBitmapFont(font);
+			return font;
+		}
+
+		/**
+		 * テクスチャから直接BitmapCharを作る
+		 * @param charCodeOrCharStr 文字コードもしくは1文字
+		 * @param texture テクスチャ（サブテクスチャ推奨)
+		 * @param xOffset 任意
+		 * @param yOffset 任意
+		 * @param width 任意、デフォルトでテクスチャの横幅
+		 */
+		public static function createBitmapCharByTexture(
+			charCodeOrCharStr:Object, texture:Texture, xOffset:Number=0, yOffset:Number=0, width:Number = -1
+		):BitmapChar {
+			var id:int;
+			if(charCodeOrCharStr is int) {
+				id = charCodeOrCharStr as int;
+			} else {
+				id = (charCodeOrCharStr+"").charCodeAt(0);
+			}
+			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.frameWidth : width);
+			return char;
+		}
+
+		/**
+		 * BitmapCharをフォントに登録する
+		 * @param font 対象フォント
+		 * @param char BitmapChar
+		 * @param id idを変える場合指定
+		 * @param noCharClone idを変える場合にcharをcloneしない
+		 *        (大量に同じCharを登録する場合のメモリ節約用：登録IDとのずれが起きるので誤動作の可能性あり)
+		 */
+		public static function addBitmapCharToFont(
+			font:BitmapFont, char:BitmapChar, id:int=-1, noCharClone:Boolean= true):void {
+			if(!font) {
+				return;
+			}
+			if(id != -1 && id != char.charID && !noCharClone) {
+				char = _cloneBitmapChar(char, id);
+			}
+			font.addChar(char.charID, char);
 		}
 
 		/**
@@ -140,7 +204,7 @@ package harayoki.starling {
 				xAdvance = xAdvanceOffset;
 			}
 			if (centerizeXOffset) {
-				xOffset = Math.max(0, (xAdvance - org.width) * 0.5);
+				xOffset = Math.max(0, (xAdvance - org.texture.frameWidth) * 0.5);
 			} else {
 				xOffset = org.xOffset + xOffset;
 			}
@@ -240,16 +304,19 @@ package harayoki.starling {
 
 		/**
 		 * あるBitmapCharでフォント文字を埋める
-		 * @param sorceBitmapChar
-		 * @param targetFont
-		 * @param targetCharIdlist
-		 * @param emptyTargetOnly
+		 * @param sorceBitmapChar コピー元BitmapChar
+		 * @param targetFont 対象フォント
+		 * @param targetCharIdlist 置き換えターゲットとなるID一覧
+		 * @param emptyTargetOnly すでに登録済みのCharは上書きしない
+		 * @param noCharClone idを変える場合にcharをcloneしない
+		 *        (大量に同じCharを登録する場合のメモリ節約用：登録IDとのずれが起きるので誤動作の可能性あり)
 		 */
 		public static function fillBitmapChars(
 			sorceBitmapChar:BitmapChar,
 			targetFont:BitmapFont,
 			targetCharIdlist:Vector.<int>,
-			emptyTargetOnly:Boolean = false
+			emptyTargetOnly:Boolean = false,
+			noCharClone:Boolean = true
 		):void {
 			if(!targetFont || !sorceBitmapChar) {
 				return;
@@ -257,12 +324,137 @@ package harayoki.starling {
 			for each(var id:int in targetCharIdlist) {
 				if(emptyTargetOnly && targetFont.getChar(id)) {
 					// 埋める先がからでないのでskip
-					trace('emptyTargetOnly', id);
 					continue;
 				}
-				var char:BitmapChar = _cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
+				var char:BitmapChar = noCharClone ? sorceBitmapChar :
+					_cloneBitmapChar(sorceBitmapChar, id, 0, 0, 0, null, false, false);
 				targetFont.addChar(id, char);
 			}
+		}
+
+		/**
+		 * アトラス画像から一括でフォントを作る(真ん中よせ)
+		 * @param fontName 作成するフォント名
+		 * @param assetManager アセットマネージャ参照
+		 * @param textureNamePrefix フォントのテクスチャ名のprefix
+		 * @param size 作成するフォントサイズ
+		 * @param width 1文字の横幅(真ん中よせ計算に使われる)
+		 * @param lineHeight ラインハイト
+		 * @param paddingX 文字間隔
+		 * @param smoothing スムージング設定
+		 */
+		public static function createBitmapFontFromTextureAtlasAsMonoSpaceFont(
+			fontName:String,
+			assetManager:AssetManager,
+			textureNamePrefix:String,
+			size:Number,
+			width:Number,
+			lineHeight:Number=0,
+			paddingX:Number=0,
+			smoothing:Boolean=false
+		):BitmapFont{
+			return createBitmapFontFromTextureAtlasDetailed(
+				fontName,
+				assetManager,
+				textureNamePrefix,
+				size,
+				lineHeight,
+				paddingX,
+				smoothing,
+				width,
+				size
+			);
+		}
+
+		/**
+		 * アトラス画像から一括でフォントを作る
+		 * @param fontName 作成するフォント名
+		 * @param assetManager アセットマネージャ参照
+		 * @param textureNamePrefix フォントのテクスチャ名のprefix
+		 * @param size 作成するフォントサイズ
+		 * @param lineHeight ラインハイト
+		 * @param paddingX 文字間隔
+		 * @param smoothing スムージング設定
+		 */
+		public static function createBitmapFontFromTextureAtlas(
+			fontName:String,
+			assetManager:AssetManager,
+			textureNamePrefix:String,
+			size:Number,
+			lineHeight:Number=0,
+			paddingX:Number=0,
+			smoothing:Boolean=false
+		):BitmapFont{
+			return createBitmapFontFromTextureAtlasDetailed(
+				fontName,
+				assetManager,
+				textureNamePrefix,
+				size,
+				lineHeight,
+				paddingX,
+				smoothing
+			);
+		}
+
+		/**
+		 * アトラス画像から一括でフォントを作る(詳細指定)
+		 * @param fontName 作成するフォント名
+		 * @param assetManager アセットマネージャ参照
+		 * @param textureNamePrefix フォントのテクスチャ名のprefix
+		 * @param size 作成するフォントサイズ
+		 * @param lineHeight ラインハイト
+		 * @param paddingX 文字間隔
+		 * @param smoothing スムージング設定
+		 * @param width 横サイズ 真ん中よせ計算に使われる
+		 * @param height 縦サイズ 真ん中よせ計算に使われる
+		 */
+		public static function createBitmapFontFromTextureAtlasDetailed(
+			fontName:String,
+			assetManager:AssetManager,
+			textureNamePrefix:String,
+			size:Number,
+			lineHeight:Number=0,
+			paddingX:Number=0,
+			smoothing:Boolean=false,
+			width:Number=0,
+			height:Number=0
+		):BitmapFont {
+			var font:BitmapFont = createEmptyFont(fontName, size, lineHeight, smoothing);
+			var textureNames:Vector.<String> = assetManager.getTextureNames(textureNamePrefix);
+			trace("textureNames", textureNames);
+			var char:BitmapChar;
+			var charNames:Vector.<String> = new <String>[];
+			for each(var textureName:String in textureNames) {
+				var texture:Texture = assetManager.getTexture(textureName);
+				var charName:String = textureName.slice(textureNamePrefix.length);
+				var offsetX:Number = 0;
+				if(width > 0) {
+					offsetX = (width - texture.frameWidth) * 0.5;
+				}
+				var offsetY:Number = 0;
+				if(height > 0) {
+					offsetY = (height - texture.height) * 0.5;
+				}
+				var advanceX = width <=0 ? texture.frameWidth + paddingX : width + paddingX;
+				if(charName.length == 1) {
+					// １文字の場合はその文字として登録
+					char = createBitmapCharByTexture(charName, texture, offsetX, offsetY, advanceX);
+				} else if (charName.indexOf("0x") == 0){
+					// 0xから始まる場合は
+					char = createBitmapCharByTexture(parseInt(charName, 16), texture, offsetX, offsetY, advanceX);
+				} else {
+					// そうでない場合は直接コード番号として扱う
+					char = createBitmapCharByTexture(Number(charName), texture, offsetX, offsetY, advanceX);
+				}
+				if(font.getChar(char.charID)) {
+					trace("Error : font for "+char.charID+ " is already exist.");
+				} else {
+					charNames.push(charName);
+					addBitmapCharToFont(font, char);
+				}
+			}
+			trace("created bitmap chars :", charNames);
+			return font;
 		}
 
 		/**
@@ -274,18 +466,41 @@ package harayoki.starling {
 			if (!target) {
 				return;
 			}
+			_idlist.length = 0;
+			var numChar:int = target.getCharIDs(_idlist).length;
 			if (!charIdlist) {
 				_idlist.length = 0;
 				charIdlist = target.getCharIDs(_idlist);
 			}
-			trace("<Font:" + target.name + ">");
+			var texture:Texture = target.texture;
+			function getTextureInfo(texture:Texture):String {
+				if(texture) {
+					return "(" + texture + " " + [
+						"size:"+texture.frameWidth+"*"+texture.frameHeight,
+						"scale:"+texture.scale
+					].join(" ") + ")";
+				} else {
+					return "(N/A)";
+				}
+			}
+			trace("<Font:" + target.name,
+				[
+					"size:"+target.size,
+					"lineheight:"+target.lineHeight,
+					"baseline:"+target.baseline,
+					"smoothing:"+target.smoothing,
+					"offsetX:"+target.offsetX,
+					"offsetY:"+target.offsetY,
+					"numChar:" + numChar,
+					"\n\ttexture:"+getTextureInfo(texture),
+				].join(" ") + ">");
 			var len:int = charIdlist.length;
 			for (var i:int=0; i<len; i++) {
 				var id:int = charIdlist[i];
 				var char:BitmapChar = target.getChar(id);
 				if (char) {
-					trace("'" + String.fromCharCode(id) + "'(" + id + ") txsize:" +
-						(char.width + "*" + char.height) + " offset:" + [char.xOffset, char.yOffset] + " xAdv:"+ char.xAdvance);
+					trace("'" + String.fromCharCode(id) + "'(" + id + ") texture:" +
+						getTextureInfo(char.texture) + " offset:" + [char.xOffset, char.yOffset] + " xAdv:"+ char.xAdvance);
 				}
 			}
 		}
