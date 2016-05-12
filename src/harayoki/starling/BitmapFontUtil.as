@@ -478,7 +478,7 @@ package harayoki.starling {
 				if(texture) {
 					return "(" + texture + " " + [
 						"size:"+texture.width+"*"+texture.height,
-						"framesize:"+texture.frameWidth+"*"+texture.frameHeight,
+						"frame:"+texture.frame, // frameWidth, frameHeight
 						"scale:"+texture.scale
 					].join(" ") + ")";
 				} else {
