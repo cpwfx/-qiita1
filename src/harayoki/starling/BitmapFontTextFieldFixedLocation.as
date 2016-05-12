@@ -94,12 +94,12 @@ package harayoki.starling {
 			// images.sort(_sortFunc); //offsetYがある場合におかしくなるので利用しない事にする
 		}
 
-		// 上から、左からの優先順位でソートし直す
-		private function _sortFunc(a:DisplayObject, b:DisplayObject):int {
-			if(a.y > b.y) return 1;
-			if(a.y < b.y) return -1;
-			return a.x - b.x;
-		}
+		//// 上から、左からの優先順位でソートし直す
+		//private function _sortFunc(a:DisplayObject, b:DisplayObject):int {
+		//	if(a.y > b.y) return 1;
+		//	if(a.y < b.y) return -1;
+		//	return a.x - b.x;
+		//}
 
 		/**
 		 * 廃棄処理
@@ -200,8 +200,8 @@ package harayoki.starling {
 				var texture:Texture = char.texture;
 				if(image.texture != texture) {
 					image.texture = texture;
-					image.width = char.width;
-					image.height = char.height;
+					image.width = char.texture.frameWidth;
+					image.height = char.texture.frameHeight;
 					// char.xOffset char.yOffset はずれていても無視 (imageサイズが違う文字は文字が左上による事がある)
 					// kerningは考慮しない
 					// char.xAdvance は最初のレイアウトの時点で揃っているものとする
