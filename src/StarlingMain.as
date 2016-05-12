@@ -9,6 +9,7 @@ package {
 
 	import starling.core.Starling;
 	import starling.display.Sprite;
+	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.AssetManager;
@@ -72,7 +73,17 @@ package {
 			var mapchip:BitmapFont =
 				BitmapFontUtil.createBitmapFontFromTextureAtlasAsMonoSpaceFont(
 					FONT_NAME_MAPCHIP, _assetManager, "map1/" , 16, 16, 16 );
-			BitmapFontUtil.setSpaceWidth(mapchip, 16); //スペースの設定
+			// スペースの設定
+			BitmapFontUtil.setSpaceWidth(mapchip, 16);
+
+			// ナカグロの点（余白テスト用）の追加
+			var dot:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("・",_assetManager.getTexture("dot16x16"), 0, 0, 16);
+			BitmapFontUtil.addBitmapCharToFont(mapchip, dot, dot.charID, false);
+
+			// マップチップ画像の下に表示する英字の幅をそろえる
+			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", monoSpaceFont, 16);
+			BitmapFontUtil.setSpaceWidth(tempFont, 16);
+			BitmapFontUtil.addBitmapCharToFont(tempFont, dot, dot.charID, false);
 
 			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
@@ -80,7 +91,7 @@ package {
 			var mapall:String = [
 				"ABCDEFGHIJKLMNOP",
 				"",
-				"01",
+				"01・",
 			].join("\n");
 
 			// マップデータ
@@ -101,6 +112,9 @@ package {
 				"BBJJCCCCCCCCLDKD",
 				"BNBJJCCCCCCCLDDF",
 				"BBBJJCCCCCCCPPPP",
+				"",
+				"A・A・", // 余白文字のテスト
+				"1B0B" // 絵文字まじった際のテスト
 			].join("\n");
 
 			// キャラデータ
@@ -142,8 +156,6 @@ package {
 				), 10, 40, 1);
 
 			// マップチップに対応する英字を表示
-			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", monoSpaceFont, 16);
-			BitmapFontUtil.setSpaceWidth(tempFont, 16);
 			_doHelper.locateDobj(
 				_doHelper.createSpriteText(
 					mapall,
