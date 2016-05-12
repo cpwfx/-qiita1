@@ -108,7 +108,7 @@ package {
 			score2.align = Align.RIGHT;
 			_doHelper.locateDobj(score2, 160, 75);
 			if(!hideInfoText) _doHelper.locateDobj(
-				_doHelper.createSpriteText("ミギよせ&ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 75);
+				_doHelper.createSpriteText("ミギよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 75);
 
 			// 左寄せ0埋め
 			var score3:BitmapFontTextFieldFixedLocation
@@ -117,7 +117,7 @@ package {
 			score3.align = Align.LEFT;
 			_doHelper.locateDobj(score3, 160, 100);
 			if(!hideInfoText) _doHelper.locateDobj(
-				_doHelper.createSpriteText("ヒダリよせ&ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 100);
+				_doHelper.createSpriteText("ヒダリよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 100);
 
 			// 数字以外を含む
 			var time:BitmapFontTextFieldFixedLocation
