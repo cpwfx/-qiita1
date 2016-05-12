@@ -15,6 +15,7 @@ package {
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.textures.Texture;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
@@ -78,8 +79,9 @@ package {
 			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
 
 			// 余白付きドットを合成
-			var dotChar:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("・", _assetManager.getTexture("dot16x16"), 0, 0, 16);
-			trace(dotChar.xOffset, dotChar.yOffset, dotChar.width);
+			var dotTexture:Texture = _assetManager.getTexture("dot12x12");
+			trace(dotTexture.width, dotTexture.height, dotTexture.frameWidth, dotTexture.frameHeight);
+			var dotChar:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("・", _assetManager.getTexture("dot12x12"), 0, 0, 12);
 			BitmapFontUtil.addBitmapCharToFont(baseFont, dotChar);
 
 			BitmapFontUtil.traceBitmapCharInfo(baseFont);
