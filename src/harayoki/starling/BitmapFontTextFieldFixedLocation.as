@@ -1,5 +1,8 @@
 package harayoki.starling {
 
+	import flash.geom.Point;
+	import flash.utils.Dictionary;
+
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -36,6 +39,7 @@ package harayoki.starling {
 		private var _paddingStr:String;
 		private var _text:String = "";
 		private var _images:Vector.<Image>;
+		private var _positions:Dictionary;
 
 		// テキストのAlign設定 "right" or "left"
 		public var align:String = "left";
@@ -58,7 +62,14 @@ package harayoki.starling {
 			var textFormat:TextFormat =
 				new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
 			_images = new <Image>[];
+			_positions = new Dictionary();
 			_setPaddingStr(" ");
+			if(_formatString == null || _formatString.length == 0) {
+				throw(new Error("Invalid format string.. empty format."))
+			}
+			if(!_checkFormatString()) {
+				throw(new Error("Invalid format string.. missing bitmap char(s)."))
+			}
 			_setup(
 				width <= 0 ? TEXT_BOX_WIDTH : width,
 				height <=0 ? TEXT_BOX_HEIGHT : height,
@@ -68,30 +79,41 @@ package harayoki.starling {
 			setText("");
 		}
 
+		// フォーマットストリングの
+		private function _checkFormatString():Boolean {
+			for(var i:int=0; i< _formatString.length; i++) {
+				var code:int = _formatString.charCodeAt(i);
+				if(!_font.getChar(code)) return false;
+			}
+			return true;
+		}
+
 		// 初期テキストレイアウト
 		protected function _setup(w:int, h:int, text:String, format:TextFormat):void {
 			var sp:Sprite = _font.createSprite(w, h, text, format);
-			_locateImages(sp, _images); // ここで中身だけ取り出して
+			_relocateImages(sp); // ここで中身だけ取り出して
 			sp.dispose(); //すぐ廃棄...無駄があるが、BitmapFontTextFieldForScore自体がDisplayObjectである方が使いやすい
+			_positions.fixed = true; // 高速化
+			_images.fixed = true; // 高速化
 		}
 
 		// 文字スプライトを自身の中に配置し直す
-		private function _locateImages(sp:Sprite, images:Vector.<Image>):void {
+		private function _relocateImages(sp:Sprite):void {
+			// Imageは文字のままの重ね合わせ順で作られている想定
 			while(sp.numChildren) {
 				var dobj:DisplayObject = sp.getChildAt(0);
-				var image:Image = dobj as Image;
+				var image:Image = dobj as Image; // Imageしかないはず
 				// trace(image.width);
-				if(image) {
-					image.textureSmoothing = _font.smoothing;
-					images.push(image);
-					addChild(image);
-				} else {
-					// imageしかないはず
-					trace("Unexpected display object found.")
-					sp.removeChild(dobj);
-				}
+				image.textureSmoothing = _font.smoothing;
+				var id:int = _formatString.charCodeAt(_images.length);
+				var char:BitmapChar = _font.getChar(id); // 必ずある
+				_images.push(image);
+				_positions[image] = new Point(image.x - char.xOffset, image.y - char.yOffset);
+				addChild(image);
 			}
-			// images.sort(_sortFunc); //offsetYがある場合におかしくなるので利用しない事にする
+			if(_formatString.length != _images.length) {
+				throw (new Error("something wrong with font images."));
+			}
 		}
 
 		//// 上から、左からの優先順位でソートし直す
@@ -108,6 +130,7 @@ package harayoki.starling {
 			_font = null;
 			_removeImages();
 			_images = null;
+			_positions = null;
 			super.dispose();
 		}
 
@@ -190,7 +213,7 @@ package harayoki.starling {
 				// trace(_text.charAt(i));
 				var id:int = _text.charCodeAt(i);
 				var image:Image = _images[i];
-				var char:BitmapChar = _font.getChar(id);
+				var char:BitmapChar = _font.getChar(id); // ないかも？
 				if(!char) {
 					// missing chara
 					image.visible = false;
@@ -200,9 +223,11 @@ package harayoki.starling {
 				var texture:Texture = char.texture;
 				if(image.texture != texture) {
 					image.texture = texture;
-					image.width = char.texture.frameWidth;
-					image.height = char.texture.frameHeight;
-					// char.xOffset char.yOffset はずれていても無視 (imageサイズが違う文字は文字が左上による事がある)
+					image.width = char.texture.frameWidth; // 余白付きのテクスチャの大きさも保つためにframeWidthを使う
+					image.height = char.texture.frameHeight; // 同様にframeHeightを使う
+					var point:Point = _positions[image];
+					image.x = point.x + char.xOffset;
+					image.y = point.y + char.yOffset;
 					// kerningは考慮しない
 					// char.xAdvance は最初のレイアウトの時点で揃っているものとする
 				}
