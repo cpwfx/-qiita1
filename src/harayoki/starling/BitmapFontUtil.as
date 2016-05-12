@@ -204,7 +204,8 @@ package harayoki.starling {
 				xAdvance = xAdvanceOffset;
 			}
 			if (centerizeXOffset) {
-				xOffset = Math.max(0, (xAdvance - org.texture.frameWidth) * 0.5);
+				// bitmapフォントなので整数値に吸着させる
+				xOffset = Math.floor(Math.max(0, (xAdvance - org.texture.frameWidth) * 0.5));
 			} else {
 				xOffset = org.xOffset + xOffset;
 			}
@@ -429,11 +430,11 @@ package harayoki.starling {
 				var charName:String = textureName.slice(textureNamePrefix.length);
 				var offsetX:Number = 0;
 				if(width > 0) {
-					offsetX = (width - texture.frameWidth) * 0.5;
+					offsetX = Math.floor((width - texture.frameWidth) * 0.5); // bitmapフォントなので整数値に吸着させる
 				}
 				var offsetY:Number = 0;
 				if(height > 0) {
-					offsetY = (height - texture.height) * 0.5;
+					offsetY = Math.floor((height - texture.frameHeight) * 0.5); // bitmapフォントなので整数値に吸着させる
 				}
 				var advanceX = width <=0 ? texture.frameWidth + paddingX : width + paddingX;
 				if(charName.length == 1) {
