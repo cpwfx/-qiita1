@@ -190,6 +190,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">alphabet.png</key>
             <key type="filename">colorbars/colorbars.png</key>
+            <key type="filename">dot16x16.png</key>
             <key type="filename">emoji/oukan.png</key>
             <key type="filename">emoji/tofu.png</key>
             <key type="filename">kana_only.png</key>
@@ -206,6 +207,7 @@
             <filename>colorbars</filename>
             <filename>emoji</filename>
             <filename>maptip.png</filename>
+            <filename>dot16x16.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
