@@ -121,9 +121,12 @@ package harayoki.starling {
 		 * @param xOffset 任意
 		 * @param yOffset 任意
 		 * @param width 任意、デフォルトでテクスチャの横幅
+		 * @param centerizeX 任意 真ん中よせX
+		 * @param centerizeHeight 任意 真ん中よせYに使う縦幅
 		 */
 		public static function createBitmapCharByTexture(
-			charCodeOrCharStr:Object, texture:Texture, xOffset:Number=0, yOffset:Number=0, width:Number = -1
+			charCodeOrCharStr:Object, texture:Texture, xOffset:Number=0, yOffset:Number=0,
+			width:Number = -1, centerizeX:Boolean=false, centerizeHeight:int=0
 		):BitmapChar {
 			var id:int;
 			if(charCodeOrCharStr is int) {
@@ -131,7 +134,14 @@ package harayoki.starling {
 			} else {
 				id = (charCodeOrCharStr+"").charCodeAt(0);
 			}
-			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width < 0 ? texture.frameWidth : width);
+			width = width < 0 ? texture.frameWidth : width;
+			if(centerizeX) {
+				xOffset += _calcCenterrizeOffsetX(texture, width);
+			}
+			if(centerizeHeight > 0) {
+				yOffset += _calcCenterrizeOffsetY(texture, centerizeHeight);
+			}
+			var char:BitmapChar = new BitmapChar(id, texture, xOffset, yOffset, width);
 			return char;
 		}
 
