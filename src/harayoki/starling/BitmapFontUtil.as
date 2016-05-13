@@ -193,7 +193,8 @@ package harayoki.starling {
 			xAdvanceOffset:Number=0,
 			idlistForKerning:Vector.<int>=null,
 			fixedXAdvance:Boolean = false,
-			centerizeXOffset:Boolean = false
+			centerizeXOffset:Boolean = false,
+			centerizeYOffsetHeight:int = 0
 		):BitmapChar {
 
 			if(newId < 0) {
@@ -204,17 +205,21 @@ package harayoki.starling {
 				xAdvance = xAdvanceOffset;
 			}
 			if (centerizeXOffset) {
-				// bitmapフォントなので整数値に吸着させる
-				xOffset = Math.floor((xAdvance - org.texture.frameWidth) * 0.5);
+				xOffset = _calcCenterrizeOffsetX(org.texture, xAdvance);
 			} else {
 				xOffset = org.xOffset + xOffset;
+			}
+			if (centerizeYOffsetHeight > 0) {
+				yOffset = _calcCenterrizeOffsetY(org.texture, centerizeYOffsetHeight);
+			} else {
+				yOffset = org.yOffset + yOffset;
 			}
 
 			var char:BitmapChar = new BitmapChar(
 				newId,
 				org.texture,
 				xOffset,
-				org.yOffset + yOffset,
+				yOffset,
 				xAdvance
 			);
 			for each(var id:int in idlistForKerning) {
@@ -274,6 +279,43 @@ package harayoki.starling {
 					font.getChar(id), -1, xOffset, yOffset, xAdvanceOffset, charIdlist);
 				font.addChar(id, char);
 			}
+		}
+
+		/**
+		 * BitmaCharの余白を更新する
+		 */
+		public static function centerize(
+			font:BitmapFont,
+			applyToWidth:Boolean = true,
+			applyToHeight:Boolean = false,
+			charIdlist:Vector.<int> = null
+		):void {
+			if (!font) {
+				return;
+			}
+			if (!charIdlist) {
+				_idlist.length = 0;
+				charIdlist = font.getCharIDs(_idlist);
+			}
+			for each(var id:int in charIdlist) {
+				var org:BitmapChar = font.getChar(id);
+				var char:BitmapChar = _cloneBitmapChar(
+					org, -1, 0, 0, 0, charIdlist, false, applyToWidth, applyToHeight ? font.size : 0);
+				font.addChar(id, char);
+			}
+		}
+
+		private static function _calcCenterrizeOffsetX(texture:Texture, width:int):int {
+			//texture.width は 余白なしのtextureの幅を返す
+			// texture.frameWidthはframe(余白設定)があるばあい余白つきの幅を、余白が無い場合textureの幅を返す
+			var w:int = texture.frameWidth;
+			return Math.floor((width - w)*0.5); // Bitmapなので整数値に吸着 負の値は許す
+		}
+
+		private static function _calcCenterrizeOffsetY(texture:Texture, height:int):int {
+			// texture.frameWidthはframe(余白設定)があるばあい余白つきの幅を、余白が無い場合textureの幅を返す
+			var h:int = texture.frameHeight;
+			return Math.floor((height - h)*0.5); // Bitmapなので整数値に吸着 負の値は許す
 		}
 
 		/**
@@ -430,11 +472,11 @@ package harayoki.starling {
 				var charName:String = textureName.slice(textureNamePrefix.length);
 				var offsetX:Number = 0;
 				if(width > 0) {
-					offsetX = Math.floor((width - texture.frameWidth) * 0.5); // bitmapフォントなので整数値に吸着させる
+					offsetX = _calcCenterrizeOffsetX(texture, width);
 				}
 				var offsetY:Number = 0;
 				if(height > 0) {
-					offsetY = Math.floor((height - texture.frameHeight) * 0.5); // bitmapフォントなので整数値に吸着させる
+					offsetY = _calcCenterrizeOffsetY(texture, height);
 				}
 				var advanceX = width <=0 ? texture.frameWidth + paddingX : width + paddingX;
 				if(charName.length == 1) {
