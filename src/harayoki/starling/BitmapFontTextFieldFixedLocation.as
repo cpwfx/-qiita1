@@ -13,22 +13,26 @@ package harayoki.starling {
 	import starling.textures.Texture;
 	import starling.utils.Align;
 
-	public class BitmapFontTextFieldFixedLocation extends Sprite{
+	public class BitmapFontTextFieldFixedLocation{
 
 		/**
-		 * インスタンスを生成する
-		 * ※ テストに使うためのメソッドで、特にこのメソッドを経由してインスタンス化する必要は無い
-		 * @param forTest パフォーマンス比較テスト用に通常のテキストフィールドを使うインスタンスを返すか
-		 *         他パラメータは通常のコンストラクタ利用時と同じ
+		 * 通常インスタンスを生成する
 		 */
 		public static function createInstance(
-			forTest:Boolean, fontName:String, formatString:String, color:Number=0xffffff,
+			fontName:String, formatString:String, color:Number=0xffffff,
 			size:Number=0, width:int=0, height:int=0
 		):BitmapFontTextFieldFixedLocation {
-			if(forTest) {
-				return new TestClass(fontName, formatString, color, size, width, height);
-			}
 			return new BitmapFontTextFieldFixedLocation(fontName, formatString, color, size, width, height);
+		}
+
+		/**
+		 * テキストフィールドを使うインスタンスを生成する
+		 */
+		public static function createInstanceWithGeneralTextField(
+			fontName:String, formatString:String, color:Number=0xffffff,
+			size:Number=0, width:int=0, height:int=0
+		):BitmapFontTextFieldFixedLocation {
+			return new BitmapFontTextFieldFixedLocationWithGeneralTextField(fontName, formatString, color, size, width, height);
 		}
 
 		private static const TEXT_BOX_WIDTH:int = 99999; // 十分に大きく
@@ -40,6 +44,7 @@ package harayoki.starling {
 		private var _text:String = "";
 		private var _images:Vector.<Image>;
 		private var _orgPositions:Dictionary;
+		private var _sp:Sprite;
 
 		// テキストのAlign設定 "right" or "left"
 		public var align:String = "left";
@@ -59,27 +64,35 @@ package harayoki.starling {
 				throw(new Error("invalid font name : " + fontName));
 			}
 			_formatString = formatString;
-			var textFormat:TextFormat =
-				new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
-			_images = new <Image>[];
-			_orgPositions = new Dictionary();
-			_setPaddingStr(" ");
 			if(_formatString == null || _formatString.length == 0) {
 				throw(new Error("Invalid format string.. empty format."))
 			}
 			if(!_checkFormatString()) {
 				throw(new Error("Invalid format string.. missing bitmap char(s)."))
 			}
+			_setPaddingStr(" ");
+			var textFormat:TextFormat = new TextFormat(
+				_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
+			_initialize();
+			setText("");
 			_setup(
 				width <= 0 ? TEXT_BOX_WIDTH : width,
 				height <=0 ? TEXT_BOX_HEIGHT : height,
 				_formatString,
-				textFormat);
-
-			setText("");
+				textFormat
+			);
 		}
 
-		// フォーマットストリングの
+		protected function _initialize():void {
+			_images = new <Image>[];
+			_orgPositions = new Dictionary();
+		}
+
+		public function getDisplayObject():DisplayObject {
+			return _sp;
+		}
+
+		// フォーマットストリングが正しく使えるものが確認する
 		private function _checkFormatString():Boolean {
 			for(var i:int=0; i< _formatString.length; i++) {
 				var code:int = _formatString.charCodeAt(i);
@@ -90,9 +103,8 @@ package harayoki.starling {
 
 		// 初期テキストレイアウト
 		protected function _setup(w:int, h:int, text:String, format:TextFormat):void {
-			var sp:Sprite = _font.createSprite(w, h, text, format);
-			_relocateImages(sp); // ここで中身だけ取り出して
-			sp.dispose(); //すぐ廃棄...無駄があるが、BitmapFontTextFieldForScore自体がDisplayObjectである方が使いやすい
+			_sp = _font.createSprite(w, h, text, format);
+			_relocateImages(_sp);
 			_orgPositions.fixed = true; // 高速化
 			_images.fixed = true; // 高速化
 		}
@@ -100,8 +112,9 @@ package harayoki.starling {
 		// 文字スプライトを自身の中に配置し直す
 		private function _relocateImages(sp:Sprite):void {
 			// Imageは文字のままの重ね合わせ順で作られている想定
-			while(sp.numChildren) {
-				var dobj:DisplayObject = sp.getChildAt(0);
+			var len:int = sp.numChildren;
+			for(var i:int=0; i<len; i++) {
+				var dobj:DisplayObject = sp.getChildAt(i);
 				var image:Image = dobj as Image; // Imageしかないはず
 				// trace(image.width);
 				image.textureSmoothing = _font.smoothing;
@@ -109,7 +122,6 @@ package harayoki.starling {
 				var char:BitmapChar = _font.getChar(id); // 必ずある
 				_images.push(image);
 				_orgPositions[image] = new Point(image.x - char.xOffset, image.y - char.yOffset);
-				addChild(image);
 			}
 			if(_formatString.length != _images.length) {
 				throw (new Error("something wrong with font images."));
@@ -126,21 +138,24 @@ package harayoki.starling {
 		/**
 		 * 廃棄処理
 		 */
-		public override function dispose():void {
+		public function dispose():void {
 			_font = null;
 			_removeImages();
+			if(_sp) {
+				_sp.removeFromParent(true);
+				_sp = null;
+			}
 			_images = null;
 			_orgPositions = null;
-			super.dispose();
 		}
 
 		// 作成した文字を全て削除する
 		private function _removeImages():void {
+			for each(var image:Image in _images) {
+				image.removeFromParent(true);
+			}
 			if(_images) {
 				_images.length = 0;
-			}
-			while (numChildren) {
-				removeChildAt(0, true);
 			}
 		}
 
@@ -242,29 +257,45 @@ package harayoki.starling {
 
 import harayoki.starling.BitmapFontTextFieldFixedLocation;
 
+import starling.display.DisplayObject;
+
 import starling.text.TextField;
 import starling.text.TextFormat;
 
 /**
- * パフォーマンス比較テスト用に通常のTextFieldをあつかうclass
+ * 同じインターフェースで通常のTextFieldをあつかうclass
  */
-internal class TestClass extends BitmapFontTextFieldFixedLocation {
+internal class BitmapFontTextFieldFixedLocationWithGeneralTextField extends BitmapFontTextFieldFixedLocation {
 
-	private var _tfForTest:TextField;
+	private var _batchable:Boolean;
+	private var _textField:TextField;
 
-	public function TestClass(
+	public function BitmapFontTextFieldFixedLocationWithGeneralTextField(
 		fontName:String, formatString:String, color:Number=0xffffff,
-		size:Number = 0, width:int=0, height:int=0
+		size:Number = 0, width:int=0, height:int=0, batchable:Boolean=false
 	) {
+		_batchable = batchable;
 		super(fontName, formatString, color, size, width, height);
 	}
 
+	protected override function _initialize():void {
+	}
+
+	public override function getDisplayObject():DisplayObject {
+		return _textField;
+	}
+
+	public override function dispose():void {
+		_textField = null;
+		super.dispose();
+	}
+
 	protected override function _setup(w:int, h:int, text:String, format:TextFormat):void {
-		_tfForTest = new TextField(w, h, text, format);
-		addChild(_tfForTest);
+		_textField = new TextField(w, h, text, format);
+		_textField.batchable = _batchable;
 	}
 
 	protected override function _updateText(prevText:String, newText:String):void {
-		_tfForTest.text = newText;
+		_textField.text = newText;
 	}
 }
