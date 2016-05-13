@@ -205,7 +205,7 @@ package harayoki.starling {
 			}
 			if (centerizeXOffset) {
 				// bitmapフォントなので整数値に吸着させる
-				xOffset = Math.floor(Math.max(0, (xAdvance - org.texture.frameWidth) * 0.5));
+				xOffset = Math.floor((xAdvance - org.texture.frameWidth) * 0.5);
 			} else {
 				xOffset = org.xOffset + xOffset;
 			}
