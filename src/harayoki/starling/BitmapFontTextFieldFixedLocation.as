@@ -39,7 +39,7 @@ package harayoki.starling {
 		private var _paddingStr:String;
 		private var _text:String = "";
 		private var _images:Vector.<Image>;
-		private var _positions:Dictionary;
+		private var _orgPositions:Dictionary;
 
 		// テキストのAlign設定 "right" or "left"
 		public var align:String = "left";
@@ -62,7 +62,7 @@ package harayoki.starling {
 			var textFormat:TextFormat =
 				new TextFormat(_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
 			_images = new <Image>[];
-			_positions = new Dictionary();
+			_orgPositions = new Dictionary();
 			_setPaddingStr(" ");
 			if(_formatString == null || _formatString.length == 0) {
 				throw(new Error("Invalid format string.. empty format."))
@@ -93,7 +93,7 @@ package harayoki.starling {
 			var sp:Sprite = _font.createSprite(w, h, text, format);
 			_relocateImages(sp); // ここで中身だけ取り出して
 			sp.dispose(); //すぐ廃棄...無駄があるが、BitmapFontTextFieldForScore自体がDisplayObjectである方が使いやすい
-			_positions.fixed = true; // 高速化
+			_orgPositions.fixed = true; // 高速化
 			_images.fixed = true; // 高速化
 		}
 
@@ -108,7 +108,7 @@ package harayoki.starling {
 				var id:int = _formatString.charCodeAt(_images.length);
 				var char:BitmapChar = _font.getChar(id); // 必ずある
 				_images.push(image);
-				_positions[image] = new Point(image.x - char.xOffset, image.y - char.yOffset);
+				_orgPositions[image] = new Point(image.x - char.xOffset, image.y - char.yOffset);
 				addChild(image);
 			}
 			if(_formatString.length != _images.length) {
@@ -130,7 +130,7 @@ package harayoki.starling {
 			_font = null;
 			_removeImages();
 			_images = null;
-			_positions = null;
+			_orgPositions = null;
 			super.dispose();
 		}
 
@@ -203,34 +203,36 @@ package harayoki.starling {
 				return;
 			}
 			// trace(text);
+			_updateText(_text, text);
 			_text = text;
-			_updateText(_text);
 		}
 
 		// 表示文字のアップデート
-		protected function _updateText(text:String):void {
+		protected function _updateText(prevText:String, newText:String):void {
 			for(var i:int=0; i<_images.length; i++) {
 				// trace(_text.charAt(i));
-				var id:int = _text.charCodeAt(i);
+				var prevId:int = prevText.charCodeAt(i);
+				var newId:int = newText.charCodeAt(i);
+				if(prevId == newId) {
+					continue;
+				}
 				var image:Image = _images[i];
-				var char:BitmapChar = _font.getChar(id); // ないかも？
+				var char:BitmapChar = _font.getChar(newId); // ないかも？
 				if(!char) {
 					// missing chara
 					image.visible = false;
-					return;
+					continue;
 				}
 				image.visible = true;
 				var texture:Texture = char.texture;
-				if(image.texture != texture) {
-					image.texture = texture;
-					image.width = char.texture.frameWidth; // 余白付きのテクスチャの大きさも保つためにframeWidthを使う
-					image.height = char.texture.frameHeight; // 同様にframeHeightを使う
-					var point:Point = _positions[image];
-					image.x = point.x + char.xOffset;
-					image.y = point.y + char.yOffset;
-					// kerningは考慮しない
-					// char.xAdvance は最初のレイアウトの時点で揃っているものとする
-				}
+				image.texture = texture;
+				image.width = char.texture.frameWidth; // 余白付きのテクスチャの大きさも保つためにframeWidthを使う
+				image.height = char.texture.frameHeight; // 同様にframeHeightを使う
+				var point:Point = _orgPositions[image];
+				image.x = point.x + char.xOffset;
+				image.y = point.y + char.yOffset;
+				// kerningは考慮しない
+				// char.xAdvance は最初のレイアウトの時点で揃っているものとする
 			}
 		}
 
@@ -262,7 +264,7 @@ internal class TestClass extends BitmapFontTextFieldFixedLocation {
 		addChild(_tfForTest);
 	}
 
-	protected override function _updateText(text:String):void {
-		_tfForTest.text = text;
+	protected override function _updateText(prevText:String, newText:String):void {
+		_tfForTest.text = newText;
 	}
 }
