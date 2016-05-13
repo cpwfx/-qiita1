@@ -81,7 +81,8 @@ package {
 			// 余白付きドットを合成
 			var dotTexture:Texture = _assetManager.getTexture("dot12x12");
 			trace(dotTexture.width, dotTexture.height, dotTexture.frameWidth, dotTexture.frameHeight);
-			var dotChar:BitmapChar = BitmapFontUtil.createBitmapCharByTexture("・", _assetManager.getTexture("dot12x12"), 0, 0, 12);
+			var dotChar:BitmapChar =
+				BitmapFontUtil.createBitmapCharByTexture("・", dotTexture, -1, 3, 12, true, baseFont.size);
 			BitmapFontUtil.addBitmapCharToFont(baseFont, dotChar);
 
 			BitmapFontUtil.traceBitmapCharInfo(baseFont);
@@ -91,7 +92,7 @@ package {
 				= BitmapFontTextFieldFixedLocation.createInstance(useTexField, baseFont.name, "00000000");
 			_doHelper.locateDobj(score0, 160, 25);
 			if(!hideInfoText) _doHelper.locateDobj(
-				_doHelper.createSpriteText("デフォルト ヒダリよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 25);
+				_doHelper.createSpriteText("デフォルト・ヒダリよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 25);
 
 			// 左寄せ寄せ空白埋め
 			var score1:BitmapFontTextFieldFixedLocation
