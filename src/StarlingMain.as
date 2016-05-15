@@ -133,7 +133,7 @@ package {
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("ミギよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 75);
 
-			// 左寄せ0埋め
+			// 左寄せ*埋め
 			var score3:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xffccff);
 			score3.paddingChr = "*";
