@@ -1,17 +1,21 @@
 package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 
-	import harayoki.starling.BitmapFontTextFieldFixedLocation;
 	import harayoki.starling.BitmapFontUtil;
+	import harayoki.starling.FixedLayoutBitmapTextController;
 	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
@@ -61,21 +65,24 @@ package {
 		}
 
 		private function _start():void {
-			_showTexts(false, false);
+			var hideInfoText:Boolean = false;
+			var useTexField:Boolean = false;
+			var bachableTextField:Boolean = false;
+			_showTexts(hideInfoText, useTexField, bachableTextField);
 		}
 
-		private function _showTexts(hideInfoText:Boolean, useTexField:Boolean):void {
+		private function _showTexts(hideInfoText:Boolean, useTexField:Boolean, bachableTextField:Boolean):void {
 
 
 			function createBitmapFontTextField(
 				fontName:String, formatString:String, color:Number=0xffffff,
 				size:Number=0, width:int=0, height:int=0
-			):BitmapFontTextFieldFixedLocation {
+			):FixedLayoutBitmapTextController {
 				if(useTexField) {
-					return BitmapFontTextFieldFixedLocation.getInstanceWithForGeneralTextField(
-						fontName, formatString, color, size, width, height);
+					return FixedLayoutBitmapTextController.getInstanceWithForGeneralTextField(
+						fontName, formatString, color, size, width, height, bachableTextField);
 				} else {
-					return BitmapFontTextFieldFixedLocation.getInstance(
+					return FixedLayoutBitmapTextController.getInstance(
 						fontName, formatString, color, size, width, height);
 				}
 			}
@@ -103,14 +110,14 @@ package {
 			BitmapFontUtil.traceBitmapCharInfo(baseFont);
 
 			// デフォルト右寄せ空白埋め
-			var score0:BitmapFontTextFieldFixedLocation
+			var score0:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000");
 			_doHelper.locateDobj(score0.displayObject, 160, 25);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("デフォルト・ヒダリよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 25);
 
 			// 左寄せ寄せ空白埋め
-			var score1:BitmapFontTextFieldFixedLocation
+			var score1:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xccffff);
 			score1.align = Align.RIGHT;
 			_doHelper.locateDobj(score1.displayObject, 160, 50);
@@ -118,7 +125,7 @@ package {
 				_doHelper.createSpriteText("ミギよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 50);
 
 			// 右寄せ0埋め
-			var score2:BitmapFontTextFieldFixedLocation
+			var score2:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xffffcc);
 			score2.paddingChr = "0";
 			score2.align = Align.RIGHT;
@@ -127,7 +134,7 @@ package {
 				_doHelper.createSpriteText("ミギよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 75);
 
 			// 左寄せ0埋め
-			var score3:BitmapFontTextFieldFixedLocation
+			var score3:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xffccff);
 			score3.paddingChr = "*";
 			score3.align = Align.LEFT;
@@ -136,7 +143,7 @@ package {
 				_doHelper.createSpriteText("ヒダリよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 100);
 
 			// 数字以外を含む
-			var time:BitmapFontTextFieldFixedLocation
+			var time:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00:00", 0xcccccc);
 			_doHelper.locateDobj(time.displayObject, 160, 125);
 			if(!hideInfoText) _doHelper.locateDobj(
@@ -155,7 +162,7 @@ package {
 				"ちょうきゅうめいのちょうすけ" +
 				"・・・・・　　　　　　　　　";
 
-			var messageBox:BitmapFontTextFieldFixedLocation =
+			var messageBox:FixedLayoutBitmapTextController =
 				createBitmapFontTextField(baseFont.name,
 					"ああああああああああああああああ" +
 					"ああああああああああああああああ" +
@@ -188,8 +195,17 @@ package {
 
 			});
 
-		}
+			// タッチ時にGCしてみる
+			var gcobj:DisplayObject = _doHelper.createSpriteText("[TOUCH TO GC]", baseFont.name, 200, 20, 0, 0xffffff);
+			_doHelper.locateDobj(gcobj, 10, 450);
+			gcobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(gcobj, TouchPhase.BEGAN)) {
+					trace("gc!");
+					System.gc();
+				}
+			});
 
+		}
 
 	}
 }
