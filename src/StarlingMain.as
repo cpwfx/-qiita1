@@ -149,10 +149,10 @@ package {
 //			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
 			var score:BitmapFontTextFieldFixedLocation
-				= BitmapFontTextFieldFixedLocation.createInstance(monoSpaceFont.name, "00000000");
+				= BitmapFontTextFieldFixedLocation.getInstance(monoSpaceFont.name, "00000000");
 			score.paddingChr = "0";
 			score.align = Align.RIGHT;
-			_doHelper.locateDobj(score.getDisplayObject(), 100, 0);
+			_doHelper.locateDobj(score.displayObject, 100, 0);
 
 			var count:int = 0;
 			addEventListener(Event.ENTER_FRAME, function(ev:*){
