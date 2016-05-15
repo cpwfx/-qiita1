@@ -13,7 +13,7 @@ package harayoki.starling {
 	import starling.textures.Texture;
 	import starling.utils.Align;
 
-	public class BitmapFontTextFieldFixedLocation{
+	public class FixedLayoutBitmapTextController{
 
 		/**
 		 * 通常インスタンスを生成する
@@ -21,8 +21,8 @@ package harayoki.starling {
 		public static function getInstance(
 			fontName:String, formatString:String, color:Number=0xffffff,
 			size:Number=0, width:int=0, height:int=0
-		):BitmapFontTextFieldFixedLocation {
-			return new BitmapFontTextFieldFixedLocation(
+		):FixedLayoutBitmapTextController {
+			return new FixedLayoutBitmapTextController(
 				fontName, formatString, color, size, width, height);
 		}
 
@@ -33,7 +33,7 @@ package harayoki.starling {
 		public static function getInstanceWithForGeneralTextField(
 			fontName:String, formatString:String, color:Number=0xffffff,
 			size:Number=0, width:int=0, height:int=0, batchable:Boolean=false
-		):BitmapFontTextFieldFixedLocation {
+		):FixedLayoutBitmapTextController {
 			return new BitmapFontTextFieldFixedLocationWithGeneralTextField(
 				fontName, formatString, color, size, width, height, batchable);
 		}
@@ -60,7 +60,7 @@ package harayoki.starling {
 		 * @param width テキストBOXの横幅 指定し無いと十分な大きさが取られる（よって、自動改行されない）
 		 * @param height テキストBOXの縦幅
 		 */
-		public function BitmapFontTextFieldFixedLocation(
+		public function FixedLayoutBitmapTextController(
 			fontName:String, formatString:String, color:Number=0xffffff, size:Number = 0, width:int=0, height:int=0) {
 			_font = TextField.getBitmapFont(fontName);
 			if(!_font) {
@@ -227,26 +227,30 @@ package harayoki.starling {
 
 		// 表示文字のアップデート
 		protected function _updateText(prevText:String, newText:String):void {
+			var newId:int;
+			var image:Image;
+			var char:BitmapChar;
+			var texture:Texture;
+			var point:Point;
 			for(var i:int=0; i<_images.length; i++) {
 				// trace(_text.charAt(i));
-				var prevId:int = prevText.charCodeAt(i);
-				var newId:int = newText.charCodeAt(i);
-				if(prevId == newId) {
+				newId = newText.charCodeAt(i);
+				if(prevText.charCodeAt(i) == newId) {
 					continue;
 				}
-				var image:Image = _images[i];
-				var char:BitmapChar = _font.getChar(newId); // ないかも？
+				image = _images[i];
+				char = _font.getChar(newId); // ないかも？
 				if(!char) {
 					// missing chara
 					image.visible = false;
 					continue;
 				}
 				image.visible = true;
-				var texture:Texture = char.texture;
+				texture = char.texture;
 				image.texture = texture;
-				image.width = char.texture.frameWidth; // 余白付きのテクスチャの大きさも保つためにframeWidthを使う
-				image.height = char.texture.frameHeight; // 同様にframeHeightを使う
-				var point:Point = _orgPositions[image];
+				image.width = texture.frameWidth; // 余白付きのテクスチャの大きさも保つためにframeWidthを使う
+				image.height = texture.frameHeight; // 同様にframeHeightを使う
+				point = _orgPositions[image];
 				image.x = point.x + char.xOffset;
 				image.y = point.y + char.yOffset;
 				// kerningは考慮しない
@@ -258,7 +262,7 @@ package harayoki.starling {
 	}
 }
 
-import harayoki.starling.BitmapFontTextFieldFixedLocation;
+import harayoki.starling.FixedLayoutBitmapTextController;
 
 import starling.display.DisplayObject;
 
@@ -268,7 +272,7 @@ import starling.text.TextFormat;
 /**
  * 同じインターフェースで通常のTextFieldをあつかうclass
  */
-internal class BitmapFontTextFieldFixedLocationWithGeneralTextField extends BitmapFontTextFieldFixedLocation {
+internal class BitmapFontTextFieldFixedLocationWithGeneralTextField extends FixedLayoutBitmapTextController {
 
 	private var _batchable:Boolean;
 	private var _textField:TextField;
