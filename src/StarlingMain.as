@@ -11,6 +11,7 @@ package {
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
+	import starling.display.Canvas;
 	import starling.display.DisplayObject;
 	import starling.display.Mesh;
 	import starling.display.Sprite;
@@ -180,16 +181,20 @@ package {
 			// mesh test
 
 			var vertexData:VertexData = new VertexData();
-			vertexData.setPoint(0, "position", 0, 0);
-			vertexData.setPoint(1, "position", 10, 0);
-			vertexData.setPoint(2, "position", 0, 10);
+			var deg60:Number = Math.PI*2/3;
+			vertexData.setPoint(0, "position", 10, 0);
+			vertexData.setPoint(1, "position", Math.cos(deg60)*10, Math.sin(deg60)*10);
+			vertexData.setPoint(2, "position", Math.cos(-deg60)*10, Math.sin(-deg60)*10);
 
 			var indexData:IndexData = new IndexData();
 			indexData.addTriangle(0, 1, 2);
 
 			var mesh:Mesh = new Mesh(vertexData, indexData);
+			mesh.setVertexColor(0, 0xff0000);
+			mesh.setVertexColor(1, 0x00ff00);
+			mesh.setVertexColor(2, 0x0000ff);
 			mesh.x = 100;
-			mesh.y = 80;
+			mesh.y = 85;
 			addChild(mesh);
 			mesh.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
 				if(ev.getTouch(mesh, TouchPhase.BEGAN)) {
@@ -197,6 +202,17 @@ package {
 					System.gc();
 				}
 			});
+
+			var circle:Canvas = new Canvas();
+			circle.beginFill(0xff0000, 0.5);
+			circle.drawCircle(0, 0, 10);
+			circle.beginFill(0x00ff00, 0.5);
+			circle.drawCircle(10, 0, 10);
+			circle.beginFill(0x0000ff, 0.5);
+			circle.drawCircle(5, 10, 10);
+			circle.x = 150;
+			circle.y = 85;
+			addChild(circle);
 
 		}
 

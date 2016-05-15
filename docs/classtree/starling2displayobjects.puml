@@ -3,30 +3,42 @@
 skinparam backgroundColor #EEEEEE
 skinparam ClassBorderColor #333333
 skinparam ClassBackgroundColor #AACCFF
+skinparam TitleFontColor #3333AA
 
 
-title Starling2.0のDisplayObject継承ツリー
+title \nStarling2.0のDisplayObject継承ツリー\n
 
 abstract class DisplayObject
+abstract class DisplayObjectContainer
 
-DisplayObject <|- DisplayObjectContainer
-DisplayObjectContainer <|- Stage
-DisplayObjectContainer <|- Button
-DisplayObjectContainer <|- Canvas
-DisplayObjectContainer <|- Sprite
-DisplayObjectContainer <|- Sprite3D
+DisplayObject <|-down- DisplayObjectContainer
+DisplayObject <|-down- Mesh
+Mesh <|-down- MeshBatch
+Mesh <|-down- Quad
+Quad <|-down- Image
+Image <|-down- MovieClip
 
-DisplayObject <|- Mesh
-Mesh <|- MeshBatch
-Mesh <|- Quad
-Quad <|- Image
-Image <|- MovieClip
+note top of DisplayObject : 規程クラス\n(実体化できない)
+note top of Mesh : ポリゴンの\n形状情報を持つ\n(実体化可能)
+note left of Quad : 1.xにおける\nQuad+Imageクラス
+note left of Image : 9スケールと\nリピート処理
+note left of MovieClip : Imageの\nコマアニメ
+note bottom of MeshBatch : 一括バッチ描画用
+note top of DisplayObjectContainer : グループ化\n(実体化できない)
 
-note top of DisplayObject : 実体化できません
-note bottom of Mesh : ポリゴンの形状情報を持つ
-note top of Quad : 1.xに置けるImageクラス
-note bottom of Image : 9スケールとリピート処理
-note top of MovieClip : Imageのコマアニメ
+DisplayObjectContainer <|-down- Stage
+DisplayObjectContainer <|-down- Button
+DisplayObjectContainer <|-down- Canvas
+DisplayObjectContainer <|-down- Sprite
+DisplayObjectContainer <|-down- Sprite3D
+DisplayObjectContainer <|-right- TextField
+
+note top of Stage : ステージ全体\n(通常実体化しない)
+note bottom of Button : ボタン
+note bottom of Canvas : マスク用
+note bottom of Sprite : 基本コンテナ
+note bottom of Sprite3D : 3D用コンテナ
+note right of TextField : テキスト表示\n内部にMeshBatch\nを持つ
 
 
 @enduml
