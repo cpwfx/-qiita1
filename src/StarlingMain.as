@@ -72,9 +72,11 @@ package {
 				size:Number=0, width:int=0, height:int=0
 			):BitmapFontTextFieldFixedLocation {
 				if(useTexField) {
-					BitmapFontTextFieldFixedLocation.createInstanceWithGeneralTextField(fontName, formatString, color, size, width, height);
+					return BitmapFontTextFieldFixedLocation.getInstanceWithForGeneralTextField(
+						fontName, formatString, color, size, width, height);
 				} else {
-					BitmapFontTextFieldFixedLocation.createInstance(fontName, formatString, color, size, width, height);
+					return BitmapFontTextFieldFixedLocation.getInstance(
+						fontName, formatString, color, size, width, height);
 				}
 			}
 
@@ -103,7 +105,7 @@ package {
 			// デフォルト右寄せ空白埋め
 			var score0:BitmapFontTextFieldFixedLocation
 				= createBitmapFontTextField(baseFont.name, "00000000");
-			_doHelper.locateDobj(score0.getDisplayObject(), 160, 25);
+			_doHelper.locateDobj(score0.displayObject, 160, 25);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("デフォルト・ヒダリよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 25);
 
@@ -111,7 +113,7 @@ package {
 			var score1:BitmapFontTextFieldFixedLocation
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xccffff);
 			score1.align = Align.RIGHT;
-			_doHelper.locateDobj(score1.getDisplayObject(), 160, 50);
+			_doHelper.locateDobj(score1.displayObject, 160, 50);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("ミギよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 50);
 
@@ -120,7 +122,7 @@ package {
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xffffcc);
 			score2.paddingChr = "0";
 			score2.align = Align.RIGHT;
-			_doHelper.locateDobj(score2.getDisplayObject(), 160, 75);
+			_doHelper.locateDobj(score2.displayObject, 160, 75);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("ミギよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 75);
 
@@ -129,14 +131,14 @@ package {
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xffccff);
 			score3.paddingChr = "*";
 			score3.align = Align.LEFT;
-			_doHelper.locateDobj(score3.getDisplayObject(), 160, 100);
+			_doHelper.locateDobj(score3.displayObject, 160, 100);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("ヒダリよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 100);
 
 			// 数字以外を含む
 			var time:BitmapFontTextFieldFixedLocation
 				= createBitmapFontTextField(baseFont.name, "00:00", 0xcccccc);
-			_doHelper.locateDobj(time.getDisplayObject(), 160, 125);
+			_doHelper.locateDobj(time.displayObject, 160, 125);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("スウジいがいをふくむ", baseFont.name, 200, 100, 0, 0x999999), 20, 125);
 
@@ -166,7 +168,7 @@ package {
 					"ああああああああああああああああ" +
 					"ああああああああああああああああ",
 					0xffffff, 0, 16*16);
-			_doHelper.locateDobj(messageBox.getDisplayObject(), 20, 175);
+			_doHelper.locateDobj(messageBox.displayObject, 20, 175);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("メッセージボックス", baseFont.name, 200, 100, 0, 0x999999), 20, 150);
 
@@ -182,7 +184,7 @@ package {
 				text = ("00" + (count % 100)).slice(-2);
 				time.setText(text + ":" + text);
 
-				messageBox.setTextWithPadding(message.slice(0, 1 + (count/4) % message.length));
+				messageBox.setTextWithPadding(message.slice(0, 1 + (count) % message.length));
 
 			});
 
