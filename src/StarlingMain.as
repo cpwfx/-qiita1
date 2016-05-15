@@ -1,8 +1,9 @@
 package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 
-	import harayoki.starling.BitmapFontTextFieldFixedLocation;
+	import harayoki.starling.FixedLayoutBitmapTextController;
 
 	import harayoki.starling.BitmapFontUtil;
 	import harayoki.util.CharCodeUtil;
@@ -13,6 +14,8 @@ package {
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.Align;
@@ -62,6 +65,7 @@ package {
 					_start();
 				}
 			});
+
 		}
 
 		private function _start():void {
@@ -148,8 +152,8 @@ package {
 
 //			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
-			var score:BitmapFontTextFieldFixedLocation
-				= BitmapFontTextFieldFixedLocation.getInstance(monoSpaceFont.name, "00000000");
+			var score:FixedLayoutBitmapTextController
+				= FixedLayoutBitmapTextController.getInstance(monoSpaceFont.name, "00000000");
 			score.paddingChr = "0";
 			score.align = Align.RIGHT;
 			_doHelper.locateDobj(score.displayObject, 100, 0);
@@ -158,6 +162,14 @@ package {
 			addEventListener(Event.ENTER_FRAME, function(ev:*){
 				count++;
 				score.setTextWithPadding(count + "");
+			});
+
+			// タッチ時にGCしてみる
+			score.displayObject.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void {
+				if(ev.getTouch(score.displayObject, TouchPhase.BEGAN)) {
+					trace("GC!");
+					System.gc();
+				}
 			});
 
 		}
