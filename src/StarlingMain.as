@@ -13,7 +13,9 @@ package {
 	import starling.core.Starling;
 	import starling.display.Canvas;
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.Mesh;
+	import starling.display.MeshBatch;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.TouchEvent;
@@ -179,6 +181,21 @@ package {
 			});
 
 			// mesh test
+
+			var meshbatch:MeshBatch = new MeshBatch();
+			var tempImage:Image = new Image(_assetManager.getTexture("oukan"));
+			tempImage.x = 0;
+			tempImage.y = 0;
+			meshbatch.addMesh(tempImage);
+			tempImage.x = 15;
+			tempImage.y = 5;
+			meshbatch.addMesh(tempImage);
+			tempImage.x = 30;
+			tempImage.y = 10;
+			meshbatch.addMesh(tempImage);
+			meshbatch.x = 190;
+			meshbatch.y = 75;
+			addChild(meshbatch);
 
 			var vertexData:VertexData = new VertexData();
 			var deg60:Number = Math.PI*2/3;
