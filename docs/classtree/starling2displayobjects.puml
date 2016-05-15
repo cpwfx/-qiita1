@@ -1,6 +1,6 @@
 @startuml
 
-skinparam backgroundColor #EEEEEE
+skinparam backgroundColor #EEEEDD
 skinparam ClassBorderColor #333333
 skinparam ClassBackgroundColor #AACCFF
 skinparam TitleFontColor #3333AA
@@ -20,10 +20,10 @@ Image <|-down- MovieClip
 
 note top of DisplayObject : 規程クラス\n(実体化できない)
 note top of Mesh : ポリゴンの\n形状情報を持つ\n(実体化可能)
-note left of Quad : 1.xにおける\nQuad+Imageクラス
+note left of Quad : 1.xにおける\nQuad+Image
 note left of Image : 9スケールと\nリピート処理
 note left of MovieClip : Imageの\nコマアニメ
-note bottom of MeshBatch : 一括バッチ描画用
+note bottom of MeshBatch : 一括バッチ描画用\n(実体化可能)
 note top of DisplayObjectContainer : グループ化\n(実体化できない)
 
 DisplayObjectContainer <|-down- Stage
