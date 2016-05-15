@@ -18,21 +18,24 @@ package harayoki.starling {
 		/**
 		 * 通常インスタンスを生成する
 		 */
-		public static function createInstance(
+		public static function getInstance(
 			fontName:String, formatString:String, color:Number=0xffffff,
 			size:Number=0, width:int=0, height:int=0
 		):BitmapFontTextFieldFixedLocation {
-			return new BitmapFontTextFieldFixedLocation(fontName, formatString, color, size, width, height);
+			return new BitmapFontTextFieldFixedLocation(
+				fontName, formatString, color, size, width, height);
 		}
 
 		/**
 		 * テキストフィールドを使うインスタンスを生成する
+		 * (パフォーマンスがこちらが良い場合などはすぐ切り替えられるように)
 		 */
-		public static function createInstanceWithGeneralTextField(
+		public static function getInstanceWithForGeneralTextField(
 			fontName:String, formatString:String, color:Number=0xffffff,
-			size:Number=0, width:int=0, height:int=0
+			size:Number=0, width:int=0, height:int=0, batchable:Boolean=false
 		):BitmapFontTextFieldFixedLocation {
-			return new BitmapFontTextFieldFixedLocationWithGeneralTextField(fontName, formatString, color, size, width, height);
+			return new BitmapFontTextFieldFixedLocationWithGeneralTextField(
+				fontName, formatString, color, size, width, height, batchable);
 		}
 
 		private static const TEXT_BOX_WIDTH:int = 99999; // 十分に大きく
@@ -88,7 +91,7 @@ package harayoki.starling {
 			_orgPositions = new Dictionary();
 		}
 
-		public function getDisplayObject():DisplayObject {
+		public function get displayObject():DisplayObject {
 			return _sp;
 		}
 
@@ -281,7 +284,7 @@ internal class BitmapFontTextFieldFixedLocationWithGeneralTextField extends Bitm
 	protected override function _initialize():void {
 	}
 
-	public override function getDisplayObject():DisplayObject {
+	public override function get displayObject():DisplayObject {
 		return _textField;
 	}
 
