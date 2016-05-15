@@ -3,15 +3,15 @@ package {
 	import flash.geom.Rectangle;
 	import flash.system.System;
 
-	import harayoki.starling.FixedLayoutBitmapTextController;
-
 	import harayoki.starling.BitmapFontUtil;
+	import harayoki.starling.FixedLayoutBitmapTextController;
 	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.TouchEvent;
@@ -165,9 +165,11 @@ package {
 			});
 
 			// タッチ時にGCしてみる
-			score.displayObject.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void {
-				if(ev.getTouch(score.displayObject, TouchPhase.BEGAN)) {
-					trace("GC!");
+			var gcobj:DisplayObject = _doHelper.createSpriteText("[TOUCH TO GC]", baseFont.name, 200, 20, 0, 0xffffff);
+			_doHelper.locateDobj(gcobj, 10, 450);
+			gcobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(gcobj, TouchPhase.BEGAN)) {
+					trace("gc!");
 					System.gc();
 				}
 			});
