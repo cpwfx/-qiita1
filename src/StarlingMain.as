@@ -12,10 +12,13 @@ package {
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.Mesh;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.rendering.IndexData;
+	import starling.rendering.VertexData;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.utils.Align;
@@ -170,6 +173,27 @@ package {
 			gcobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
 				if(ev.getTouch(gcobj, TouchPhase.BEGAN)) {
 					trace("gc!");
+					System.gc();
+				}
+			});
+
+			// mesh test
+
+			var vertexData:VertexData = new VertexData();
+			vertexData.setPoint(0, "position", 0, 0);
+			vertexData.setPoint(1, "position", 10, 0);
+			vertexData.setPoint(2, "position", 0, 10);
+
+			var indexData:IndexData = new IndexData();
+			indexData.addTriangle(0, 1, 2);
+
+			var mesh:Mesh = new Mesh(vertexData, indexData);
+			mesh.x = 100;
+			mesh.y = 80;
+			addChild(mesh);
+			mesh.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(mesh, TouchPhase.BEGAN)) {
+					trace("mesh!");
 					System.gc();
 				}
 			});

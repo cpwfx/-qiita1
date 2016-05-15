@@ -1,0 +1,32 @@
+@startuml
+
+skinparam backgroundColor #EEEEEE
+skinparam ClassBorderColor #333333
+skinparam ClassBackgroundColor #AACCFF
+
+
+title Starling2.0のDisplayObject継承ツリー
+
+abstract class DisplayObject
+
+DisplayObject <|- DisplayObjectContainer
+DisplayObjectContainer <|- Stage
+DisplayObjectContainer <|- Button
+DisplayObjectContainer <|- Canvas
+DisplayObjectContainer <|- Sprite
+DisplayObjectContainer <|- Sprite3D
+
+DisplayObject <|- Mesh
+Mesh <|- MeshBatch
+Mesh <|- Quad
+Quad <|- Image
+Image <|- MovieClip
+
+note top of DisplayObject : 実体化できません
+note bottom of Mesh : ポリゴンの形状情報を持つ
+note top of Quad : 1.xに置けるImageクラス
+note bottom of Image : 9スケールとリピート処理
+note top of MovieClip : Imageのコマアニメ
+
+
+@enduml
