@@ -94,11 +94,14 @@ package {
 			// カナフォントに英字フォントを合体
 			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
 
-			// 固定幅フォントを作る
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
-			monoSpaceFont.lineHeight = 8;
-			// 半角設定
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
+			//// 固定幅フォントを作る
+			//var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
+			//monoSpaceFont.lineHeight = 8;
+			//// 半角設定
+			//BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
+
+			// ":"の文字を調整
+			BitmapFontUtil.updatePadding(baseFont, -2, -1, -2, CharCodeUtil.getIdListByLetters(":"));
 
 			// 余白付きドットを合成
 			var dotTexture:Texture = _assetManager.getTexture("dot12x12");
