@@ -109,14 +109,14 @@ package {
 
 			BitmapFontUtil.traceBitmapCharInfo(baseFont);
 
-			// デフォルト右寄せ空白埋め
+			// デフォルト左寄せ空白埋め
 			var score0:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000");
 			_doHelper.locateDobj(score0.displayObject, 160, 25);
 			if(!hideInfoText) _doHelper.locateDobj(
 				_doHelper.createSpriteText("デフォルト・ヒダリよせ", baseFont.name, 200, 100, 0, 0x999999), 20, 25);
 
-			// 左寄せ寄せ空白埋め
+			// 右寄せ寄せ空白埋め
 			var score1:FixedLayoutBitmapTextController
 				= createBitmapFontTextField(baseFont.name, "00000000", 0xccffff);
 			score1.align = Align.RIGHT;
@@ -140,7 +140,7 @@ package {
 			score3.align = Align.LEFT;
 			_doHelper.locateDobj(score3.displayObject, 160, 100);
 			if(!hideInfoText) _doHelper.locateDobj(
-				_doHelper.createSpriteText("ヒダリよせ・ゼロうめ", baseFont.name, 200, 100, 0, 0x999999), 20, 100);
+				_doHelper.createSpriteText("ヒダリよせ・*うめ", baseFont.name, 200, 100, 0, 0x999999), 20, 100);
 
 			// 数字以外を含む
 			var time:FixedLayoutBitmapTextController
