@@ -1,5 +1,6 @@
 package {
 	import flash.display.Stage;
+	import flash.display3D.Context3DFillMode;
 	import flash.geom.Rectangle;
 	import flash.system.System;
 
@@ -172,11 +173,26 @@ package {
 
 			// タッチ時にGCしてみる
 			var gcobj:DisplayObject = _doHelper.createSpriteText("[TOUCH TO GC]", baseFont.name, 200, 20, 0, 0xffffff);
-			_doHelper.locateDobj(gcobj, 10, 450);
+			_doHelper.locateDobj(gcobj, 10, 440);
 			gcobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
 				if(ev.getTouch(gcobj, TouchPhase.BEGAN)) {
 					trace("gc!");
 					System.gc();
+				}
+			});
+
+			// タッチ時にワイヤーフレームにしてみる
+			var isWireframe:Boolean = false;
+			var wfobj:DisplayObject = _doHelper.createSpriteText("[TOGGLE WIREFRAME]", baseFont.name, 200, 20, 0, 0xffffff);
+			_doHelper.locateDobj(wfobj, 10, 455);
+			wfobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(wfobj, TouchPhase.BEGAN)) {
+					isWireframe = !isWireframe;
+					if(isWireframe) {
+						Starling.current.context.setFillMode(Context3DFillMode.WIREFRAME);
+					} else {
+						Starling.current.context.setFillMode(Context3DFillMode.SOLID);
+					}
 				}
 			});
 
@@ -213,12 +229,6 @@ package {
 			mesh.x = 100;
 			mesh.y = 85;
 			addChild(mesh);
-			mesh.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
-				if(ev.getTouch(mesh, TouchPhase.BEGAN)) {
-					trace("mesh!");
-					System.gc();
-				}
-			});
 
 			var circle:Canvas = new Canvas();
 			circle.beginFill(0xff0000, 0.5);
@@ -230,6 +240,7 @@ package {
 			circle.x = 150;
 			circle.y = 85;
 			addChild(circle);
+
 
 		}
 
