@@ -8,7 +8,7 @@
 //
 // =================================================================================================
 
-package harayoki.starling
+package harayoki.starling.display
 {
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -157,15 +157,9 @@ package harayoki.starling
 		//	return out;
 		//}
 
-		override public function hitTest(localPoint:Point):DisplayObject
-		{
-			return null; // dummy
-		}
 		//override public function hitTest(localPoint:Point):DisplayObject
 		//{
-		//	if (!visible || !touchable || !hitTestMask(localPoint)) return null;
-		//	else if (_bounds.containsPoint(localPoint)) return this;
-		//	else return null;
+		//	return null; // dummy
 		//}
 
 		public function readjustSize(width:Number=-1, height:Number=-1):void
