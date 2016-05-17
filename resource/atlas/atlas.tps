@@ -194,7 +194,9 @@
             <key type="filename">emoji/oukan.png</key>
             <key type="filename">emoji/tofu.png</key>
             <key type="filename">kana_only.png</key>
+            <key type="filename">lenna.gif</key>
             <key type="filename">maptip.png</key>
+            <key type="filename">pict1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -208,6 +210,8 @@
             <filename>emoji</filename>
             <filename>maptip.png</filename>
             <filename>dot16x16.png</filename>
+            <filename>pict1.png</filename>
+            <filename>lenna.gif</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
