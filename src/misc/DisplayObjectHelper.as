@@ -1,15 +1,21 @@
 package misc {
 
+	import flash.geom.Matrix;
+	import flash.geom.Rectangle;
+
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.text.TextFieldAutoSize;
 	import starling.text.TextFormat;
 	import starling.text.TextOptions;
+	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 
@@ -110,6 +116,18 @@ package misc {
 			dobj.rotation = rotation;
 			parent.addChild(dobj);
 			return dobj;
+		}
+
+		private var _workRect:Rectangle = new flash.geom.Rectangle();
+		public function fitToBound(target:DisplayObject, boundObj:DisplayObject, texture:Texture=null):void {
+			var targetSpace:DisplayObjectContainer = boundObj.parent;
+			if(targetSpace) {
+				target.getBounds(targetSpace, _workRect);
+				boundObj.x = _workRect.x;
+				boundObj.y = _workRect.y;
+				boundObj.width = _workRect.width;
+				boundObj.height = _workRect.height;
+			};
 		}
 
 	}

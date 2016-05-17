@@ -6,7 +6,7 @@ package {
 
 	import harayoki.starling.BitmapFontUtil;
 	import harayoki.starling.FixedLayoutBitmapTextController;
-	import harayoki.starling.Triangle;
+	import harayoki.starling.display.Triangle;
 	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
@@ -18,6 +18,7 @@ package {
 	import starling.display.Image;
 	import starling.display.Mesh;
 	import starling.display.MeshBatch;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.TouchEvent;
@@ -26,6 +27,7 @@ package {
 	import starling.rendering.VertexData;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
@@ -204,11 +206,18 @@ package {
 		}
 
 		private function _triTest1():void {
-			
+
+			var white:Texture = _assetManager.getTexture("mx/F"); // colorchip white
+
 			var tr1:Triangle = new Triangle(30, 30);
 			tr1.x = 80;
 			tr1.y = 100;
 			tr1.textureSmoothing = TextureSmoothing.NONE;
+			tr1.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
+				if(ev.getTouch(tr1, TouchPhase.BEGAN)) {
+					trace("touched! tr1");
+				}
+			});
 
 			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
 			tr2.x = 130;
@@ -216,7 +225,12 @@ package {
 			tr2.rotation = -Math.PI * 0.2;
 			tr2.scale = 2.0;
 			tr2.textureSmoothing = TextureSmoothing.NONE;
-			tr2.texture = _assetManager.getTexture("mx/F"); // colorchip white
+			tr2.texture = white;
+			tr2.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
+				if(ev.getTouch(tr2, TouchPhase.BEGAN)) {
+					trace("touched! tr2");
+				}
+			});
 
 			var tr3:Triangle = Triangle.fromTexture(_assetManager.getTexture("tofu"))
 			tr3.x = 180;
@@ -224,10 +238,35 @@ package {
 			tr3.color = 0xff0000;
 			tr3.scale = 2.0;
 			tr3.textureSmoothing = TextureSmoothing.NONE;
+			tr3.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
+				if(ev.getTouch(tr3, TouchPhase.BEGAN)) {
+					trace("touched! tr3");
+				}
+			});
+
+			var bound1:Quad = Quad.fromTexture(white);
+			var bound2:Quad = Quad.fromTexture(white);
+			var bound3:Quad = Quad.fromTexture(white);
+
+			bound1.alpha = 0.1;
+			bound2.alpha = 0.1;
+			bound3.alpha = 0.1;
+
+			bound1.textureSmoothing = TextureSmoothing.NONE;
+			bound2.textureSmoothing = TextureSmoothing.NONE;
+			bound3.textureSmoothing = TextureSmoothing.NONE;
 
 			addChild(tr1);
 			addChild(tr2);
 			addChild(tr3);
+
+			addChild(bound1);
+			addChild(bound2);
+			addChild(bound3);
+
+			_doHelper.fitToBound(tr1, bound1);
+			_doHelper.fitToBound(tr2, bound2);
+			_doHelper.fitToBound(tr3, bound3);
 
 		}
 
