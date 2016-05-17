@@ -6,6 +6,7 @@ package {
 
 	import harayoki.starling.BitmapFontUtil;
 	import harayoki.starling.FixedLayoutBitmapTextController;
+	import harayoki.starling.Triangle;
 	import harayoki.util.CharCodeUtil;
 
 	import misc.DisplayObjectHelper;
@@ -25,6 +26,7 @@ package {
 	import starling.rendering.VertexData;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
@@ -75,28 +77,24 @@ package {
 
 		}
 
-		private function _start():void {
+		private function _scoreTest():void {
 
-			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
+			var score:FixedLayoutBitmapTextController
+				= FixedLayoutBitmapTextController.getInstance(FONT_NAME_MONO, "00000000");
+			score.paddingChr = "0";
+			score.align = Align.RIGHT;
+			_doHelper.locateDobj(score.displayObject, 100, 0);
+
+			var count:int = 0;
+			addEventListener(Event.ENTER_FRAME, function (ev:*) {
+				count++;
+				score.setTextWithPadding(count + "");
+			});
+		}
+
+		private function _mapTest():void {
+
 			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
-			
-			// カナフォントに英字フォントを
-			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
-			
-			// 固定幅フォントを作る
-			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
-			monoSpaceFont.lineHeight = 16;
-			// 半角設定
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
-			// 句読点も
-			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListByLetters("、。"));
-
-			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
-			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B","D"));
-
-			// カラーチップフォント
-			var colorTipFont1:BitmapFont =
-				BitmapFontUtil.createBitmapFontFromTextureAtlas("colorchip", _assetManager, "mx/", 2);
 
 			// マップチップフォント
 			var mapchip:BitmapFont =
@@ -155,47 +153,10 @@ package {
 					mapchip.name,
 					300,
 					600
-				), 10, 110, 1);
+				), 10, 110, 1);		}
 
-//			BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
-			var score:FixedLayoutBitmapTextController
-				= FixedLayoutBitmapTextController.getInstance(monoSpaceFont.name, "00000000");
-			score.paddingChr = "0";
-			score.align = Align.RIGHT;
-			_doHelper.locateDobj(score.displayObject, 100, 0);
-
-			var count:int = 0;
-			addEventListener(Event.ENTER_FRAME, function(ev:*){
-				count++;
-				score.setTextWithPadding(count + "");
-			});
-
-			// タッチ時にGCしてみる
-			var gcobj:DisplayObject = _doHelper.createSpriteText("[TOUCH TO GC]", baseFont.name, 200, 20, 0, 0xffffff);
-			_doHelper.locateDobj(gcobj, 10, 440);
-			gcobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
-				if(ev.getTouch(gcobj, TouchPhase.BEGAN)) {
-					trace("gc!");
-					System.gc();
-				}
-			});
-
-			// タッチ時にワイヤーフレームにしてみる
-			var isWireframe:Boolean = false;
-			var wfobj:DisplayObject = _doHelper.createSpriteText("[TOGGLE WIREFRAME]", baseFont.name, 200, 20, 0, 0xffffff);
-			_doHelper.locateDobj(wfobj, 10, 455);
-			wfobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
-				if(ev.getTouch(wfobj, TouchPhase.BEGAN)) {
-					isWireframe = !isWireframe;
-					if(isWireframe) {
-						Starling.current.context.setFillMode(Context3DFillMode.WIREFRAME);
-					} else {
-						Starling.current.context.setFillMode(Context3DFillMode.SOLID);
-					}
-				}
-			});
-
+		private function _meshTest():void {
 			// mesh test
 
 			var meshbatch:MeshBatch = new MeshBatch();
@@ -240,10 +201,88 @@ package {
 			circle.x = 150;
 			circle.y = 85;
 			addChild(circle);
+		}
 
+		private function _triTest1():void {
+			
+			var tr1:Triangle = new Triangle(30, 30);
+			tr1.x = 80;
+			tr1.y = 100;
+			tr1.textureSmoothing = TextureSmoothing.NONE;
+
+			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
+			tr2.x = 130;
+			tr2.y = 100;
+			tr2.rotation = -Math.PI * 0.2;
+			tr2.scale = 2.0;
+			tr2.textureSmoothing = TextureSmoothing.NONE;
+			tr2.texture = _assetManager.getTexture("mx/F"); // colorchip white
+
+			var tr3:Triangle = Triangle.fromTexture(_assetManager.getTexture("tofu"))
+			tr3.x = 180;
+			tr3.y = 100;
+			tr3.color = 0xff0000;
+			tr3.scale = 2.0;
+			tr3.textureSmoothing = TextureSmoothing.NONE;
+
+			addChild(tr1);
+			addChild(tr2);
+			addChild(tr3);
 
 		}
 
+		private function _start():void {
+
+			var baseFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_KANA);
+			var subFont:BitmapFont = TextField.getBitmapFont(FONT_NAME_ALPHABET);
+
+			// カナフォントに英字フォントを
+			BitmapFontUtil.overWriteCopyBitmapChars(baseFont, subFont, true, baseFont.lineHeight - subFont.lineHeight + 1);
+
+			// 固定幅フォントを作る
+			var monoSpaceFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont(FONT_NAME_MONO, baseFont, 16);
+			monoSpaceFont.lineHeight = 16;
+			// 半角設定
+			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListForAscii());
+			// 句読点も
+			BitmapFontUtil.setFixedWidth(monoSpaceFont, 8, true, CharCodeUtil.getIdListByLetters("、。"));
+
+			var paddingAlphabetFont:BitmapFont = BitmapFontUtil.cloneBitmapFont(FONT_NAME_PADDING, subFont);
+			BitmapFontUtil.updatePadding(paddingAlphabetFont, 10, 0, 20, CharCodeUtil.getIdListByCharRange("B", "D"));
+
+			// カラーチップフォント
+			var colorTipFont1:BitmapFont =
+				BitmapFontUtil.createBitmapFontFromTextureAtlas("colorchip", _assetManager, "mx/", 2);
+
+			// BitmapFontUtil.traceBitmapCharInfo(mapchip);
+
+			// タッチ時にGCしてみる
+			var gcobj:DisplayObject = _doHelper.createSpriteText("[TOUCH TO GC]", baseFont.name, 200, 20, 0, 0xffffff);
+			_doHelper.locateDobj(gcobj, 10, 440);
+			gcobj.addEventListener(TouchEvent.TOUCH, function (ev:TouchEvent):void {
+				if (ev.getTouch(gcobj, TouchPhase.BEGAN)) {
+					trace("gc!");
+					System.gc();
+				}
+			});
+
+			// タッチ時にワイヤーフレームにしてみる
+			var isWireframe:Boolean = false;
+			var wfobj:DisplayObject = _doHelper.createSpriteText("[TOGGLE WIREFRAME]", baseFont.name, 200, 20, 0, 0xffffff);
+			_doHelper.locateDobj(wfobj, 10, 455);
+			wfobj.addEventListener(TouchEvent.TOUCH, function (ev:TouchEvent):void {
+				if (ev.getTouch(wfobj, TouchPhase.BEGAN)) {
+					isWireframe = !isWireframe;
+					if (isWireframe) {
+						Starling.current.context.setFillMode(Context3DFillMode.WIREFRAME);
+					} else {
+						Starling.current.context.setFillMode(Context3DFillMode.SOLID);
+					}
+				}
+			});
+
+			_triTest1();
+		}
 
 	}
 }
