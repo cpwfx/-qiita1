@@ -9,10 +9,11 @@ package {
 	import harayoki.starling.display.Triangle;
 	import harayoki.util.CharCodeUtil;
 
-	import misc.DisplayObjectHelper;
+	import misc.DemoHelper;
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
+	import starling.display.Button;
 	import starling.display.Canvas;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -27,6 +28,7 @@ package {
 	import starling.rendering.VertexData;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+	import starling.textures.SubTexture;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
@@ -55,13 +57,13 @@ package {
 			starling.stage.color = 0x666666;
 		}
 
-		private var _doHelper:DisplayObjectHelper;
+		private var _demoHelper:DemoHelper;
 		private var _assetManager:AssetManager;
 		public function StarlingMain() {
 
 			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE, true);
 
-			_doHelper = new DisplayObjectHelper(Starling.current, this, true);
+			_demoHelper = new DemoHelper(Starling.current, this, true);
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
@@ -85,7 +87,7 @@ package {
 				= FixedLayoutBitmapTextController.getInstance(FONT_NAME_MONO, "00000000");
 			score.paddingChr = "0";
 			score.align = Align.RIGHT;
-			_doHelper.locateDobj(score.displayObject, 100, 0);
+			_demoHelper.locateDobj(score.displayObject, 100, 0);
 
 			var count:int = 0;
 			addEventListener(Event.ENTER_FRAME, function (ev:*) {
@@ -129,8 +131,8 @@ package {
 				"BBBJJCCCCCCCPPPP",
 			].join("\n");
 
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
+			_demoHelper.locateDobj(
+				_demoHelper.createSpriteText(
 					mapall,
 					mapchip.name,
 					300,
@@ -139,8 +141,8 @@ package {
 
 			var tempFont:BitmapFont = BitmapFontUtil.cloneBitmapFontAsMonoSpaceFont("tempFont", subFont, 16);
 			BitmapFontUtil.setSpaceWidth(tempFont, 16);
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
+			_demoHelper.locateDobj(
+				_demoHelper.createSpriteText(
 					mapall,
 					tempFont.name,
 					300,
@@ -149,8 +151,8 @@ package {
 				), 10, 40 + 16, 1);
 
 
-			_doHelper.locateDobj(
-				_doHelper.createSpriteText(
+			_demoHelper.locateDobj(
+				_demoHelper.createSpriteText(
 					map,
 					mapchip.name,
 					300,
@@ -208,11 +210,14 @@ package {
 		private function _triTest1():void {
 
 			var white:Texture = _assetManager.getTexture("mx/F"); // colorchip white
+			var pict1:Texture = _assetManager.getTexture("pict1");
+			// var yohakuTofu:Texture = new SubTexture(tofu, null,false, new flash.geom.Rectangle(-2,-2,16,16));
 
 			var tr1:Triangle = new Triangle(30, 30);
 			tr1.x = 80;
 			tr1.y = 100;
 			tr1.textureSmoothing = TextureSmoothing.NONE;
+			tr1.texture = white;
 			tr1.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
 				if(ev.getTouch(tr1, TouchPhase.BEGAN)) {
 					trace("touched! tr1");
@@ -223,7 +228,6 @@ package {
 			tr2.x = 130;
 			tr2.y = 100;
 			tr2.rotation = -Math.PI * 0.2;
-			tr2.scale = 2.0;
 			tr2.textureSmoothing = TextureSmoothing.NONE;
 			tr2.texture = white;
 			tr2.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
@@ -232,17 +236,22 @@ package {
 				}
 			});
 
-			var tr3:Triangle = Triangle.fromTexture(_assetManager.getTexture("tofu"))
-			tr3.x = 180;
+			var tr3:Triangle = Triangle.fromTexture(pict1);
+			tr3.x = 170;
 			tr3.y = 100;
-			tr3.color = 0xff0000;
-			tr3.scale = 2.0;
+			tr3.color = 0xffffff;
 			tr3.textureSmoothing = TextureSmoothing.NONE;
 			tr3.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
 				if(ev.getTouch(tr3, TouchPhase.BEGAN)) {
 					trace("touched! tr3");
 				}
 			});
+
+			addChild(tr1);
+			addChild(tr2);
+			addChild(tr3);
+
+			return;
 
 			var bound1:Quad = Quad.fromTexture(white);
 			var bound2:Quad = Quad.fromTexture(white);
@@ -256,17 +265,13 @@ package {
 			bound2.textureSmoothing = TextureSmoothing.NONE;
 			bound3.textureSmoothing = TextureSmoothing.NONE;
 
-			addChild(tr1);
-			addChild(tr2);
-			addChild(tr3);
-
 			addChild(bound1);
 			addChild(bound2);
 			addChild(bound3);
 
-			_doHelper.fitToBound(tr1, bound1);
-			_doHelper.fitToBound(tr2, bound2);
-			_doHelper.fitToBound(tr3, bound3);
+			_demoHelper.fitToBound(tr1, bound1);
+			_demoHelper.fitToBound(tr2, bound2);
+			_demoHelper.fitToBound(tr3, bound3);
 
 		}
 
@@ -295,30 +300,25 @@ package {
 
 			// BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
+			var bgTexure:Texture = _assetManager.getTexture("mx/9");
 			// タッチ時にGCしてみる
-			var gcobj:DisplayObject = _doHelper.createSpriteText("[TOUCH TO GC]", baseFont.name, 200, 20, 0, 0xffffff);
-			_doHelper.locateDobj(gcobj, 10, 440);
-			gcobj.addEventListener(TouchEvent.TOUCH, function (ev:TouchEvent):void {
-				if (ev.getTouch(gcobj, TouchPhase.BEGAN)) {
-					trace("gc!");
-					System.gc();
-				}
-			});
+			var gcobj:DisplayObject = _demoHelper.createSpriteText("[TOUCH_TO_GC]", baseFont.name, 200, 20, 0, 0xffffff);
+			_demoHelper.createButton(gcobj, function():void{
+				trace("gc!");
+				System.gc();
+			},10, 440, bgTexure);
 
 			// タッチ時にワイヤーフレームにしてみる
 			var isWireframe:Boolean = false;
-			var wfobj:DisplayObject = _doHelper.createSpriteText("[TOGGLE WIREFRAME]", baseFont.name, 200, 20, 0, 0xffffff);
-			_doHelper.locateDobj(wfobj, 10, 455);
-			wfobj.addEventListener(TouchEvent.TOUCH, function (ev:TouchEvent):void {
-				if (ev.getTouch(wfobj, TouchPhase.BEGAN)) {
-					isWireframe = !isWireframe;
-					if (isWireframe) {
-						Starling.current.context.setFillMode(Context3DFillMode.WIREFRAME);
-					} else {
-						Starling.current.context.setFillMode(Context3DFillMode.SOLID);
-					}
+			var wfobj:DisplayObject = _demoHelper.createSpriteText("[TOGGLE_WIREFRAME]", baseFont.name, 200, 20, 0, 0xffffff);
+			_demoHelper.createButton(wfobj, function():void{
+				isWireframe = !isWireframe;
+				if (isWireframe) {
+					Starling.current.context.setFillMode(Context3DFillMode.WIREFRAME);
+				} else {
+					Starling.current.context.setFillMode(Context3DFillMode.SOLID);
 				}
-			});
+			}, 10, 455, bgTexure);
 
 			_triTest1();
 		}

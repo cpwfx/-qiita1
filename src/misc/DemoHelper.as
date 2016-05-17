@@ -6,10 +6,13 @@ package misc {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.text.TextFieldAutoSize;
@@ -19,11 +22,11 @@ package misc {
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 
-	public class DisplayObjectHelper {
+	public class DemoHelper {
 
 		private var _forDotArt:Boolean; // DOTアート対応フラグ
 		private var _baseDisplayObject:DisplayObjectContainer;
-		public function DisplayObjectHelper(starling:Starling, baseDisplayObject:DisplayObjectContainer, forDotArt:Boolean=false) {
+		public function DemoHelper(starling:Starling, baseDisplayObject:DisplayObjectContainer, forDotArt:Boolean=false) {
 			_baseDisplayObject = baseDisplayObject;
 			_forDotArt = forDotArt;
 			if(_forDotArt) {
@@ -116,6 +119,39 @@ package misc {
 			dobj.rotation = rotation;
 			parent.addChild(dobj);
 			return dobj;
+		}
+
+		public function createButton(
+			contents:DisplayObject, handler:Function,
+			x:Number=NaN, y:Number=NaN, bgTexture:Texture=null,
+			textureSmoothing:String=''
+		):Sprite {
+			var sp:Sprite = new Sprite();
+			sp.touchGroup = true;
+			sp.touchable = true;
+			sp.addChild(contents);
+			sp.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(sp, TouchPhase.BEGAN)) {
+					handler && handler();
+				}
+			});
+			if(!isNaN(x)) {
+				sp.x = x;
+			}
+			if(!isNaN(y)) {
+				sp.y = y;
+			}
+			_baseDisplayObject.addChild(sp);
+			if(bgTexture) {
+				var bg:Quad = Quad.fromTexture(bgTexture);
+				bg.textureSmoothing = TextureSmoothing.NONE;
+				if(textureSmoothing) {
+					bg.textureSmoothing = textureSmoothing;
+				}
+				_baseDisplayObject.addChildAt(bg, 0);
+				fitToBound(sp, bg);
+			}
+			return sp;
 		}
 
 		private var _workRect:Rectangle = new flash.geom.Rectangle();
