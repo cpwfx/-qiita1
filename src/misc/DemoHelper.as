@@ -1,16 +1,12 @@
 package misc {
 
-	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
-	import starling.display.DisplayObject;
-	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -27,12 +23,20 @@ package misc {
 
 		private var _forDotArt:Boolean; // DOTアート対応フラグ
 		private var _baseDisplayObject:DisplayObjectContainer;
+		private var _workRect:Rectangle = new flash.geom.Rectangle();
+
 		public function DemoHelper(starling:Starling, baseDisplayObject:DisplayObjectContainer, forDotArt:Boolean=false) {
 			_baseDisplayObject = baseDisplayObject;
 			_forDotArt = forDotArt;
 			if(_forDotArt) {
 				starling.antiAliasing = 0; // デフォルト値は0だが念のため
 			}
+		}
+
+		private function delay(wait:int, func:Function, args:Array=null):void {
+			setTimeout(function():void{
+				func.apply(null,args ? args : []);
+			}, wait);
 		}
 
 		public function createText(text:String="", fontName:String=null, size:Number=0, color:int=0xffffff, border:Boolean=false):TextField {
@@ -123,8 +127,9 @@ package misc {
 		}
 
 		public function createButton(
-			contents:DisplayObject, handler:Function,
-			x:Number=NaN, y:Number=NaN, bgTexture:Texture=null,
+			contents:DisplayObject,
+			handler:Function,
+			bgTexture:Texture=null,
 			textureSmoothing:String=null
 		):Sprite {
 			var sp:Sprite = new Sprite();
@@ -134,27 +139,22 @@ package misc {
 			sp.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
 				if(ev.getTouch(sp, TouchPhase.ENDED)) {
 					sp.alpha = 0.5;
-					_delay(50, function():void{
+					delay(50, function():void{
 						sp.alpha = 1.0;
 					});
 					handler && handler();
 				}
 			});
-			if(!isNaN(x)) {
-				sp.x = x;
-			}
-			if(!isNaN(y)) {
-				sp.y = y;
-			}
-			_baseDisplayObject.addChild(sp);
+			//_baseDisplayObject.addChild(sp);
 			if(bgTexture) {
 				var bg:Image = new Image(bgTexture);
 				contents.getBounds(sp, _workRect);
 				_workRect.inflate(8,8);
+				contents.x += 8;
 				bg.textureSmoothing = textureSmoothing ? textureSmoothing : TextureSmoothing.NONE;
 				bg.scale9Grid = new flash.geom.Rectangle(bg.width/2,bg.height/2,1,1);
 				bg.touchable = true;
-				bg.x = _workRect.x;
+				bg.x = _workRect.x + 8;
 				bg.y = _workRect.y;
 				bg.width = _workRect.width;
 				bg.height = _workRect.height;
@@ -163,13 +163,6 @@ package misc {
 			return sp;
 		}
 
-		private function _delay(wait:int, func:Function, args:Array=null):void {
-			setTimeout(function():void{
-				func.apply(null,args ? args : []);
-			}, wait);
-		}
-
-		private var _workRect:Rectangle = new flash.geom.Rectangle();
 		public function fitToBound(target:DisplayObject, boundObj:DisplayObject, texture:Texture=null):void {
 			var targetSpace:DisplayObjectContainer = boundObj.parent;
 			if(targetSpace) {
@@ -179,6 +172,46 @@ package misc {
 				boundObj.width = _workRect.width;
 				boundObj.height = _workRect.height;
 			};
+		}
+
+		public function loacateBottomLeft(displayObjects:Vector.<DisplayObject>, bottomPos:int=-1, rightPos:int=-1):void {
+
+			if(bottomPos<0) {
+				bottomPos = _baseDisplayObject.stage ? _baseDisplayObject.stage.stageHeight : 640;
+			}
+			if(rightPos<0) {
+				rightPos = _baseDisplayObject.stage ? _baseDisplayObject.stage.stageWidth :320;
+			}
+
+			var padding:int = 5;
+			var xx:int = padding;
+			bottomPos -= padding;
+			var minY:int = bottomPos;
+			var yy:int = bottomPos;
+
+			for(var i:int=0; i<displayObjects.length; i++) {
+				var dobj:DisplayObject = displayObjects[i] as DisplayObject;
+				if(!dobj) {
+					continue;
+				}
+				_baseDisplayObject.addChild(dobj);
+				while(true) {
+					dobj.x = xx;
+					dobj.y = yy - dobj.height;
+					xx += dobj.width + padding;
+					minY = Math.min(minY, dobj.y);
+
+					if(dobj.x < rightPos) {
+						break;
+					}
+					if(dobj.width > rightPos) {
+						break;
+					}
+					xx = padding;
+					minY = yy = minY - padding;
+				}
+			}
+
 		}
 
 	}
