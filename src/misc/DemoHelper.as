@@ -2,6 +2,7 @@ package misc {
 
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
@@ -124,14 +125,18 @@ package misc {
 		public function createButton(
 			contents:DisplayObject, handler:Function,
 			x:Number=NaN, y:Number=NaN, bgTexture:Texture=null,
-			textureSmoothing:String=''
+			textureSmoothing:String=null
 		):Sprite {
 			var sp:Sprite = new Sprite();
 			sp.touchGroup = true;
 			sp.touchable = true;
 			sp.addChild(contents);
 			sp.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
-				if(ev.getTouch(sp, TouchPhase.BEGAN)) {
+				if(ev.getTouch(sp, TouchPhase.ENDED)) {
+					sp.alpha = 0.5;
+					_delay(50, function():void{
+						sp.alpha = 1.0;
+					});
 					handler && handler();
 				}
 			});
@@ -143,15 +148,23 @@ package misc {
 			}
 			_baseDisplayObject.addChild(sp);
 			if(bgTexture) {
-				var bg:Quad = Quad.fromTexture(bgTexture);
-				bg.textureSmoothing = TextureSmoothing.NONE;
-				if(textureSmoothing) {
-					bg.textureSmoothing = textureSmoothing;
-				}
-				_baseDisplayObject.addChildAt(bg, 0);
-				fitToBound(sp, bg);
+				var bg:Image = new Image(bgTexture);
+				contents.getBounds(sp, _workRect);
+				bg.textureSmoothing = textureSmoothing ? textureSmoothing : TextureSmoothing.NONE;
+				bg.touchable = true;
+				bg.x = _workRect.x;
+				bg.y = _workRect.y;
+				bg.width = _workRect.width;
+				bg.height = _workRect.height;
+				sp.addChildAt(bg, 0);
 			}
 			return sp;
+		}
+
+		private function _delay(wait:int, func:Function, args:Array=null):void {
+			setTimeout(function():void{
+				func.apply(null,args ? args : []);
+			}, wait);
 		}
 
 		private var _workRect:Rectangle = new flash.geom.Rectangle();

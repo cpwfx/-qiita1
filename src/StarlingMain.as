@@ -214,7 +214,7 @@ package {
 			// var yohakuTofu:Texture = new SubTexture(tofu, null,false, new flash.geom.Rectangle(-2,-2,16,16));
 
 			var tr1:Triangle = new Triangle(30, 30);
-			tr1.x = 80;
+			tr1.x = 60;
 			tr1.y = 100;
 			tr1.textureSmoothing = TextureSmoothing.NONE;
 			tr1.texture = white;
@@ -225,7 +225,7 @@ package {
 			});
 
 			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
-			tr2.x = 130;
+			tr2.x = 110;
 			tr2.y = 100;
 			tr2.rotation = -Math.PI * 0.2;
 			tr2.textureSmoothing = TextureSmoothing.NONE;
@@ -237,9 +237,10 @@ package {
 			});
 
 			var tr3:Triangle = Triangle.fromTexture(pict1);
-			tr3.x = 170;
+			tr3.x = 150;
 			tr3.y = 100;
 			tr3.color = 0xffffff;
+			tr3.scale = 1.0;
 			tr3.textureSmoothing = TextureSmoothing.NONE;
 			tr3.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent){
 				if(ev.getTouch(tr3, TouchPhase.BEGAN)) {
@@ -300,7 +301,7 @@ package {
 
 			// BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
-			var bgTexure:Texture = _assetManager.getTexture("mx/9");
+			var bgTexure:Texture = _assetManager.getTexture("mx/5");
 			// タッチ時にGCしてみる
 			var gcobj:DisplayObject = _demoHelper.createSpriteText("[TOUCH_TO_GC]", baseFont.name, 200, 20, 0, 0xffffff);
 			_demoHelper.createButton(gcobj, function():void{
