@@ -191,6 +191,7 @@
             <key type="filename">alphabet.png</key>
             <key type="filename">border1.png</key>
             <key type="filename">colorbars/colorbars.png</key>
+            <key type="filename">dot12x12.png</key>
             <key type="filename">dot16x16.png</key>
             <key type="filename">emoji/oukan.png</key>
             <key type="filename">emoji/tofu.png</key>
@@ -212,6 +213,7 @@
             <filename>dot16x16.png</filename>
             <filename>pict1.png</filename>
             <filename>border1.png</filename>
+            <filename>dot12x12.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
