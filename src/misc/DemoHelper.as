@@ -150,7 +150,9 @@ package misc {
 			if(bgTexture) {
 				var bg:Image = new Image(bgTexture);
 				contents.getBounds(sp, _workRect);
+				_workRect.inflate(8,8);
 				bg.textureSmoothing = textureSmoothing ? textureSmoothing : TextureSmoothing.NONE;
+				bg.scale9Grid = new flash.geom.Rectangle(bg.width/2,bg.height/2,1,1);
 				bg.touchable = true;
 				bg.x = _workRect.x;
 				bg.y = _workRect.y;

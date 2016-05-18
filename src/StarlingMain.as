@@ -13,7 +13,6 @@ package {
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
-	import starling.display.Button;
 	import starling.display.Canvas;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
@@ -28,7 +27,6 @@ package {
 	import starling.rendering.VertexData;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	import starling.textures.SubTexture;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
@@ -54,7 +52,7 @@ package {
 			);
 			starling.skipUnchangedFrames = true;
 			starling.start();
-			starling.stage.color = 0x666666;
+			starling.stage.color = 0x333333;
 		}
 
 		private var _demoHelper:DemoHelper;
@@ -301,17 +299,17 @@ package {
 
 			// BitmapFontUtil.traceBitmapCharInfo(mapchip);
 
-			var bgTexure:Texture = _assetManager.getTexture("mx/5");
+			var bgTexure:Texture = _assetManager.getTexture("border1");
 			// タッチ時にGCしてみる
-			var gcobj:DisplayObject = _demoHelper.createSpriteText("[TOUCH_TO_GC]", baseFont.name, 200, 20, 0, 0xffffff);
+			var gcobj:DisplayObject = _demoHelper.createSpriteText("TOUCH TO GC", baseFont.name, 200, 20, 0, 0xffffff);
 			_demoHelper.createButton(gcobj, function():void{
 				trace("gc!");
 				System.gc();
-			},10, 440, bgTexure);
+			},10, 430, bgTexure);
 
 			// タッチ時にワイヤーフレームにしてみる
 			var isWireframe:Boolean = false;
-			var wfobj:DisplayObject = _demoHelper.createSpriteText("[TOGGLE_WIREFRAME]", baseFont.name, 200, 20, 0, 0xffffff);
+			var wfobj:DisplayObject = _demoHelper.createSpriteText("TOGGLE WIREFRAME", baseFont.name, 200, 20, 0, 0xffffff);
 			_demoHelper.createButton(wfobj, function():void{
 				isWireframe = !isWireframe;
 				if (isWireframe) {
