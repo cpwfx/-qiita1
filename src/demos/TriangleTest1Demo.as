@@ -23,13 +23,19 @@ package demos {
 
 			var bgTexure:Texture = _assetManager.getTexture("border1");
 
-			var wfobj:DisplayObject =
-				_demoHelper.createSpriteText("DO IT", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
-			var btn1:DisplayObject =
-				_demoHelper.createButton(wfobj, function ():void {
+			var txt:DisplayObject;
+			var btn:DisplayObject;
 
-				}, bgTexure);
-			out.push(btn1);
+			txt = _demoHelper.createSpriteText("SHOW BORDER", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
+			btn = _demoHelper.createButton(txt, function ():void {
+			}, bgTexure);
+			out.push(btn);
+
+			txt = _demoHelper.createSpriteText("HIDE BORDER", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
+			btn = _demoHelper.createButton(txt, function ():void {
+			}, bgTexure);
+			out.push(btn);
+
 			return out;
 		}
 

@@ -3,6 +3,7 @@ package {
 	import demos.MapChipTestDemo;
 	import demos.MeshTestDemo;
 	import demos.ScoreTextDemo;
+	import demos.TriangleTest1Demo;
 
 	import flash.display.Stage;
 	import flash.display3D.Context3DFillMode;
@@ -11,17 +12,12 @@ package {
 
 	import misc.DemoHelper;
 	import misc.MyFontManager;
-	import demos.TriangleTest1Demo;
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
-	import starling.display.Quad;
 	import starling.display.Sprite;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import starling.textures.TextureSmoothing;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
@@ -90,7 +86,7 @@ package {
 			var bgTexure:Texture = _assetManager.getTexture("border1");
 
 			// タッチ時にGCしてみる
-			var gcobj:DisplayObject = _demoHelper.createSpriteText("TOUCH TO GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
+			var gcobj:DisplayObject = _demoHelper.createSpriteText("GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
 			var btn2:DisplayObject = _demoHelper.createButton(gcobj, function():void{
 				trace("gc!");
 				System.gc();
@@ -98,7 +94,7 @@ package {
 
 			// タッチ時にワイヤーフレームにしてみる
 			var isWireframe:Boolean = false;
-			var wfobj:DisplayObject = _demoHelper.createSpriteText("TOGGLE WIREFRAME", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
+			var wfobj:DisplayObject = _demoHelper.createSpriteText("WIREFRAME", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
 			var btn1:DisplayObject = _demoHelper.createButton(wfobj, function():void{
 				isWireframe = !isWireframe;
 				if (isWireframe) {
@@ -114,7 +110,7 @@ package {
 			];
 			_demo.getBottomButtons(buttons);
 
-			_demoHelper.loacateBottomLeft(buttons);
+			_demoHelper.loacateBottomLeft(buttons, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
 
 		}
 

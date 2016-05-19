@@ -1,5 +1,6 @@
 package misc {
 
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
@@ -24,6 +25,7 @@ package misc {
 		private var _forDotArt:Boolean; // DOTアート対応フラグ
 		private var _baseDisplayObject:DisplayObjectContainer;
 		private var _workRect:Rectangle = new flash.geom.Rectangle();
+		private var _workPoint:Point= new Point();
 
 		public function DemoHelper(starling:Starling, baseDisplayObject:DisplayObjectContainer, forDotArt:Boolean=false) {
 			_baseDisplayObject = baseDisplayObject;
@@ -174,41 +176,47 @@ package misc {
 			};
 		}
 
-		public function loacateBottomLeft(displayObjects:Vector.<DisplayObject>, bottomPos:int=-1, rightPos:int=-1):void {
+		public function loacateBottomLeft(
+			displayObjects:Vector.<DisplayObject>,
+			rightPos:int=-1, bottomPos:int=-1,
+			paddingX:int=2, paddingY:int = 0,
+			indextX:int=5
+		):void {
 
-			if(bottomPos<0) {
-				bottomPos = _baseDisplayObject.stage ? _baseDisplayObject.stage.stageHeight : 640;
-			}
 			if(rightPos<0) {
-				rightPos = _baseDisplayObject.stage ? _baseDisplayObject.stage.stageWidth :320;
+				rightPos = _baseDisplayObject.stage ? _baseDisplayObject.stage.stageWidth :255;
+			}
+			if(bottomPos<0) {
+				bottomPos = _baseDisplayObject.stage ? _baseDisplayObject.stage.stageHeight : 255;
 			}
 
-			var padding:int = 5;
-			var xx:int = padding;
-			bottomPos -= padding;
+			var xx:int = indextX;
+			bottomPos -= paddingY;
 			var minY:int = bottomPos;
 			var yy:int = bottomPos;
 
 			for(var i:int=0; i<displayObjects.length; i++) {
 				var dobj:DisplayObject = displayObjects[i] as DisplayObject;
 				if(!dobj) {
+					xx = indextX;
+					minY = yy = minY - paddingY;
 					continue;
 				}
 				_baseDisplayObject.addChild(dobj);
 				while(true) {
 					dobj.x = xx;
 					dobj.y = yy - dobj.height;
-					xx += dobj.width + padding;
+					xx += dobj.width + paddingX;
 					minY = Math.min(minY, dobj.y);
 
-					if(dobj.x < rightPos) {
+					if(xx + paddingX < rightPos) {
 						break;
 					}
 					if(dobj.width > rightPos) {
 						break;
 					}
-					xx = padding;
-					minY = yy = minY - padding;
+					xx = indextX;
+					minY = yy = minY - paddingY;
 				}
 			}
 
