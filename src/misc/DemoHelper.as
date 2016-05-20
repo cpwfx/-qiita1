@@ -165,7 +165,7 @@ package misc {
 			return sp;
 		}
 
-		public function fitToBound(target:DisplayObject, boundObj:DisplayObject, texture:Texture=null):void {
+		public function fitToBound(target:DisplayObject, boundObj:DisplayObject):void {
 			var targetSpace:DisplayObjectContainer = boundObj.parent;
 			if(targetSpace) {
 				target.getBounds(targetSpace, _workRect);
