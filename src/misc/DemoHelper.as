@@ -128,6 +128,17 @@ package misc {
 			return dobj;
 		}
 
+		public function setTouchHandler(
+			dobj:DisplayObject,
+			handler:Function
+		):void {
+			dobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(dobj, TouchPhase.ENDED)) {
+					handler && handler();
+				}
+			});
+		}
+
 		public function createButton(
 			contents:DisplayObject,
 			handler:Function,
@@ -138,14 +149,12 @@ package misc {
 			sp.touchGroup = true;
 			sp.touchable = true;
 			sp.addChild(contents);
-			sp.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
-				if(ev.getTouch(sp, TouchPhase.ENDED)) {
-					sp.alpha = 0.5;
-					delay(50, function():void{
-						sp.alpha = 1.0;
-					});
-					handler && handler();
-				}
+			setTouchHandler(sp, function():void{
+				sp.alpha = 0.5;
+				delay(50, function():void{
+					sp.alpha = 1.0;
+				});
+				handler && handler();
 			});
 			//_baseDisplayObject.addChild(sp);
 			if(bgTexture) {
@@ -165,7 +174,7 @@ package misc {
 			return sp;
 		}
 
-		public function fitToBound(target:DisplayObject, boundObj:DisplayObject, texture:Texture=null):void {
+		public function fitToBound(target:DisplayObject, boundObj:DisplayObject):void {
 			var targetSpace:DisplayObjectContainer = boundObj.parent;
 			if(targetSpace) {
 				target.getBounds(targetSpace, _workRect);
