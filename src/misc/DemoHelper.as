@@ -130,11 +130,15 @@ package misc {
 
 		public function setTouchHandler(
 			dobj:DisplayObject,
-			handler:Function
+			touchEndHandler:Function,
+			touchBeginHandler:Function=null
 		):void {
 			dobj.addEventListener(TouchEvent.TOUCH, function(ev:TouchEvent):void{
+				if(ev.getTouch(dobj, TouchPhase.BEGAN)) {
+					touchBeginHandler && touchBeginHandler();
+				}
 				if(ev.getTouch(dobj, TouchPhase.ENDED)) {
-					handler && handler();
+					touchEndHandler && touchEndHandler();
 				}
 			});
 		}

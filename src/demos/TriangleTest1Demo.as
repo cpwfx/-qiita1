@@ -8,6 +8,7 @@ package demos {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
@@ -15,6 +16,7 @@ package demos {
 
 	public class TriangleTest1Demo extends DemoBase {
 
+		private var _borderVisible:Boolean = true;
 		public function TriangleTest1Demo(assetManager:AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 		}
@@ -28,11 +30,13 @@ package demos {
 
 			txt = _demoHelper.createSpriteText("SHOW BORDER", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
 			btn = _demoHelper.createButton(txt, function ():void {
+				_borderVisible = true;
 			}, bgTexture);
 			out.push(btn);
 
 			txt = _demoHelper.createSpriteText("HIDE BORDER", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
 			btn = _demoHelper.createButton(txt, function ():void {
+				_borderVisible = false;
 			}, bgTexture);
 			out.push(btn);
 
@@ -47,33 +51,49 @@ package demos {
 			// 余白テスト用
 			// var yohaku:Texture = new SubTexture(texture, null,false, new flash.geom.Rectangle(-2,-2,16,16));
 
+			var pressingTr1:Boolean = false;
+			var pressingTr2:Boolean = false;
+			var pressingTr3:Boolean = false;
+
+			var scale1:Number = 1.0;
+			var scale2:Number = 3.0;
+			var scale3:Number = 1.0;
+
 			var tr1:Triangle = new Triangle(30, 30);
-			tr1.x = 60;
+			tr1.x = 160;
 			tr1.y = 100;
 			tr1.texture = whiteTexture;
+			tr1.scale = scale1;
 			_demoHelper.setTouchHandler(tr1, function(){
-				trace("touched! tr1");
+				pressingTr1 = false;
+			},function(){
+				tr1.scale *= 0.3;
+				pressingTr1 = true;
 			});
 
 			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
-			tr2.x = 110;
-			tr2.y = 100;
-			tr2.rotation = -Math.PI * 0.2;
-			tr2.scale = 3.0;
+			tr2.x = 160;
+			tr2.y = 200 - 40;
 			tr2.texture = whiteTexture;
+			tr2.scale = scale2;
+			tr2.skewX = 2;
 			_demoHelper.setTouchHandler(tr2, function(){
-				trace("touched! tr2");
+				pressingTr2 = false;
+			},function(){
+				pressingTr2 = true;
 			});
 
 			var tr3:Triangle = Triangle.fromTexture(pict1);
 			tr3.x = 160;
-			tr3.y = 220;
+			tr3.y = 300;
 			tr3.color = 0xffffff;
-			tr3.scale = 1.0;
-			tr3.pivotX = 30;
-			tr3.pivotY = 30;
+			tr3.pivotX = 64;
+			tr3.pivotY = 64;
+			tr3.scale = scale3;
 			_demoHelper.setTouchHandler(tr3, function(){
-				trace("touched! tr3");
+				pressingTr3 = false;
+			},function(){
+				pressingTr3 = true;
 			});
 
 			tr1.textureSmoothing =
@@ -92,26 +112,58 @@ package demos {
 			addChildAt(border2, 0);
 			addChildAt(border3, 0);
 
+			var cross1:DisplayObject = _createCross(tr1);
+			var cross2:DisplayObject = _createCross(tr2);
+			var cross3:DisplayObject = _createCross(tr3);
+
+			addChildAt(cross1, 0);
+			addChildAt(cross2, 0);
+			addChildAt(cross3, 0);
+
+			var theta:Number = 0;
 			addEventListener(Event.ENTER_FRAME, function():void{
-				_update(tr1, border1);
-				_update(tr2, border2);
-				_update(tr3, border3);
+				theta += 0.05;
+				_update(tr1, border1, pressingTr1 ? 0.5 : 1.25,
+					pressingTr1 ? scale1 * 0.5 : scale1 * (1.0 + Math.sin(theta) * 0.2));
+				_update(tr2, border2, pressingTr2 ? 0.5 : 1.25,
+					pressingTr2 ? scale2 * 0.5 : scale2 * (1.0 + Math.sin(theta) * 0.2));
+				_update(tr3, border3, pressingTr3 ? 0.5 : 1.25,
+					pressingTr3 ? scale3 * 0.5 : scale3 * (1.0 + Math.sin(theta) * 0.2));
 			});
 
 		}
 
-		private function _createBorder():DisplayObject {
+		private function _createCross(target:DisplayObject):DisplayObject {
+			var sp:Sprite = new Sprite();
+			sp.x = target.x;
+			sp.y = target.y;
+			var border1:DisplayObject = _createBorder(0x000000, 1.0);
+			border1.scale = 1000;
+			var border2:DisplayObject = _createBorder(0x000000, 1.0);
+			border2.pivotX = 8;
+			border2.pivotY = 8;
+			border2.x = 1;
+			border2.y = 1;
+			border2.scale = 1000;
+			sp.addChild(border1);
+			sp.addChild(border2);
+			return sp;
+		}
+
+		private function _createBorder(color:int=0x00ffff,alpha:Number=0.2):DisplayObject {
 			var borderTexture:Texture = _assetManager.getTexture("box1line");
 			var border:Image = new Image(borderTexture);
 			border.textureSmoothing = TextureSmoothing.NONE;
-			border.alpha = 0.2;
-			border.color = 0x00ffff;
+			border.alpha = alpha;
+			border.color = color;
 			border.scale9Grid = new flash.geom.Rectangle(4, 4, 1, 1);
 			return border;
 		}
 
-		private function _update(tr:Triangle, border:DisplayObject):void {
-			tr.rotation += 0.03;
+		private function _update(tr:Triangle, border:DisplayObject, changeScaleRatio:Number = 0.2, baseScale:Number=1.0):void {
+			tr.rotation += 0.02;
+			tr.scale += (baseScale - tr.scale) * changeScaleRatio;
+			border.visible = _borderVisible;
 			_demoHelper.fitToBound(tr, border);
 		}
 	}
