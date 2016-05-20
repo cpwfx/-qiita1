@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:187974f64f8bb90f023fad198b8c7f6e:dfa86af73bf34836cca3fc36cf04110a:cde709370900f12288f3449eded86f07$ -->
+<!-- $TexturePacker:SmartUpdate:42da9edf5cd81322c0e7337fbe56a873:2773b7f94f49c091c5d80348695b7610:cde709370900f12288f3449eded86f07$ -->
 <TextureAtlas imagePath="atlas.png" width="280" height="210">
     <SubTexture name="alphabet" x="151" y="131" width="76" height="78"/>
     <SubTexture name="border1" x="129" y="152" width="13" height="12" frameX="-2" frameY="-2" frameWidth="16" frameHeight="16"/>
+    <SubTexture name="box1line" x="111" y="200" width="8" height="8"/>
     <SubTexture name="colorbars" x="111" y="167" width="7" height="31" frameX="0" frameY="0" frameWidth="8" frameHeight="32"/>
     <SubTexture name="dot12x12" x="144" y="152" width="5" height="4" frameX="-4" frameY="-4" frameWidth="12" frameHeight="12"/>
     <SubTexture name="dot16x16" x="144" y="152" width="5" height="4" frameX="-6" frameY="-6" frameWidth="16" frameHeight="16"/>
@@ -11,5 +12,5 @@
     <SubTexture name="maptip" x="1" y="152" width="108" height="54"/>
     <SubTexture name="oukan" x="111" y="152" width="16" height="13"/>
     <SubTexture name="pict1" x="151" y="1" width="128" height="128"/>
-    <SubTexture name="tofu" x="111" y="200" width="8" height="8"/>
+    <SubTexture name="tofu" x="129" y="166" width="8" height="8"/>
 </TextureAtlas>

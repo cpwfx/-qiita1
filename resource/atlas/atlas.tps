@@ -190,6 +190,7 @@
         <map type="IndividualSpriteSettingsMap">
             <key type="filename">alphabet.png</key>
             <key type="filename">border1.png</key>
+            <key type="filename">box1line.png</key>
             <key type="filename">colorbars/colorbars.png</key>
             <key type="filename">dot12x12.png</key>
             <key type="filename">dot16x16.png</key>
@@ -214,6 +215,7 @@
             <filename>pict1.png</filename>
             <filename>border1.png</filename>
             <filename>dot12x12.png</filename>
+            <filename>box1line.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
