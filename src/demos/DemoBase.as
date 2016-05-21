@@ -1,4 +1,6 @@
 package demos {
+	import harayoki.stage3d.IContext3DFillModeControl;
+
 	import misc.DemoHelper;
 
 	import starling.core.Starling;

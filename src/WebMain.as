@@ -1,13 +1,14 @@
 package {
 
-import flash.display.Sprite;
+	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 
-	public class Main extends Sprite {
-        public function Main() {
+	[SWF(width = "640", height = "1136", frameRate = "60", backgroundColor = "#333333")]
+	public class WebMain extends Sprite {
+		public function WebMain() {
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.frameRate = 60;
@@ -17,7 +18,7 @@ import flash.display.Sprite;
 		}
 
 		private function _init(ev:Event=null):void {
-			StarlingMain.start(stage);
+			StarlingMain.start(stage, null);
 		}
 	}
 }

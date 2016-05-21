@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="qiita1">
+  <component name="FlexBuildConfigurationManager" active="forair">
     <configurations>
-      <configuration name="qiita1" target-platform="Desktop" pure-as="true" main-class="Main" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
+      <configuration name="forair" target-platform="Desktop" pure-as="true" main-class="AirMain" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
         <dependencies>
           <entries>
             <entry library-name="starling" library-level="project">
@@ -24,6 +24,22 @@
         <packaging-android />
         <packaging-ios />
       </configuration>
+      <configuration name="forweb" pure-as="true" main-class="WebMain" output-file="forweb.swf" output-folder="$MODULE_DIR$/out/production/qiita1" wrapper-template-path="$MODULE_DIR$/html-template">
+        <dependencies target-player="21.0">
+          <entries>
+            <entry library-id="3a63461d-b6ee-4fe1-88a8-498dfeed93ef">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="AIRSDK_21" />
+        </dependencies>
+        <compiler-options>
+          <option name="additionalOptions" value="-advanced-telemetry" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
     </configurations>
     <compiler-options />
   </component>
@@ -39,5 +55,16 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="starling" level="project" />
     <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="3a63461d-b6ee-4fe1-88a8-498dfeed93ef" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -198,7 +198,9 @@ package demos {
 			tr.rotation += 0.02;
 			tr.scale += (baseScale - tr.scale) * changeScaleRatio;
 			border.visible = _infoVisible;
-			_demoHelper.fitToBound(tr, border);
+			if(_infoVisible) {
+				_demoHelper.fitToBound(tr, border);
+			}
 		}
 	}
 }

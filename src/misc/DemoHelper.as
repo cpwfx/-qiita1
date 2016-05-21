@@ -4,6 +4,8 @@ package misc {
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 
+	import harayoki.stage3d.IContext3DFillModeControl;
+
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
@@ -26,6 +28,7 @@ package misc {
 		private var _baseDisplayObject:DisplayObjectContainer;
 		private var _workRect:Rectangle = new flash.geom.Rectangle();
 		private var _workPoint:Point= new Point();
+		private var _context3DFillModeControl:IContext3DFillModeControl;
 
 		public function DemoHelper(starling:Starling, baseDisplayObject:DisplayObjectContainer, forDotArt:Boolean=false) {
 			_baseDisplayObject = baseDisplayObject;
