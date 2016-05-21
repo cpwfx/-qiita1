@@ -24,8 +24,8 @@ package misc {
 
 		public static function setupAsset(assetManager:AssetManager):void {
 			_assetManager = assetManager;
-			assetManager.enqueueWithName('app:/assets/px12fontshadow/alphabet.fnt');
-			assetManager.enqueueWithName('app:/assets/px12fontshadow/kana_only.fnt');
+			assetManager.enqueueWithName('assets/px12fontshadow/alphabet.fnt');
+			assetManager.enqueueWithName('assets/px12fontshadow/kana_only.fnt');
 		}
 
 		public static function setup():void {

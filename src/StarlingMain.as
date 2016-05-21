@@ -58,9 +58,9 @@ package {
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
 			_demo.addAssets(assetsCandidates);
-			assetsCandidates.push('app:/assets/atlas.png');
-			assetsCandidates.push('app:/assets/atlas.xml');
-			assetsCandidates.push('app:/assets/colorbars.xml');
+			assetsCandidates.push('assets/atlas.png');
+			assetsCandidates.push('assets/atlas.xml');
+			assetsCandidates.push('assets/colorbars.xml');
 
 			var assets:Array = [];
 			//重複を省く
