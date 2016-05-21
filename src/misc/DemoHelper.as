@@ -88,7 +88,7 @@ package misc {
 			fmt:TextFormat=null,
 			opt:TextOptions=null
 		):Sprite {
-			var fnt:BitmapFont = TextField.getBitmapFont(fontName);
+			var fnt:BitmapFont = fmt ? TextField.getBitmapFont(fmt.font) : TextField.getBitmapFont(fontName);
 			if(!fnt) {
 				trace('No bitmap font for', fontName);
 				return new Sprite();
