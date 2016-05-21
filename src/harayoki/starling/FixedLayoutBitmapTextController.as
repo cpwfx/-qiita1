@@ -216,7 +216,7 @@ package harayoki.starling {
 		/**
 		 * テキストを直接指定する
 		 */
-		public function setText(text:String) {
+		public function setText(text:String):void {
 			if (_text == text) {
 				return;
 			}

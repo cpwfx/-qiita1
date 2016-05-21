@@ -14,7 +14,6 @@ package demos {
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
-	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
 	public class TriangleTest1Demo extends DemoBase {
@@ -29,7 +28,7 @@ package demos {
 			var btn:DisplayObject;
 			var bgTexture:Texture = _assetManager.getTexture("border1");
 
-			btn = _demoHelper.createButton(_createText("INFO"), function ():void {
+			btn = _demoHelper.createButton(_createText("INFO"), function():void {
 				_infoVisible = !_infoVisible;
 			}, bgTexture);
 			out.push(btn);
@@ -64,9 +63,9 @@ package demos {
 			tr1.y = 130;
 			//tr1.texture = whiteTexture;
 			tr1.scale = scale1;
-			_demoHelper.setTouchHandler(tr1, function(){
+			_demoHelper.setTouchHandler(tr1, function():void{
 				pressingTr1 = false;
-			},function(){
+			},function():void{
 				tr1.scale *= 0.3;
 				pressingTr1 = true;
 			});
@@ -77,9 +76,9 @@ package demos {
 			// tr2.texture = whiteTexture;
 			tr2.scale = scale2;
 			tr2.skewX = -30 * Math.PI / 180;
-			_demoHelper.setTouchHandler(tr2, function(){
+			_demoHelper.setTouchHandler(tr2, function():void{
 				pressingTr2 = false;
-			},function(){
+			},function():void{
 				pressingTr2 = true;
 			});
 
@@ -90,9 +89,9 @@ package demos {
 			tr3.pivotX = 48;
 			tr3.pivotY = 48;
 			tr3.scale = scale3;
-			_demoHelper.setTouchHandler(tr3, function(){
+			_demoHelper.setTouchHandler(tr3, function():void{
 				pressingTr3 = false;
-			},function(){
+			},function():void{
 				pressingTr3 = true;
 			});
 

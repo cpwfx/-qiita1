@@ -488,7 +488,7 @@ package harayoki.starling {
 				if(height > 0) {
 					offsetY = _calcCenterrizeOffsetY(texture, height);
 				}
-				var advanceX = width <=0 ? texture.frameWidth + paddingX : width + paddingX;
+				var advanceX:Number = width <=0 ? texture.frameWidth + paddingX : width + paddingX;
 				if(charName.length == 1) {
 					// １文字の場合はその文字として登録
 					char = createBitmapCharByTexture(charName, texture, offsetX, offsetY, advanceX);
@@ -515,7 +515,7 @@ package harayoki.starling {
 		 * @param target フォント
 		 * @param charIdlist 対象文字番号の一覧
 		 */
-		public static function traceBitmapCharInfo(target:BitmapFont, charIdlist:Vector.<int> = null) {
+		public static function traceBitmapCharInfo(target:BitmapFont, charIdlist:Vector.<int> = null):void {
 			if (!target) {
 				return;
 			}

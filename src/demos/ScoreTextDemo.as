@@ -130,9 +130,9 @@ package demos {
 				_demoHelper.createSpriteText("メッセージボックス", font.name, 200, 100, 0, 0x999999), 20, 150);
 
 			var count:int = 0;
-			addEventListener(Event.ENTER_FRAME, function(ev:*){
+			addEventListener(Event.ENTER_FRAME, function(ev:*):void{
 				count = (count + 1) % 100000000;
-				var text = (""  + count);
+				var text:String = (""  + count);
 				score0.setTextWithPadding(text);
 				score1.setTextWithPadding(text);
 				score2.setTextWithPadding(text);
