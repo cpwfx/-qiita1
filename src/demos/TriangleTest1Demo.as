@@ -11,6 +11,7 @@ package demos {
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextFormat;
+	import starling.textures.SubTexture;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
@@ -42,7 +43,7 @@ package demos {
 			var pict1:Texture = _assetManager.getTexture("pict1");
 
 			// 余白テスト用
-			// var yohaku:Texture = new SubTexture(texture, null,false, new flash.geom.Rectangle(-2,-2,16,16));
+			// var whiteTexturePAdding:Texture = new SubTexture(whiteTexture, null,false, new flash.geom.Rectangle(-2,-2,6,6));
 
 			var pressingTr1:Boolean = false;
 			var pressingTr2:Boolean = false;
@@ -54,14 +55,14 @@ package demos {
 
 			var title:DisplayObject = _createText("TOUCH TRIANGLES", Align.CENTER);
 			title.x -= 160;
-			title.y = 20;
+			title.y = 10;
 			title.scale = 2;
 			addChild(title);
 
 			var tr1:Triangle = new Triangle(30, 30);
 			tr1.x = 160;
-			tr1.y = 130;
-			//tr1.texture = whiteTexture;
+			tr1.y = 110;
+			// tr1.texture = whiteTexture; // ここをイキにするとドローコールが減る テクスチャなしがまざるとドローコール増える
 			tr1.scale = scale1;
 			_demoHelper.setTouchHandler(tr1, function():void{
 				pressingTr1 = false;
@@ -72,8 +73,8 @@ package demos {
 
 			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
 			tr2.x = 160;
-			tr2.y = 230 - 10;
-			// tr2.texture = whiteTexture;
+			tr2.y = 210 - 20;
+			tr2.texture = whiteTexture;
 			tr2.scale = scale2;
 			tr2.skewX = -30 * Math.PI / 180;
 			_demoHelper.setTouchHandler(tr2, function():void{
@@ -84,7 +85,7 @@ package demos {
 
 			var tr3:Triangle = Triangle.fromTexture(pict1);
 			tr3.x = 160;
-			tr3.y = 330;
+			tr3.y = 310;
 			tr3.color = 0xffffff;
 			tr3.pivotX = 48;
 			tr3.pivotY = 48;
@@ -98,10 +99,6 @@ package demos {
 			tr1.textureSmoothing =
 			tr2.textureSmoothing =
 			tr3.textureSmoothing = TextureSmoothing.NONE;
-
-			addChild(tr1);
-			addChild(tr2);
-			addChild(tr3);
 
 			var title1:DisplayObject = _createText("Normal", Align.CENTER, tr1);
 			var title2:DisplayObject = _createText("Skew & Color", Align.CENTER, tr2);
@@ -149,6 +146,10 @@ package demos {
 				cross1.visible = cross2.visible = cross3.visible = _infoVisible;
 
 			});
+
+			addChild(tr2);
+			addChild(tr3);
+			addChild(tr1); // こいつだけDrawのStateが違う
 
 		}
 
