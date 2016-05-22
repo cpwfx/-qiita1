@@ -25,11 +25,13 @@ package {
 
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 		private static var _context3DFillModeControl:IContext3DFillModeControl;
+		private static var _gcAvairable:Boolean;
 
-		public static function start(nativeStage:Stage, context3DFillModeControl:IContext3DFillModeControl=null):void {
+		public static function start(nativeStage:Stage, context3DFillModeControl:IContext3DFillModeControl=null, gcAvairable:Boolean=true):void {
 			trace("Starling version :", Starling.VERSION);
 
 			_context3DFillModeControl = context3DFillModeControl;
+			_gcAvairable = gcAvairable;
 
 			var starling:Starling = new Starling(
 				StarlingMain,
@@ -106,16 +108,22 @@ package {
 				buttons.push(btn1);
 			}
 
-			// タッチ時にGCしてみる
-			var gcobj:DisplayObject = _demoHelper.createSpriteText("GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
-			var btn2:DisplayObject = _demoHelper.createButton(gcobj, function():void{
-				trace("gc!");
-				System.gc();
-			},bgTexure);
-			buttons.push(btn2);
+			if(_gcAvairable) {
+				// タッチ時にGCしてみる
+				var gcobj:DisplayObject = _demoHelper.createSpriteText("GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
+				var btn2:DisplayObject = _demoHelper.createButton(gcobj, function():void{
+					trace("gc!");
+					System.gc();
+				},bgTexure);
+				buttons.push(btn2);
+			}
 
+			// 各デモでボタンを追加 nullが入っていると改行になる
 			_demo.getBottomButtons(buttons);
-			_demoHelper.loacateBottomLeft(buttons, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
+
+			if(buttons.length > 0) {
+				_demoHelper.loacateBottomLeft(buttons, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
+			}
 
 			addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
 
