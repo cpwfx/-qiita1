@@ -6,7 +6,7 @@ package {
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 
-	[SWF(width = "640", height = "1136", frameRate = "60", backgroundColor = "#333333")]
+	[SWF(width = "480", height = "640", frameRate = "60", backgroundColor = "#333333")]
 	public class WebMain extends Sprite {
 		public function WebMain() {
 			stage.align = StageAlign.TOP_LEFT;

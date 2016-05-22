@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="forair">
+  <component name="FlexBuildConfigurationManager" active="forAir">
     <configurations>
-      <configuration name="forair" target-platform="Desktop" pure-as="true" main-class="AirMain" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
+      <configuration name="forAir" target-platform="Desktop" pure-as="true" main-class="AirMain" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
         <dependencies>
           <entries>
             <entry library-name="starling" library-level="project">
@@ -24,10 +24,26 @@
         <packaging-android />
         <packaging-ios />
       </configuration>
-      <configuration name="forweb" pure-as="true" main-class="WebMain" output-file="forweb.swf" output-folder="$MODULE_DIR$/out/production/qiita1" wrapper-template-path="$MODULE_DIR$/html-template">
+      <configuration name="swfOnly" pure-as="true" main-class="WebMain" output-file="forweb.swf" output-folder="$MODULE_DIR$/out/production/qiita1" wrapper-template-path="$MODULE_DIR$/html-template">
         <dependencies target-player="21.0">
           <entries>
             <entry library-id="3a63461d-b6ee-4fe1-88a8-498dfeed93ef">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="AIRSDK_21" />
+        </dependencies>
+        <compiler-options>
+          <option name="additionalOptions" value="-advanced-telemetry" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
+      <configuration name="withHtml" pure-as="true" main-class="WebMain" output-file="withHtml.swf" output-folder="$MODULE_DIR$/out/production/qiita1" use-html-wrapper="true" wrapper-template-path="$MODULE_DIR$/html-template">
+        <dependencies target-player="21.0">
+          <entries>
+            <entry library-id="1e457d32-5766-4f4c-a1d1-cf6f69ac9170">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -58,6 +74,17 @@
     <orderEntry type="module-library" exported="">
       <library type="flex">
         <properties id="3a63461d-b6ee-4fe1-88a8-498dfeed93ef" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="1e457d32-5766-4f4c-a1d1-cf6f69ac9170" />
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
         </CLASSES>
