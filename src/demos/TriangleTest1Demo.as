@@ -74,7 +74,7 @@ package demos {
 			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
 			tr2.x = 160;
 			tr2.y = 210 - 20;
-			tr2.texture = whiteTexture;
+			// tr2.texture = whiteTexture; // ここをイキにするとドローコールが減る テクスチャなしがまざるとドローコール増える
 			tr2.scale = scale2;
 			tr2.skewX = -30 * Math.PI / 180;
 			_demoHelper.setTouchHandler(tr2, function():void{
@@ -100,9 +100,10 @@ package demos {
 			tr2.textureSmoothing =
 			tr3.textureSmoothing = TextureSmoothing.NONE;
 
-			addChild(tr3);
-			addChild(tr2);
-			addChild(tr1); // こいつだけDrawのStateが違う
+			// 逆さ順に配置しておくと、infoを消した時に drawが１つへる
+			addChild(tr3); // texture
+			addChild(tr2); // color
+			addChild(tr1); // color
 
 			var title1:DisplayObject = _createText("Normal", Align.CENTER, tr1);
 			var title2:DisplayObject = _createText("Skew & Color", Align.CENTER, tr2);
