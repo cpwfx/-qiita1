@@ -66,14 +66,14 @@ package harayoki.starling {
 			if(!_font) {
 				throw(new Error("invalid font name : " + fontName));
 			}
-			_formatString = formatString;
-			if(_formatString == null || _formatString.length == 0) {
+			if(formatString == null || formatString.length == 0) {
 				throw(new Error("Invalid format string.. empty format."))
 			}
-			var err:String = _checkFormatError();
+			var err:String = _checkFormatError(formatString);
 			if(err && err.length > 0) {
 				throw(new Error("Invalid format string.. " + err))
 			}
+			_formatString = _replaceSpaces(formatString, "_");
 			_setPaddingStr(" ");
 			var textFormat:TextFormat = new TextFormat(
 				_font.name, size <= 0 ? _font.size : size, color, Align.TOP, Align.LEFT);
@@ -85,6 +85,7 @@ package harayoki.starling {
 				_formatString,
 				textFormat
 			);
+			setText(formatString);
 		}
 
 		protected function _initialize():void {
@@ -96,16 +97,31 @@ package harayoki.starling {
 			return _sp;
 		}
 
+		// 幅0の文字を適当に入れ替える
+		private function _replaceSpaces(format:String, replaceStr:String):String {
+			var replaced:String = "";
+			for (var i:int = 0; i < format.length; i++) {
+				var code:int = format.charCodeAt(i);
+				var str:String = format.charAt(i);
+				var char:BitmapChar = _font.getChar(code);
+				if (char.width == 0) {
+					trace("Caution : format include width 0 char : " + code);
+					replaced += replaceStr;
+				} else {
+					replaced += str;
+				}
+			}
+			return replaced;
+		}
+
 		// フォーマットストリングが正しく使えるものが確認する
-		private function _checkFormatError():String {
+		private function _checkFormatError(formatString:String):String {
 			var err:Array = [];
-			for(var i:int=0; i< _formatString.length; i++) {
-				var code:int = _formatString.charCodeAt(i);
+			for(var i:int=0; i< formatString.length; i++) {
+				var code:int = formatString.charCodeAt(i);
 				var char:BitmapChar = _font.getChar(code);
 				if(!char) {
 					err.push("missign char : " + code);
-				} else if(char.width == 0) {
-					err.push("char has no width : " + code);
 				}
 			}
 			return err.join("\n");
