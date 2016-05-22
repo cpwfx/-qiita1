@@ -59,24 +59,23 @@ package {
 			_demo = new MapChipTestDemo(_assetManager);
 			_demo = new TriangleTest1Demo(_assetManager);
 
-			addChild(_demo);
-
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
 			_demo.addAssets(assetsCandidates);
+			assetsCandidates.push('assets/colorbars.xml');
 			assetsCandidates.push('assets/atlas.png');
 			assetsCandidates.push('assets/atlas.xml');
-			assetsCandidates.push('assets/colorbars.xml');
 
-			var assets:Array = [];
-			//重複を省く
-			for each(var file:String in assetsCandidates) {
-				if(assets.indexOf(file) == -1) {
-					assets.push(file);
+			var assetsAdded:Array = [];
+			//重複を省く 順序を保たないと入れ子アトラスが解決できない模様 (atlas.png内にcolorbarsがある)
+			for(var i:int=0; i < assetsCandidates.length; i++) {
+				var file:String = assetsCandidates[i];
+				if(assetsAdded.indexOf(file) == -1) {
+					assetsAdded.push(file);
+					_assetManager.enqueue(file);
 				}
 			}
 
-			_assetManager.enqueue(assets);
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
 					_start();
@@ -116,8 +115,9 @@ package {
 			buttons.push(btn2);
 
 			_demo.getBottomButtons(buttons);
-
 			_demoHelper.loacateBottomLeft(buttons, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
+
+			addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
 
 		}
 
