@@ -70,8 +70,9 @@ package harayoki.starling {
 			if(_formatString == null || _formatString.length == 0) {
 				throw(new Error("Invalid format string.. empty format."))
 			}
-			if(!_checkFormatString()) {
-				throw(new Error("Invalid format string.. missing bitmap char(s)."))
+			var err:String = _checkFormatError();
+			if(err && err.length > 0) {
+				throw(new Error("Invalid format string.. " + err))
 			}
 			_setPaddingStr(" ");
 			var textFormat:TextFormat = new TextFormat(
@@ -96,12 +97,18 @@ package harayoki.starling {
 		}
 
 		// フォーマットストリングが正しく使えるものが確認する
-		private function _checkFormatString():Boolean {
+		private function _checkFormatError():String {
+			var err:Array = [];
 			for(var i:int=0; i< _formatString.length; i++) {
 				var code:int = _formatString.charCodeAt(i);
-				if(!_font.getChar(code)) return false;
+				var char:BitmapChar = _font.getChar(code);
+				if(!char) {
+					err.push("missign char : " + code);
+				} else if(char.width == 0) {
+					err.push("char has no width : " + code);
+				}
 			}
-			return true;
+			return err.join("\n");
 		}
 
 		// 初期テキストレイアウト
