@@ -100,6 +100,10 @@ package demos {
 			tr2.textureSmoothing =
 			tr3.textureSmoothing = TextureSmoothing.NONE;
 
+			addChild(tr3);
+			addChild(tr2);
+			addChild(tr1); // こいつだけDrawのStateが違う
+
 			var title1:DisplayObject = _createText("Normal", Align.CENTER, tr1);
 			var title2:DisplayObject = _createText("Skew & Color", Align.CENTER, tr2);
 			var title3:DisplayObject = _createText("FromTexture & Pivot", Align.CENTER, tr3);
@@ -146,10 +150,6 @@ package demos {
 				cross1.visible = cross2.visible = cross3.visible = _infoVisible;
 
 			});
-
-			addChild(tr2);
-			addChild(tr3);
-			addChild(tr1); // こいつだけDrawのStateが違う
 
 		}
 
