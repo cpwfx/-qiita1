@@ -18,6 +18,8 @@ package demos {
 		internal var _demoHelper:DemoHelper;
 		internal var _assets:Array;
 
+		public var frontDisplay:Boolean = false;
+		
 		public function DemoBase(assetManager:AssetManager, starling:Starling=null) {
 			_assets = [];
 			_starling = starling ? starling : Starling.current;

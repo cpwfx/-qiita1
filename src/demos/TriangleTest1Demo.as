@@ -21,6 +21,7 @@ package demos {
 
 		private var _infoVisible:Boolean = true;
 		public function TriangleTest1Demo(assetManager:AssetManager, starling:Starling = null) {
+			frontDisplay = true;
 			super(assetManager, starling);
 		}
 

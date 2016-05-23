@@ -4,6 +4,7 @@ package {
 	import demos.MeshTestDemo;
 	import demos.ScoreTextDemo;
 	import demos.TriangleTest1Demo;
+	import demos.TriangleTest2Demo;
 
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
@@ -60,6 +61,7 @@ package {
 			_demo = new MeshTestDemo(_assetManager);
 			_demo = new MapChipTestDemo(_assetManager);
 			_demo = new TriangleTest1Demo(_assetManager);
+			_demo = new TriangleTest2Demo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
@@ -93,6 +95,8 @@ package {
 		private function _start():void {
 
 			MyFontManager.setup();
+
+			addChild(_demo)
 			_demo.start();
 
 			var buttons:Vector.<DisplayObject> = new <DisplayObject>[];
@@ -125,7 +129,9 @@ package {
 				_demoHelper.loacateBottomLeft(buttons, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
 			}
 
-			addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
+			if(_demo.frontDisplay) {
+				addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
+			}
 
 		}
 
