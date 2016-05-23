@@ -1,32 +1,28 @@
-// =================================================================================================
-//
-//	Starling Framework
-//	Copyright Gamua GmbH. All Rights Reserved.
-//
-//	This program is free software. You can redistribute and/or modify it
-//	in accordance with the terms of the accompanying license agreement.
-//
-// =================================================================================================
-
 package harayoki.starling.display
 {
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
+	import starling.display.DisplayObject;
 	import starling.display.Mesh;
 	import starling.rendering.IndexData;
 	import starling.rendering.VertexData;
 	import starling.styles.MeshStyle;
 	import starling.textures.Texture;
+	import starling.utils.MatrixUtil;
 
 	public class Triangle extends Mesh {
 		private var _bounds:Rectangle;
 
 		// helper objects
-		//private static var sPoint3D:Vector3D = new Vector3D();
 		private static var sMatrix:Matrix = new Matrix();
-		//private static var sMatrix3D:Matrix3D = new Matrix3D();
 		private static var sRectangle:Rectangle = new Rectangle();
+		// private static var sPoint3D:Vector3D = new Vector3D();
+		// private static var sMatrix3D:Matrix3D = new Matrix3D();
+		private static const sPoint:Point = new Point();
+		private static const sPositions:Vector.<Point> =
+			new <Point>[new Point(), new Point(), new Point()];
 
 		public function Triangle(width:Number, height:Number, color:uint = 0xffffff) {
 			_bounds = new Rectangle(0, 0, width, height);
@@ -112,14 +108,70 @@ package harayoki.starling.display
 			texture.setTexCoords(vertexData, vertexID + 2, attrName, 0.0, 1.0);
 		}
 
-		//public override function getBounds(targetSpace:DisplayObject, out:Rectangle = null):Rectangle {
-		//	return super.getBounds(targetSpace, out);
-		//}
+		public override function getBounds(targetSpace:DisplayObject, out:Rectangle=null):Rectangle
+		{
+			if (out == null) out = new Rectangle();
 
+			if (targetSpace == this) // optimization
+			{
+				out.copyFrom(_bounds);
+			}
+			else if (targetSpace == parent && rotation == 0.0) // optimization
+			{
+				var scaleX:Number = this.scaleX;
+				var scaleY:Number = this.scaleY;
+
+				out.setTo(   x - pivotX * scaleX,     y - pivotY * scaleY,
+					_bounds.width * scaleX, _bounds.height * scaleY);
+
+				if (scaleX < 0) { out.width  *= -1; out.x -= out.width;  }
+				if (scaleY < 0) { out.height *= -1; out.y -= out.height; }
+			}
+			//else if (is3D && stage) // not implemented currently
+			//{
+			//	stage.getCameraPosition(targetSpace, sPoint3D);
+			//	getTransformationMatrix3D(targetSpace, sMatrix3D);
+			//	RectangleUtil.getBoundsProjected(_bounds, sMatrix3D, sPoint3D, out);
+			//}
+			else
+			{
+				getTransformationMatrix(targetSpace, sMatrix);
+				_getTriangleBounds(_bounds, sMatrix, out)
+			}
+
+			return out;
+		}
+		
 		//override public function hitTest(localPoint:Point):DisplayObject
 		//{
 		//	return super.hitTest(localPoint);
 		//}
+
+
+		private function _getTriangleBounds(rectangle:Rectangle, matrix:Matrix, out:Rectangle):void {
+
+			var minX:Number = Number.MAX_VALUE, maxX:Number = -Number.MAX_VALUE;
+			var minY:Number = Number.MAX_VALUE, maxY:Number = -Number.MAX_VALUE;
+			_getPositions(rectangle, sPositions);
+
+			for (var i:int=0; i<3; ++i)
+			{
+				MatrixUtil.transformCoords(matrix, sPositions[i].x, sPositions[i].y, sPoint);
+
+				if (minX > sPoint.x) minX = sPoint.x;
+				if (maxX < sPoint.x) maxX = sPoint.x;
+				if (minY > sPoint.y) minY = sPoint.y;
+				if (maxY < sPoint.y) maxY = sPoint.y;
+			}
+
+			out.setTo(minX, minY, maxX - minX, maxY - minY);
+		}
+		private function _getPositions(rectangle:Rectangle, out:Vector.<Point>):void
+		{
+			out[0].x = rectangle.left;  out[0].y = rectangle.top;
+			out[1].x = rectangle.right; out[1].y = rectangle.top;
+			out[2].x = rectangle.left;  out[2].y = rectangle.bottom;
+		}
 
 		public function readjustSize(width:Number=-1, height:Number=-1):void
 		{

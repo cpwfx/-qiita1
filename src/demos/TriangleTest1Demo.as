@@ -9,7 +9,6 @@ package demos {
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Mesh;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextFormat;
@@ -42,18 +41,15 @@ package demos {
 
 		public override function start():void {
 
-			var whiteTexture:Texture = _assetManager.getTexture("mx/F"); // colorchip white
-			var pict1:Texture = _assetManager.getTexture("pict1");
-			// 余白テスト用
-			// pict1 = new SubTexture(pict1, null,false, new flash.geom.Rectangle(-10,-10,pict1.width+20,pict1.height+20));
+			var pict:Texture = _assetManager.getTexture("pict1");
+			// 余白テスト
+			var pictWithFrame:Texture = new SubTexture(pict, null,false, new Rectangle(-5, -5, pict.width + 10, pict.height + 10));
+
+			var bigScale:Number = 4.0;
 
 			var pressingTr1:Boolean = false;
 			var pressingTr2:Boolean = false;
 			var pressingTr3:Boolean = false;
-
-			var scale1:Number = 1.0;
-			var scale2:Number = 3.0;
-			var scale3:Number = 1.0;
 
 			var title:DisplayObject = _createText("TOUCH TRIANGLES", Align.CENTER);
 			title.x -= 160;
@@ -63,9 +59,7 @@ package demos {
 
 			var tr1:Mesh = new Triangle(30, 30);
 			tr1.x = 160;
-			tr1.y = 110;
-			// tr1.texture = whiteTexture; // ここをイキにするとドローコールが減る テクスチャなしがまざるとドローコール増える
-			tr1.scale = scale1;
+			tr1.y = 100;
 			_demoHelper.setTouchHandler(tr1, function():void{
 				pressingTr1 = false;
 			},function():void{
@@ -75,41 +69,50 @@ package demos {
 
 			var tr2:Mesh = new Triangle(10, 10, 0xffff00);
 			tr2.x = 160;
-			tr2.y = 210 - 20;
-			// tr2.texture = whiteTexture; // ここをイキにするとドローコールが減る テクスチャなしがまざるとドローコール増える
-			tr2.scale = scale2;
+			tr2.y = 200 - 20;
+			tr2.scale = bigScale;
 			tr2.skewX = -30 * Math.PI / 180;
+			tr2.pivotX = 3;
+			tr2.pivotY = 3;
 			_demoHelper.setTouchHandler(tr2, function():void{
 				pressingTr2 = false;
 			},function():void{
 				pressingTr2 = true;
 			});
 
-			var tr3:Mesh = Triangle.fromTexture(pict1);
+			var tr3:Mesh = Triangle.fromTexture(pictWithFrame);
 			tr3.x = 160;
-			tr3.y = 310;
-			tr3.color = 0xffffff;
+			tr3.y = 300 + 10;
 			tr3.pivotX = 48;
 			tr3.pivotY = 48;
-			tr3.scale = scale3;
 			_demoHelper.setTouchHandler(tr3, function():void{
 				pressingTr3 = false;
 			},function():void{
 				pressingTr3 = true;
 			});
 
+			// テクスチャの余白(frame)分を可視化
+			var tr4:Mesh = new Triangle(128 + 10, 128 + 10);
+			tr4.x = tr3.x;
+			tr4.y = tr3.y;
+			tr4.pivotX = tr3.pivotX;
+			tr4.pivotY = tr3.pivotY;
+			tr4.alpha = 0.1;
+			tr4.touchable = false;
+
 			tr1.textureSmoothing =
 			tr2.textureSmoothing =
-			tr3.textureSmoothing = TextureSmoothing.NONE;
+			tr3.textureSmoothing =
+			tr4.textureSmoothing = TextureSmoothing.NONE;
 
-			// 逆さ順に配置しておくと、infoを消した時に drawが１つへる
 			addChild(tr3); // texture
+			addChild(tr4); // color
 			addChild(tr2); // color
 			addChild(tr1); // color
 
 			var title1:DisplayObject = _createText("Normal", Align.CENTER, tr1);
-			var title2:DisplayObject = _createText("Skew & Color", Align.CENTER, tr2);
-			var title3:DisplayObject = _createText("FromTexture & Pivot", Align.CENTER, tr3);
+			var title2:DisplayObject = _createText("Skew & Color & Scale & Pivot", Align.CENTER, tr2);
+			var title3:DisplayObject = _createText("FromTexture & Frame & Pivot", Align.CENTER, tr3);
 
 			title1.x -= 160;
 			title2.x -= 160;
@@ -143,11 +146,13 @@ package demos {
 			addEventListener(Event.ENTER_FRAME, function():void{
 				theta += 0.05;
 				_update(tr1, border1, pressingTr1 ? 0.5 : 1.25,
-					pressingTr1 ? scale1 * 0.5 : scale1 * (1.0 + Math.sin(theta) * 0.2));
+					pressingTr1 ? 0.5 : (1.0 + Math.sin(theta) * 0.2));
 				_update(tr2, border2, pressingTr2 ? 0.5 : 1.25,
-					pressingTr2 ? scale2 * 0.5 : scale2 * (1.0 + Math.sin(theta) * 0.2));
+					pressingTr2 ? bigScale * 0.5 : bigScale * (1.0 + Math.sin(theta) * 0.2));
 				_update(tr3, border3, pressingTr3 ? 0.5 : 1.25,
-					pressingTr3 ? scale3 * 0.5 : scale3 * (1.0 + Math.sin(theta) * 0.2));
+					pressingTr3 ? 0.5 : (1.0 + Math.sin(theta) * 0.2));
+				_update(tr4, null, pressingTr3 ? 0.5 : 1.25,
+					pressingTr3 ? 0.5 : (1.0 + Math.sin(theta) * 0.2));
 
 				title1.visible = title2.visible = title3.visible = _infoVisible;
 				cross1.visible = cross2.visible = cross3.visible = _infoVisible;
@@ -201,9 +206,11 @@ package demos {
 		private function _update(tr:DisplayObject, border:DisplayObject, changeScaleRatio:Number = 0.2, baseScale:Number=1.0):void {
 			tr.rotation += 0.02;
 			tr.scale += (baseScale - tr.scale) * changeScaleRatio;
-			border.visible = _infoVisible;
-			if(_infoVisible) {
-				_demoHelper.fitToBound(tr, border);
+			if(border) {
+				border.visible = _infoVisible;
+				if(_infoVisible) {
+					_demoHelper.fitToBound(tr, border);
+				}
 			}
 		}
 	}
