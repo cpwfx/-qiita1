@@ -8,6 +8,8 @@ package demos {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Mesh;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextFormat;
@@ -42,9 +44,8 @@ package demos {
 
 			var whiteTexture:Texture = _assetManager.getTexture("mx/F"); // colorchip white
 			var pict1:Texture = _assetManager.getTexture("pict1");
-
 			// 余白テスト用
-			// var whiteTexturePAdding:Texture = new SubTexture(whiteTexture, null,false, new flash.geom.Rectangle(-2,-2,6,6));
+			// pict1 = new SubTexture(pict1, null,false, new flash.geom.Rectangle(-10,-10,pict1.width+20,pict1.height+20));
 
 			var pressingTr1:Boolean = false;
 			var pressingTr2:Boolean = false;
@@ -60,7 +61,7 @@ package demos {
 			title.scale = 2;
 			addChild(title);
 
-			var tr1:Triangle = new Triangle(30, 30);
+			var tr1:Mesh = new Triangle(30, 30);
 			tr1.x = 160;
 			tr1.y = 110;
 			// tr1.texture = whiteTexture; // ここをイキにするとドローコールが減る テクスチャなしがまざるとドローコール増える
@@ -72,7 +73,7 @@ package demos {
 				pressingTr1 = true;
 			});
 
-			var tr2:Triangle = new Triangle(10, 10, 0xffff00);
+			var tr2:Mesh = new Triangle(10, 10, 0xffff00);
 			tr2.x = 160;
 			tr2.y = 210 - 20;
 			// tr2.texture = whiteTexture; // ここをイキにするとドローコールが減る テクスチャなしがまざるとドローコール増える
@@ -84,7 +85,7 @@ package demos {
 				pressingTr2 = true;
 			});
 
-			var tr3:Triangle = Triangle.fromTexture(pict1);
+			var tr3:Mesh = Triangle.fromTexture(pict1);
 			tr3.x = 160;
 			tr3.y = 310;
 			tr3.color = 0xffffff;
@@ -197,7 +198,7 @@ package demos {
 			return border;
 		}
 
-		private function _update(tr:Triangle, border:DisplayObject, changeScaleRatio:Number = 0.2, baseScale:Number=1.0):void {
+		private function _update(tr:DisplayObject, border:DisplayObject, changeScaleRatio:Number = 0.2, baseScale:Number=1.0):void {
 			tr.rotation += 0.02;
 			tr.scale += (baseScale - tr.scale) * changeScaleRatio;
 			border.visible = _infoVisible;

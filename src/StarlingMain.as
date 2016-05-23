@@ -60,8 +60,8 @@ package {
 			_demo = new ScoreTextDemo(_assetManager);
 			_demo = new MeshTestDemo(_assetManager);
 			_demo = new MapChipTestDemo(_assetManager);
-			_demo = new TriangleTest1Demo(_assetManager);
 			_demo = new TriangleTest2Demo(_assetManager);
+			_demo = new TriangleTest1Demo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
