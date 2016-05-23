@@ -141,12 +141,6 @@ package harayoki.starling.display
 
 			return out;
 		}
-		
-		//override public function hitTest(localPoint:Point):DisplayObject
-		//{
-		//	return super.hitTest(localPoint);
-		//}
-
 
 		private function _getTriangleBounds(rectangle:Rectangle, matrix:Matrix, out:Rectangle):void {
 
@@ -166,12 +160,19 @@ package harayoki.starling.display
 
 			out.setTo(minX, minY, maxX - minX, maxY - minY);
 		}
+
 		private function _getPositions(rectangle:Rectangle, out:Vector.<Point>):void
 		{
 			out[0].x = rectangle.left;  out[0].y = rectangle.top;
 			out[1].x = rectangle.right; out[1].y = rectangle.top;
 			out[2].x = rectangle.left;  out[2].y = rectangle.bottom;
 		}
+
+		//override public function hitTest(localPoint:Point):DisplayObject
+		//{
+		//	return super.hitTest(localPoint);
+		//}
+
 
 		public function readjustSize(width:Number=-1, height:Number=-1):void
 		{
