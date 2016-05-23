@@ -199,6 +199,9 @@
             <key type="filename">kana_only.png</key>
             <key type="filename">maptip.png</key>
             <key type="filename">pict1.png</key>
+            <key type="filename">quad_star.png</key>
+            <key type="filename">topleft_star.png</key>
+            <key type="filename">topleft_star_no_dot.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -216,6 +219,9 @@
             <filename>border1.png</filename>
             <filename>dot12x12.png</filename>
             <filename>box1line.png</filename>
+            <filename>quad_star.png</filename>
+            <filename>topleft_star.png</filename>
+            <filename>topleft_star_no_dot.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
