@@ -20,7 +20,7 @@ package demos {
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
-	public class TriangleTest2Demo extends DemoBase {
+	public class TriangleTest3Demo extends DemoBase {
 
 		private var _stars:Vector.<DisplayObject>;
 		private var _useStarTexture:Boolean = true;
@@ -34,7 +34,7 @@ package demos {
 		private var _infoTextControl2:FixedLayoutBitmapTextController;
 		private var _title:DisplayObject;
 
-		public function TriangleTest2Demo(assetManager:AssetManager, starling:Starling = null) {
+		public function TriangleTest3Demo(assetManager:AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 		}
 
@@ -138,7 +138,7 @@ package demos {
 					trace(_texForTriangle.frameWidth, _texForTriangle.frameHeight);
 				} else {
 					quad = new Quad(_texForQuad.width, _texForQuad.height);
-					quad.texture = _texWhite;
+					 quad.texture = _texWhite; // drawをまとめる
 				}
 				quad.color = 0x00ffff;
 				quad.textureSmoothing = TextureSmoothing.NONE;
@@ -161,7 +161,7 @@ package demos {
 					trace(_texForTriangle.frameWidth, _texForTriangle.frameHeight);
 				} else {
 					tri = new Triangle(_texForTriangle.width, _texForTriangle.height);
-					tri.texture = _texWhite;
+					 tri.texture = _texWhite; // drawをまとめる
 				}
 				tri.color = 0xffff00;
 				tri.textureSmoothing = TextureSmoothing.NONE;
