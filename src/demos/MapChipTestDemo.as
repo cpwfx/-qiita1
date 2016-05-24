@@ -15,7 +15,6 @@ package demos {
 
 		public override function addAssets(assets:Array):void {
 			assets.push('assets/maptip.xml');
-			assets.push('assets/colorbars.xml');
 		}
 
 		public override function start():void {

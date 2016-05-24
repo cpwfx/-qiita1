@@ -30,6 +30,9 @@ package demos {
 		public function addAssets(assets:Array):void {
 			return;
 		}
+		public function getBackgroundDisplay():DisplayObject {
+			return null;
+		}
 
 		public function getBottomButtons(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 			return out;

@@ -38,6 +38,13 @@ package demos {
 			super(assetManager, starling);
 		}
 
+		public override function getBackgroundDisplay():DisplayObject {
+			var bg:Quad = Quad.fromTexture(_assetManager.getTexture("gradation_mono"));
+			bg.textureSmoothing = TextureSmoothing.NONE;
+			bg.alpha = 0.1;
+			return bg;
+		}
+
 		public override function getBottomButtons(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 
 			var btn:DisplayObject;
@@ -105,7 +112,7 @@ package demos {
 			_stars = new <DisplayObject>[];
 
 			_texForQuad = _assetManager.getTexture("quad_star");
-			_texForTriangle = _assetManager.getTexture("topleft_star");
+			_texForTriangle = _assetManager.getTexture("topleft_star_no_dot");
 			_texWhite = _assetManager.getTexture("mx/F"); // colorchip white
 
 			_title = _createText("QUAD and TRIANGLE", Align.CENTER);
@@ -138,7 +145,7 @@ package demos {
 					trace(_texForTriangle.frameWidth, _texForTriangle.frameHeight);
 				} else {
 					quad = new Quad(_texForQuad.width, _texForQuad.height);
-					 quad.texture = _texWhite; // drawをまとめる
+					 quad.texture = _texWhite; // drawコールをまとめるためにテクスチャを設定
 				}
 				quad.color = 0x00ffff;
 				quad.textureSmoothing = TextureSmoothing.NONE;
@@ -161,7 +168,7 @@ package demos {
 					trace(_texForTriangle.frameWidth, _texForTriangle.frameHeight);
 				} else {
 					tri = new Triangle(_texForTriangle.width, _texForTriangle.height);
-					 tri.texture = _texWhite; // drawをまとめる
+					 tri.texture = _texWhite; // drawコールをまとめるためにテクスチャを設定
 				}
 				tri.color = 0xffff00;
 				tri.textureSmoothing = TextureSmoothing.NONE;
@@ -231,7 +238,7 @@ package demos {
 		}
 
 		private function _update(disp:DisplayObject):void {
-			disp.rotation += 0.04 * disp.scale;
+			//disp.rotation += 0.04 * disp.scale;
 		}
 	}
 }

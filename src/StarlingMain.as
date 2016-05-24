@@ -96,6 +96,13 @@ package {
 
 			MyFontManager.setup();
 
+			var bg:DisplayObject = _demo.getBackgroundDisplay();
+			if (bg) {
+				bg.width = CONTENTS_SIZE.width;
+				bg.height = CONTENTS_SIZE.height;
+				addChild(bg);
+			}
+
 			addChild(_demo)
 			_demo.start();
 
