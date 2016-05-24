@@ -8,9 +8,6 @@ package {
 
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
-	import flash.system.System;
-
-	import harayoki.stage3d.IContext3DFillModeControl;
 
 	import misc.DemoHelper;
 	import misc.MyFontManager;
@@ -19,20 +16,18 @@ package {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
-	import starling.textures.Texture;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
 
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
-		private static var _context3DFillModeControl:IContext3DFillModeControl;
-		private static var _gcAvairable:Boolean;
 
-		public static function start(nativeStage:Stage, context3DFillModeControl:IContext3DFillModeControl=null, gcAvairable:Boolean=true):void {
+		private static var _startCallback:Function;
+
+		public static function start(nativeStage:Stage, startCallback:Function = null):void {
 			trace("Starling version :", Starling.VERSION);
 
-			_context3DFillModeControl = context3DFillModeControl;
-			_gcAvairable = gcAvairable;
+			_startCallback = startCallback;
 
 			var starling:Starling = new Starling(
 				StarlingMain,
@@ -50,6 +45,10 @@ package {
 		private var _assetManager:AssetManager;
 
 		public function StarlingMain() {
+
+			if(_startCallback) {
+				_startCallback.apply(null, [Starling.current]);
+			}
 
 			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE, true);
 
@@ -86,9 +85,9 @@ package {
 				}
 			});
 
-			if(_context3DFillModeControl) {
-				_context3DFillModeControl.setContext(Starling.current.context);
-			}
+			//if(_context3DFillModeControl) {
+			//	_context3DFillModeControl.setContext(Starling.current.context);
+			//}
 
 		}
 
@@ -108,26 +107,13 @@ package {
 
 			var buttons:Vector.<DisplayObject> = new <DisplayObject>[];
 
-			var bgTexure:Texture = _assetManager.getTexture("border1");
-
-			if(_context3DFillModeControl) {
-				// タッチ時にワイヤーフレームにしてみる
-				var wfobj:DisplayObject = _demoHelper.createSpriteText("WIREFRAME", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
-				var btn1:DisplayObject = _demoHelper.createButton(wfobj, function():void{
-					_context3DFillModeControl.toggleWireFrame();
-				}, bgTexure);
-				buttons.push(btn1);
-			}
-
-			if(_gcAvairable) {
-				// タッチ時にGCしてみる
-				var gcobj:DisplayObject = _demoHelper.createSpriteText("GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
-				var btn2:DisplayObject = _demoHelper.createButton(gcobj, function():void{
-					trace("gc!");
-					System.gc();
-				},bgTexure);
-				buttons.push(btn2);
-			}
+			//	// タッチ時にGCしてみる
+			//	var gcobj:DisplayObject = _demoHelper.createSpriteText("GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
+			//	var btn2:DisplayObject = _demoHelper.createButton(gcobj, function():void{
+			//		trace("gc!");
+			//		System.gc();
+			//	},bgTexure);
+			//	buttons.push(btn2);
 
 			// 各デモでボタンを追加 nullが入っていると改行になる
 			_demo.getBottomButtons(buttons);

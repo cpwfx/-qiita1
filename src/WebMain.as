@@ -6,6 +6,8 @@ package {
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 
+	import starling.core.Starling;
+
 	[SWF(width = "640", height = "960", frameRate = "60", backgroundColor = "#333333")]
 	public class WebMain extends Sprite {
 		public function WebMain() {
@@ -18,7 +20,11 @@ package {
 		}
 
 		private function _init(ev:Event=null):void {
-			StarlingMain.start(stage, null, false);
+			StarlingMain.start(stage, _handleStartStarling);
+		}
+
+		private function _handleStartStarling(starling:Starling):void {
+			trace("_handleStartStarling");
 		}
 	}
 }
