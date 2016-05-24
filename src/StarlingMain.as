@@ -9,6 +9,8 @@ package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
+	import harayoki.starling.FixedLayoutBitmapTextController;
+
 	import misc.DemoHelper;
 	import misc.MyFontManager;
 	import misc.ViewportUtil;
@@ -16,12 +18,14 @@ package {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
+	import starling.textures.Texture;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
 
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
+		private static var _starling:Starling;
 		private static var _startCallback:Function;
 
 		public static function start(nativeStage:Stage, startCallback:Function = null):void {
@@ -29,14 +33,14 @@ package {
 
 			_startCallback = startCallback;
 
-			var starling:Starling = new Starling(
+			_starling = new Starling(
 				StarlingMain,
 				nativeStage,
 				CONTENTS_SIZE
 			);
-			starling.skipUnchangedFrames = true;
-			starling.stage.color = 0x000000;
-			starling.start();
+			_starling.skipUnchangedFrames = true;
+			_starling.stage.color = 0x000000;
+			_starling.start();
 
 		}
 
@@ -47,7 +51,7 @@ package {
 		public function StarlingMain() {
 
 			if(_startCallback) {
-				_startCallback.apply(null, [Starling.current]);
+				_startCallback.apply(null, [_starling]);
 			}
 
 			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE, true);
@@ -107,13 +111,21 @@ package {
 
 			var buttons:Vector.<DisplayObject> = new <DisplayObject>[];
 
-			//	// タッチ時にGCしてみる
-			//	var gcobj:DisplayObject = _demoHelper.createSpriteText("GC", MyFontManager.baseFont.name, 200, 20, 0, 0xffffff);
-			//	var btn2:DisplayObject = _demoHelper.createButton(gcobj, function():void{
-			//		trace("gc!");
-			//		System.gc();
-			//	},bgTexure);
-			//	buttons.push(btn2);
+			var bgTexture:Texture = _assetManager.getTexture("border1");
+
+			// タッチ時にskipUnchangedFrames切り替え
+			var infoTextControl1:FixedLayoutBitmapTextController;
+			infoTextControl1 = new FixedLayoutBitmapTextController(MyFontManager.baseFont.name, "SkpUnchngdFrms:XXX");
+			infoTextControl1.setText("SkpUnchngdFrms:YES");
+			var btn:DisplayObject = _demoHelper.createButton(infoTextControl1.displayObject, function():void {
+				_starling.skipUnchangedFrames = !_starling.skipUnchangedFrames;
+				if(_starling.skipUnchangedFrames) {
+					infoTextControl1.setText("SkpUnchngdFrms:YES");
+				} else {
+					infoTextControl1.setText("SkpUnchngdFrms: NO");
+				}
+			}, bgTexture);
+			buttons.push(btn);
 
 			// 各デモでボタンを追加 nullが入っていると改行になる
 			_demo.getBottomButtons(buttons);
