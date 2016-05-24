@@ -196,12 +196,14 @@
             <key type="filename">dot16x16.png</key>
             <key type="filename">emoji/oukan.png</key>
             <key type="filename">emoji/tofu.png</key>
+            <key type="filename">gradation_mono.png</key>
             <key type="filename">kana_only.png</key>
             <key type="filename">maptip.png</key>
             <key type="filename">pict1.png</key>
             <key type="filename">quad_star.png</key>
             <key type="filename">topleft_star.png</key>
             <key type="filename">topleft_star_no_dot.png</key>
+            <key type="filename">white.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -222,6 +224,8 @@
             <filename>quad_star.png</filename>
             <filename>topleft_star.png</filename>
             <filename>topleft_star_no_dot.png</filename>
+            <filename>gradation_mono.png</filename>
+            <filename>white.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
