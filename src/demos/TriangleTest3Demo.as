@@ -142,8 +142,8 @@ package demos {
 				} else {
 					quad = new Quad(_texForQuad.width, _texForQuad.height);
 					 quad.texture = _texWhite; // drawコールをまとめるためにテクスチャを設定
+					quad.color = 0x00ffff;
 				}
-				quad.color = 0x00ffff;
 				quad.textureSmoothing = TextureSmoothing.NONE;
 				_stars.push(quad);
 				quad.pivotX = quad.width >> 1;
@@ -161,8 +161,8 @@ package demos {
 				} else {
 					tri = new Triangle(_texForTriangle.width, _texForTriangle.height);
 					 tri.texture = _texWhite; // drawコールをまとめるためにテクスチャを設定
+					tri.color = 0xffff00;
 				}
-				tri.color = 0xffff00;
 				tri.textureSmoothing = TextureSmoothing.NONE;
 				tri.pivotX = tri.width >> 2;
 				tri.pivotY = tri.height >> 2;
