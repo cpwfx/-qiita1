@@ -202,7 +202,6 @@
             <key type="filename">pict1.png</key>
             <key type="filename">quad_star.png</key>
             <key type="filename">topleft_star.png</key>
-            <key type="filename">topleft_star_no_dot.png</key>
             <key type="filename">white.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -223,7 +222,6 @@
             <filename>box1line.png</filename>
             <filename>quad_star.png</filename>
             <filename>topleft_star.png</filename>
-            <filename>topleft_star_no_dot.png</filename>
             <filename>gradation_mono.png</filename>
             <filename>white.png</filename>
         </array>

@@ -40,7 +40,7 @@ package {
 				CONTENTS_SIZE
 			);
 			starling.skipUnchangedFrames = true;
-			starling.stage.color = 0x333333;
+			starling.stage.color = 0x000000;
 			starling.start();
 
 		}

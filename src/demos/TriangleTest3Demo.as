@@ -39,9 +39,9 @@ package demos {
 		}
 
 		public override function getBackgroundDisplay():DisplayObject {
-			var bg:Quad = Quad.fromTexture(_assetManager.getTexture("gradation_mono"));
+			var bg:Image = new Image(_assetManager.getTexture("gradation_mono"));
 			bg.textureSmoothing = TextureSmoothing.NONE;
-			bg.alpha = 0.1;
+			bg.alpha = 0.25;
 			return bg;
 		}
 
@@ -51,12 +51,12 @@ package demos {
 			var bgTexture:Texture = _assetManager.getTexture("border1");
 
 			var infoTextControl1:FixedLayoutBitmapTextController;
-			infoTextControl1 = new FixedLayoutBitmapTextController(MyFontManager.baseFont.name, "tex_***");
-			infoTextControl1.setText("tex ON");
+			infoTextControl1 = new FixedLayoutBitmapTextController(MyFontManager.baseFont.name, "XXXXXXX");
+			infoTextControl1.setText("tex  ON");
 			btn = _demoHelper.createButton(infoTextControl1.displayObject, function():void {
 				_useStarTexture = !_useStarTexture;
 				if(_useStarTexture) {
-					infoTextControl1.setText("tex ON");
+					infoTextControl1.setText("tex  ON");
 				} else {
 					infoTextControl1.setText("tex OFF");
 				}
@@ -64,7 +64,7 @@ package demos {
 			out.push(btn);
 
 			var infoTextControl2:FixedLayoutBitmapTextController;
-			infoTextControl2 = new FixedLayoutBitmapTextController(MyFontManager.baseFont.name, ",moving");
+			infoTextControl2 = new FixedLayoutBitmapTextController(MyFontManager.baseFont.name, "XXXXXX");
 			infoTextControl2.setText("moving");
 			btn = _demoHelper.createButton(infoTextControl2.displayObject, function():void {
 				_moving = !_moving;
@@ -112,8 +112,8 @@ package demos {
 			_stars = new <DisplayObject>[];
 
 			_texForQuad = _assetManager.getTexture("quad_star");
-			_texForTriangle = _assetManager.getTexture("topleft_star_no_dot");
-			_texWhite = _assetManager.getTexture("mx/F"); // colorchip white
+			_texForTriangle = _assetManager.getTexture("topleft_star");
+			_texWhite = _assetManager.getTexture("white");
 
 			_title = _createText("QUAD and TRIANGLE", Align.CENTER);
 			_title.x -= 160;
@@ -139,10 +139,6 @@ package demos {
 				var quad:Quad;
 				if(_useStarTexture) {
 					quad = Quad.fromTexture(_texForQuad); // 16px * 16px
-					trace("--");
-					trace(quad.width, quad.height);
-					trace(_texForTriangle.width, _texForTriangle.height);
-					trace(_texForTriangle.frameWidth, _texForTriangle.frameHeight);
 				} else {
 					quad = new Quad(_texForQuad.width, _texForQuad.height);
 					 quad.texture = _texWhite; // drawコールをまとめるためにテクスチャを設定
@@ -161,11 +157,7 @@ package demos {
 			while(num--) {
 				var tri:Triangle;
 				if(_useStarTexture) {
-					tri = Triangle.fromTexture(_texForTriangle); // 32px * 32px
-					trace("--");
-					//trace(tri.width, tri.height);
-					trace(_texForTriangle.width, _texForTriangle.height);
-					trace(_texForTriangle.frameWidth, _texForTriangle.frameHeight);
+					 tri = Triangle.fromTexture(_texForTriangle); // 32px * 32px
 				} else {
 					tri = new Triangle(_texForTriangle.width, _texForTriangle.height);
 					 tri.texture = _texWhite; // drawコールをまとめるためにテクスチャを設定
@@ -238,7 +230,7 @@ package demos {
 		}
 
 		private function _update(disp:DisplayObject):void {
-			//disp.rotation += 0.04 * disp.scale;
+			disp.rotation += 0.04 * disp.scale;
 		}
 	}
 }
