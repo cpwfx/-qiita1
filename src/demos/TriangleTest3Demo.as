@@ -215,20 +215,6 @@ package demos {
 			_updateInfo();
 		}
 
-		private function _createText(str:String, halign:String="left", target:DisplayObject=null):DisplayObject {
-			var fmt:TextFormat = new TextFormat(
-				MyFontManager.baseFont.name, MyFontManager.baseFont.size, 0xffffff, halign, Align.TOP);
-			var sp:Sprite = _demoHelper.createSpriteTextWithTextFormat(
-				fmt, str, 320, 20);
-			if(target) {
-				sp.x = target.x;
-				sp.y = target.y;
-			}
-			sp.touchGroup = true;
-			sp.touchable = false;
-			return sp;
-		}
-
 		private function _update(disp:DisplayObject):void {
 			disp.rotation += 0.04 * disp.scale;
 		}

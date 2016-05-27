@@ -43,7 +43,7 @@ package demos {
 
 			var pict:Texture = _assetManager.getTexture("pict1");
 			// 余白テスト
-			var pictWithFrame:Texture = new SubTexture(pict, null,false, new Rectangle(-5, -5, pict.width + 10, pict.height + 10));
+			var pictWithFrame:Texture = new SubTexture(pict, null, false, new Rectangle(-5, -5, pict.width + 10, pict.height + 10));
 
 			var bigScale:Number = 4.0;
 
@@ -60,9 +60,9 @@ package demos {
 			var tr1:Mesh = new Triangle(30, 30);
 			tr1.x = 160;
 			tr1.y = 100;
-			_demoHelper.setTouchHandler(tr1, function():void{
+			_demoHelper.setTouchHandler(tr1, function ():void {
 				pressingTr1 = false;
-			},function():void{
+			}, function ():void {
 				tr1.scale *= 0.3;
 				pressingTr1 = true;
 			});
@@ -74,9 +74,9 @@ package demos {
 			tr2.skewX = -30 * Math.PI / 180;
 			tr2.pivotX = 3;
 			tr2.pivotY = 3;
-			_demoHelper.setTouchHandler(tr2, function():void{
+			_demoHelper.setTouchHandler(tr2, function ():void {
 				pressingTr2 = false;
-			},function():void{
+			}, function ():void {
 				pressingTr2 = true;
 			});
 
@@ -85,9 +85,9 @@ package demos {
 			tr3.y = 300 + 10;
 			tr3.pivotX = 48;
 			tr3.pivotY = 48;
-			_demoHelper.setTouchHandler(tr3, function():void{
+			_demoHelper.setTouchHandler(tr3, function ():void {
 				pressingTr3 = false;
-			},function():void{
+			}, function ():void {
 				pressingTr3 = true;
 			});
 
@@ -101,9 +101,9 @@ package demos {
 			tr4.touchable = false;
 
 			tr1.textureSmoothing =
-			tr2.textureSmoothing =
-			tr3.textureSmoothing =
-			tr4.textureSmoothing = TextureSmoothing.NONE;
+				tr2.textureSmoothing =
+					tr3.textureSmoothing =
+						tr4.textureSmoothing = TextureSmoothing.NONE;
 
 			addChild(tr3); // texture
 			addChild(tr4); // color
@@ -143,7 +143,7 @@ package demos {
 			addChildAt(cross3, 0);
 
 			var theta:Number = 0;
-			addEventListener(Event.ENTER_FRAME, function():void{
+			addEventListener(Event.ENTER_FRAME, function ():void {
 				theta += 0.05;
 				_update(tr1, border1, pressingTr1 ? 0.5 : 1.25,
 					pressingTr1 ? 0.5 : (1.0 + Math.sin(theta) * 0.2));
@@ -158,21 +158,6 @@ package demos {
 				cross1.visible = cross2.visible = cross3.visible = _infoVisible;
 
 			});
-
-		}
-
-		private function _createText(str:String, halign:String="left", target:DisplayObject=null):DisplayObject {
-			var fmt:TextFormat = new TextFormat(
-				MyFontManager.baseFont.name, MyFontManager.baseFont.size, 0xffffff, halign, Align.TOP);
-			var sp:Sprite = _demoHelper.createSpriteTextWithTextFormat(
-				fmt, str, 320, 20);
-			if(target) {
-				sp.x = target.x;
-				sp.y = target.y;
-			}
-			sp.touchGroup = true;
-			sp.touchable = false;
-			return sp;
 		}
 
 		private function _createCross(target:DisplayObject):DisplayObject {

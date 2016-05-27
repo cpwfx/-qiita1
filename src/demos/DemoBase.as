@@ -1,14 +1,12 @@
 package demos {
-	import harayoki.stage3d.IContext3DFillModeControl;
-
 	import misc.DemoHelper;
-
-	import starling.core.Starling;
+	import misc.MyFontManager;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
-
 	import starling.display.Sprite;
+	import starling.text.TextFormat;
+	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
 	public class DemoBase extends Sprite{
@@ -40,6 +38,21 @@ package demos {
 
 		public function start():void{
 
+		}
+
+
+		protected function _createText(str:String, halign:String="left", target:DisplayObject=null):DisplayObject {
+			var fmt:TextFormat = new TextFormat(
+				MyFontManager.baseFont.name, MyFontManager.baseFont.size, 0xffffff, halign, Align.TOP);
+			var sp:Sprite= _demoHelper.createSpriteTextWithTextFormat(
+				fmt, str, 320, 20);
+			if(target) {
+				sp.x = target.x;
+				sp.y = target.y;
+			}
+			sp.touchGroup = true;
+			sp.touchable = false;
+			return sp;
 		}
 	}
 }
