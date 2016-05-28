@@ -6,7 +6,7 @@ package harayoki.starling.filters {
 	public class PosterizationFilter extends FragmentFilter
 	{
 		public function PosterizationFilter(
-			redDiv:uint=8, greenDiv:uint=8, blueDiv:uint=8, alphaDiv:uint=8):void
+			redDiv:uint=2, greenDiv:uint=4, blueDiv:uint=4, alphaDiv:uint=4):void
 		{
 			colorOffsetEffect.redDiv = redDiv;
 			colorOffsetEffect.greenDiv = greenDiv;
@@ -87,6 +87,9 @@ class PosterizationEffect extends FilterEffect
 			// ft0(テンポラリ)にテクスチャカラーを取得するお決まりコード v0:texture coordinates fs0:texture参照
 			tex("ft0", "v0", 0, texture), // tex == ft0, v0, fs0 <2d, linear>
 
+			// PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
+			"div ft0.xyz, ft0.xyz, ft0.www",
+
 			// 各チャンネルにRGBA定数値(fc0)を掛け合わせる
 			"mul ft0, ft0, fc0",
 
@@ -94,8 +97,11 @@ class PosterizationEffect extends FilterEffect
 			"frc ft1, ft0",
 			"sub ft0, ft0, ft1",
 
-			// ft0を掛けた際より1小さい値(fc1)で割る
+			// ft0を掛けた際より1小さい値(fc1)で割る 吸着処理
 			"div ft0, ft0, fc1",
+
+			// PMAをやり直す rgb *= a
+			"mul ft0.xyz, ft0.xyz, ft0.www",
 
 			// ft0(テンポラリ)の値を0~1の範囲におさめたものを出力(oc)
 			"sat oc, ft0"].join("\n");
@@ -127,7 +133,7 @@ class PosterizationEffect extends FilterEffect
 	public function get blueDiv():Number { return _divs0[2]; }
 	public function set blueDiv(value:Number):void { _divs0[2] = value; _divs1[2] = value - 1.0; }
 
-	public function get alphaDiv():Number { return _divs0[3]; }
-	public function set alphaDiv(value:Number):void { _divs0[3] = value; _divs1[3] = value - 1.0; }
+	public function get alphaDiv():Number { return _divs0[3] + 1.0; }
+	public function set alphaDiv(value:Number):void { _divs0[3] = value -1.0 ; _divs1[3] = value -1.0; }
 
 }
