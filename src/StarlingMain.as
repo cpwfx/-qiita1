@@ -2,6 +2,7 @@ package {
 	import demos.DemoBase;
 	import demos.MapChipTestDemo;
 	import demos.MeshTestDemo;
+	import demos.MyFirstFilterDemo;
 	import demos.ScoreTextDemo;
 	import demos.TriangleTest1Demo;
 	import demos.TriangleTest3Demo;
@@ -65,6 +66,7 @@ package {
 			_demo = new MapChipTestDemo(_assetManager);
 			_demo = new TriangleTest1Demo(_assetManager);
 			_demo = new TriangleTest3Demo(_assetManager);
+			_demo = new MyFirstFilterDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
