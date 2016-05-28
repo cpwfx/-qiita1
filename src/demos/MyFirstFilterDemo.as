@@ -11,6 +11,7 @@ package demos {
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
@@ -34,6 +35,13 @@ package demos {
 		public function MyFirstFilterDemo(assetManager:AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
 			super(assetManager, starling);
+		}
+
+		public override function getBackgroundDisplay():DisplayObject {
+			var bg:Image = new Image(_assetManager.getTexture("white"));
+			bg.textureSmoothing = TextureSmoothing.NONE;
+			bg.color = 0x111111; // サンプル画像のalphaが見やすいように
+			return bg;
 		}
 
 		public override function getBottomButtons(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
@@ -94,7 +102,7 @@ package demos {
 		}
 
 		private function _createPosterizationFilter():PosterizationFilter {
-			return new PosterizationFilter(8, 8, 4, 2); // MSX screen 8
+			return new PosterizationFilter(8, 8, 4); // MSX screen 8 + alpha
 		}
 
 		private function _createBlurFilter():BlurFilter {
@@ -136,7 +144,7 @@ package demos {
 
 			var slider:Slider = new Slider();
 			slider.minimum = 2;
-			slider.maximum = 32;
+			slider.maximum = 64;
 			slider.value = value;
 			slider.step = 1;
 			slider.x = xx + textWidth + 10;

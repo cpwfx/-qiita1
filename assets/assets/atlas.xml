@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:8e56be89d3f57cd983cb8809a883ba6a:2742aca3bf3e3e197cea31f8e42426ec:cde709370900f12288f3449eded86f07$ -->
-<TextureAtlas imagePath="atlas.png" width="798" height="258">
-    <SubTexture name="alphabet" x="519" y="152" width="76" height="78"/>
+<!-- $TexturePacker:SmartUpdate:04eea906e3c65eff09816bbcd24c9b68:09a4136fbcceed5057155152bd47b417:cde709370900f12288f3449eded86f07$ -->
+<TextureAtlas imagePath="atlas.png" width="808" height="258">
+    <SubTexture name="alphabet" x="621" y="152" width="76" height="78"/>
     <SubTexture name="border1" x="41" y="237" width="13" height="12" frameX="-2" frameY="-2" frameWidth="16" frameHeight="16"/>
     <SubTexture name="box1line" x="48" y="204" width="8" height="8"/>
     <SubTexture name="colorbars" x="39" y="204" width="7" height="31" frameX="0" frameY="0" frameWidth="8" frameHeight="32"/>
@@ -10,7 +10,8 @@
     <SubTexture name="dot16x16" x="23" y="253" width="5" height="4" frameX="-6" frameY="-6" frameWidth="16" frameHeight="16"/>
     <SubTexture name="gradation_mono" x="1" y="1" width="2" height="256"/>
     <SubTexture name="kana_only" x="519" y="1" width="148" height="149"/>
-    <SubTexture name="maptip" x="669" y="131" width="108" height="54"/>
+    <SubTexture name="lena" x="519" y="152" width="100" height="100"/>
+    <SubTexture name="maptip" x="699" y="131" width="108" height="54"/>
     <SubTexture name="minimal_mobile" x="5" y="1" width="512" height="201" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
     <SubTexture name="oukan" x="23" y="238" width="16" height="13"/>
     <SubTexture name="pict1" x="669" y="1" width="128" height="128"/>
