@@ -10,6 +10,8 @@ package {
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
+	import harayoki.feathers.themes.CustomMinimalTheme;
+
 	import harayoki.starling.FixedLayoutBitmapTextController;
 
 	import misc.DemoHelper;
@@ -71,6 +73,7 @@ package {
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
 			_demo.addAssets(assetsCandidates);
+			assetsCandidates.push("assets/minimal_mobile.xml");
 			assetsCandidates.push('assets/colorbars.xml');
 			assetsCandidates.push('assets/atlas.png');
 			assetsCandidates.push('assets/atlas.xml');
@@ -100,6 +103,8 @@ package {
 		private function _start():void {
 
 			MyFontManager.setup();
+
+			new CustomMinimalTheme(_assetManager.getTextureAtlas("minimal_mobile"), MyFontManager.baseFont.name);
 
 			var bg:DisplayObject = _demo.getBackgroundDisplay();
 			if (bg) {

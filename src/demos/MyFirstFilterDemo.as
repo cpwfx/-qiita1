@@ -1,4 +1,10 @@
 package demos {
+	import feathers.controls.Button;
+	import feathers.controls.Slider;
+	import feathers.motion.Slide;
+
+	import harayoki.starling.FixedLayoutBitmapTextController;
+
 	import harayoki.starling.filters.PosterizationFilter;
 
 	import misc.MyFontManager;
@@ -6,11 +12,13 @@ package demos {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import starling.filters.BlurFilter;
 	import starling.filters.FilterChain;
 	import starling.filters.FragmentFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
+	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
 	public class MyFirstFilterDemo extends DemoBase {
@@ -47,17 +55,42 @@ package demos {
 
 		public override function start():void {
 
-			_quad1 = _addImage(50, 40, "ノーマル");
-			_quad2 = _addImage(170, 40 , "ポスタリゼーション");
-			_quad3 = _addImage(50, 180 , "ポスタ + ブラー");
-			_quad4 = _addImage(170, 180 , "ブラー + ポスタ");
+			_quad1 = _addImage(50, 30, "ノーマル");
+			_quad2 = _addImage(170, 30 , "ポスタリゼーション");
+			_quad3 = _addImage(50, 170 , "ポスタ + ブラー");
+			_quad4 = _addImage(170, 170 , "ブラー + ポスタ");
 
-			_filter2 = _createPosterizationFilter();
-			_filter3 = new FilterChain(_createPosterizationFilter(), _createBlurFilter());
-			_filter4 = new FilterChain(_createBlurFilter(), _createPosterizationFilter());
+			var pFilter2:PosterizationFilter =_createPosterizationFilter();
+			var pFilter3:PosterizationFilter =_createPosterizationFilter();
+			var pFilter4:PosterizationFilter =_createPosterizationFilter();
+
+			_filter2 = pFilter2;
+			_filter3 = new FilterChain(pFilter3, _createBlurFilter());
+			_filter4 = new FilterChain(_createBlurFilter(), pFilter4);
 
 			_toggleFilter();
 
+			var sliderRed:Slider = _createSlider(30, 320, pFilter2.redDiv, "RED DIV", function(value:int):void{
+				pFilter2.redDiv = value;
+				pFilter3.redDiv = value;
+				pFilter4.redDiv = value;
+			});
+			var sliderGreen:Slider = _createSlider(30, 350, pFilter2.greenDiv, "GREEN DIV", function(value:int):void{
+				pFilter2.greenDiv = value;
+				pFilter3.greenDiv = value;
+				pFilter4.greenDiv = value;
+			});
+			var sliderBlue:Slider = _createSlider(30, 380, pFilter2.blueDiv, "BLUE DIV", function(value:int):void{
+				pFilter2.blueDiv = value;
+				pFilter3.blueDiv = value;
+				pFilter4.blueDiv = value;
+			});
+
+			var sliderAlpha:Slider = _createSlider(30, 410, pFilter2.alphaDiv, "ALPHA DIV", function(value:int):void{
+				pFilter2.alphaDiv = value;
+				pFilter3.alphaDiv = value;
+				pFilter4.alphaDiv = value;
+			});
 		}
 
 		private function _createPosterizationFilter():PosterizationFilter {
@@ -65,7 +98,7 @@ package demos {
 		}
 
 		private function _createBlurFilter():BlurFilter {
-			return new BlurFilter(2, 2);
+			return new BlurFilter(4, 2);
 		}
 
 		private function _addImage(xx:int, yy:int, title:String=""):Quad {
@@ -89,5 +122,31 @@ package demos {
 			_quad4.filter = _quad4.filter ? null : _filter4;
 		}
 
+		private function _createSlider(xx:int, yy:int, value:int, title:String, onChange:Function):Slider {
+
+			var textWidth:int = 90;
+			var textControl:FixedLayoutBitmapTextController;
+			textControl = new FixedLayoutBitmapTextController(
+				MyFontManager.baseFont.name, title + ": XXX", 0xffffff, 0, textWidth);
+			textControl.align = Align.LEFT;
+			textControl.setTextWithPadding(title + ": " + value);
+			textControl.displayObject.x = xx;
+			textControl.displayObject.y = yy;
+			addChildAt(textControl.displayObject, 0);
+
+			var slider:Slider = new Slider();
+			slider.minimum = 2;
+			slider.maximum = 32;
+			slider.value = value;
+			slider.step = 1;
+			slider.x = xx + textWidth + 10;
+			slider.y = yy;
+			slider.addEventListener(Event.CHANGE, function(ev:Event):void{
+				textControl.setTextWithPadding(title + ": " + slider.value);
+				onChange(slider.value);
+			});
+			addChildAt( slider , 0);
+			return slider;
+		}
 	}
 }
