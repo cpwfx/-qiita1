@@ -7,8 +7,15 @@ package {
 	import demos.TriangleTest1Demo;
 	import demos.TriangleTest3Demo;
 
+	import feathers.controls.Check;
+	
+	import feathers.themes.StyleNameFunctionTheme;
+	
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
+
+	import harayoki.feathers.themes.CustomMetalWorksTheme;
 
 	import harayoki.feathers.themes.CustomMinimalTheme;
 
@@ -22,6 +29,7 @@ package {
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
@@ -73,7 +81,7 @@ package {
 			MyFontManager.setupAsset(_assetManager);
 			var assetsCandidates:Array = [];
 			_demo.addAssets(assetsCandidates);
-			assetsCandidates.push("assets/minimal_mobile.xml");
+			assetsCandidates.push("assets/metalworks_desktop_custom.xml");
 			assetsCandidates.push('assets/colorbars.xml');
 			assetsCandidates.push('assets/atlas.png');
 			assetsCandidates.push('assets/atlas.xml');
@@ -104,7 +112,9 @@ package {
 
 			MyFontManager.setup();
 
-			new CustomMinimalTheme(_assetManager.getTextureAtlas("minimal_mobile"), MyFontManager.baseFont.name);
+			var themeAtlas:TextureAtlas = _assetManager.getTextureAtlas("metalworks_desktop_custom");
+			var theme:CustomMetalWorksTheme = new CustomMetalWorksTheme(themeAtlas, MyFontManager.baseFont.name);
+			theme.dummyTexture = _assetManager.getTexture("white");
 
 			var bg:DisplayObject = _demo.getBackgroundDisplay();
 			if (bg) {
@@ -116,29 +126,22 @@ package {
 			addChild(_demo)
 			_demo.start();
 
-			var buttons:Vector.<DisplayObject> = new <DisplayObject>[];
+			var uiList:Vector.<DisplayObject> = new <DisplayObject>[];
 
-			var bgTexture:Texture = _assetManager.getTexture("border1");
-
-			// タッチ時にskipUnchangedFrames切り替え
-			var infoTextControl1:FixedLayoutBitmapTextController;
-			infoTextControl1 = new FixedLayoutBitmapTextController(MyFontManager.baseFont.name, "SkpUnchngdFrms:XXX");
-			infoTextControl1.setText("SkpUnchngdFrms:YES");
-			var btn:DisplayObject = _demoHelper.createButton(infoTextControl1.displayObject, function():void {
-				_starling.skipUnchangedFrames = !_starling.skipUnchangedFrames;
-				if(_starling.skipUnchangedFrames) {
-					infoTextControl1.setText("SkpUnchngdFrms:YES");
+			var chk:Check = _demo.createDemoCheckBox(function():void{
+				if(chk.isSelected) {
+					_starling.skipUnchangedFrames = true;
 				} else {
-					infoTextControl1.setText("SkpUnchngdFrms: NO");
+					_starling.skipUnchangedFrames = false;
 				}
-			}, bgTexture);
-			buttons.push(btn);
+			}, true);
+			uiList.push(_demo.createDemoWrapSprite(new <DisplayObject>[chk, _demo.createDemoText("SkpUnchngdFrms")]));
 
 			// 各デモでボタンを追加 nullが入っていると改行になる
-			_demo.getBottomButtons(buttons);
+			_demo.setBottomUI(uiList);
 
-			if(buttons.length > 0) {
-				_demoHelper.loacateBottomLeft(buttons, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
+			if(uiList.length > 0) {
+				_demoHelper.loacateBottomLeft(uiList, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
 			}
 
 			if(_demo.frontDisplay) {

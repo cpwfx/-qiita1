@@ -45,7 +45,7 @@ package demos {
 			return bg;
 		}
 
-		public override function getBottomButtons(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
+		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 
 			var btn:DisplayObject;
 			var bgTexture:Texture = _assetManager.getTexture("border1");
@@ -76,29 +76,29 @@ package demos {
 			}, bgTexture);
 			out.push(btn);
 
-			btn = _demoHelper.createButton(_createText("Clear"), function():void {
+			btn = _demoHelper.createButton(createDemoText("Clear"), function():void {
 				_clearStars();
 			}, bgTexture);
 			out.push(btn);
 
 			out.push(null);
 
-			btn = _demoHelper.createButton(_createText("Make 25 Quads"), function():void {
+			btn = _demoHelper.createButton(createDemoText("Make 25 Quads"), function():void {
 				_makeQuad(25);
 			}, bgTexture);
 			out.push(btn);
 
-			btn = _demoHelper.createButton(_createText("Make many Quads"), function():void {
+			btn = _demoHelper.createButton(createDemoText("Make many Quads"), function():void {
 				_makeQuad(500);
 			}, bgTexture);
 			out.push(btn);
 
-			btn = _demoHelper.createButton(_createText("Make 25 Triangles"), function():void {
+			btn = _demoHelper.createButton(createDemoText("Make 25 Triangles"), function():void {
 				_makeTriangle(25);
 			}, bgTexture);
 			out.push(btn);
 
-			btn = _demoHelper.createButton(_createText("Make many Triangles"), function():void {
+			btn = _demoHelper.createButton(createDemoText("Make many Triangles"), function():void {
 				_makeTriangle(500);
 			}, bgTexture);
 			out.push(btn);
@@ -115,7 +115,7 @@ package demos {
 			_texForTriangle = _assetManager.getTexture("topleft_star");
 			_texWhite = _assetManager.getTexture("white");
 
-			_title = _createText("QUAD and TRIANGLE", Align.CENTER);
+			_title = createDemoText("QUAD and TRIANGLE", Align.CENTER);
 			_title.x -= 160;
 			_title.y = 15;
 			_title.scale = 2;

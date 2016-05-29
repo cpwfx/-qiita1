@@ -196,7 +196,7 @@
             <key type="filename">dot16x16.png</key>
             <key type="filename">emoji/oukan.png</key>
             <key type="filename">emoji/tofu.png</key>
-            <key type="filename">feathers/minimal_mobile.png</key>
+            <key type="filename">feathers/metalworks_desktop_custom.png</key>
             <key type="filename">gradation_mono.png</key>
             <key type="filename">kana_only.png</key>
             <key type="filename">lena.jpg</key>
@@ -227,7 +227,7 @@
             <filename>gradation_mono.png</filename>
             <filename>white.png</filename>
             <filename>lena.jpg</filename>
-            <filename>feathers</filename>
+            <filename>feathers/metalworks_desktop_custom.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

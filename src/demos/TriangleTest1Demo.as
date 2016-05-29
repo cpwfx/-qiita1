@@ -1,4 +1,6 @@
 package demos {
+	import feathers.controls.Check;
+
 	import flash.geom.Rectangle;
 
 	import harayoki.starling.display.Triangle;
@@ -6,6 +8,7 @@ package demos {
 	import misc.*;
 
 	import starling.core.Starling;
+	import starling.display.DisplayObject;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Mesh;
@@ -22,19 +25,24 @@ package demos {
 
 		private var _infoVisible:Boolean = true;
 		public function TriangleTest1Demo(assetManager:AssetManager, starling:Starling = null) {
-			frontDisplay = true;
+			// frontDisplay = true;
 			super(assetManager, starling);
 		}
 
-		public override function getBottomButtons(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
+		public override function getBackgroundDisplay():DisplayObject {
+			var bg:Image = new Image(_assetManager.getTexture("white"));
+			bg.textureSmoothing = TextureSmoothing.NONE;
+			bg.color = 0x111111;
+			return bg;
+		}
 
-			var btn:DisplayObject;
-			var bgTexture:Texture = _assetManager.getTexture("border1");
+		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 
-			btn = _demoHelper.createButton(_createText("INFO"), function():void {
-				_infoVisible = !_infoVisible;
-			}, bgTexture);
-			out.push(btn);
+			var chk:Check = createDemoCheckBox(function():void{
+				_infoVisible = chk.isSelected;
+			});
+			chk.isSelected = _infoVisible;
+			out.push(createDemoWrapSprite(new <DisplayObject>[chk,createDemoText("INFO")]));
 
 			return out;
 		}
@@ -51,7 +59,7 @@ package demos {
 			var pressingTr2:Boolean = false;
 			var pressingTr3:Boolean = false;
 
-			var title:DisplayObject = _createText("TOUCH TRIANGLES", Align.CENTER);
+			var title:DisplayObject = createDemoText("TOUCH TRIANGLES", Align.CENTER);
 			title.x -= 160;
 			title.y = 10;
 			title.scale = 2;
@@ -110,9 +118,9 @@ package demos {
 			addChild(tr2); // color
 			addChild(tr1); // color
 
-			var title1:DisplayObject = _createText("Normal", Align.CENTER, tr1);
-			var title2:DisplayObject = _createText("Skew & Color & Scale & Pivot", Align.CENTER, tr2);
-			var title3:DisplayObject = _createText("FromTexture & Frame & Pivot", Align.CENTER, tr3);
+			var title1:DisplayObject = createDemoText("Normal", Align.CENTER, tr1);
+			var title2:DisplayObject = createDemoText("Skew & Color & Scale & Pivot", Align.CENTER, tr2);
+			var title3:DisplayObject = createDemoText("FromTexture & Frame & Pivot", Align.CENTER, tr3);
 
 			title1.x -= 160;
 			title2.x -= 160;

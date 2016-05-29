@@ -114,7 +114,7 @@ package misc {
 				while(i--) {
 					var image:Image = sp.getChildAt(i) as Image
 					if(image) {
-						image.textureSmoothing =TextureSmoothing.NONE;
+						image.textureSmoothing = TextureSmoothing.NONE;TextureSmoothing
 					}
 				}
 			}
@@ -195,7 +195,7 @@ package misc {
 		public function loacateBottomLeft(
 			displayObjects:Vector.<DisplayObject>,
 			rightPos:int=-1, bottomPos:int=-1,
-			paddingX:int=2, paddingY:int = 0,
+			paddingX:int=6, paddingY:int = 0,
 			indextX:int=5
 		):void {
 
@@ -211,6 +211,8 @@ package misc {
 			var minY:int = bottomPos;
 			var yy:int = bottomPos;
 
+			var bounds:Rectangle = _workRect;
+
 			for(var i:int=0; i<displayObjects.length; i++) {
 				var dobj:DisplayObject = displayObjects[i] as DisplayObject;
 				if(!dobj) {
@@ -222,13 +224,14 @@ package misc {
 				while(true) {
 					dobj.x = xx;
 					dobj.y = yy - dobj.height;
-					xx += dobj.width + paddingX;
+					dobj.getBounds(_baseDisplayObject, bounds);
+					xx = bounds.right + paddingX;
 					minY = Math.min(minY, dobj.y);
 
 					if(xx + paddingX < rightPos) {
 						break;
 					}
-					if(dobj.width > rightPos) {
+					if(bounds.width > rightPos) {
 						break;
 					}
 					xx = indextX;
