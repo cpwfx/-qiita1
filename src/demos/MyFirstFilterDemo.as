@@ -49,7 +49,7 @@ package demos {
 			var btn:DisplayObject;
 			var bgTexture:Texture = _assetManager.getTexture("border1");
 
-			btn = _demoHelper.createButton(_createText("TOGGLE FILTER"), function():void {
+			btn = _demoHelper.createButton(_createText("FILTER ON/OFF"), function():void {
 				_toggleFilter();
 			}, bgTexture);
 			out.push(btn);
@@ -63,10 +63,10 @@ package demos {
 
 		public override function start():void {
 
-			_quad1 = _addImage(50, 30, "ノーマル");
-			_quad2 = _addImage(170, 30 , "ポスタリゼーション");
-			_quad3 = _addImage(50, 170 , "ポスタ + ブラー");
-			_quad4 = _addImage(170, 170 , "ブラー + ポスタ");
+			_quad1 = _addImage(50, 30, "Normal");
+			_quad2 = _addImage(170, 30 , "Posterization");
+			_quad3 = _addImage(50, 170 , "Poster.. + Blur");
+			_quad4 = _addImage(170, 170 , "Blur + Poster..");
 
 			var pFilter2:PosterizationFilter =_createPosterizationFilter();
 			var pFilter3:PosterizationFilter =_createPosterizationFilter();
@@ -118,7 +118,7 @@ package demos {
 			if(title) {
 				var sp:DisplayObject = _demoHelper.createSpriteText(title, MyFontManager.baseFont.name, 150);
 				sp.x = quad.x;
-				sp.y = quad.getBounds(this).bottom + 5;
+				sp.y = quad.getBounds(this).bottom + 2;
 				addChildAt(sp, 0);
 			}
 			return quad;
