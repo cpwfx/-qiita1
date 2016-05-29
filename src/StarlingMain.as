@@ -3,6 +3,7 @@ package {
 	import demos.MapChipTestDemo;
 	import demos.MeshTestDemo;
 	import demos.MyFirstFilterDemo;
+	import demos.MyFirstStyleDemo;
 	import demos.ScoreTextDemo;
 	import demos.TriangleTest1Demo;
 	import demos.TriangleTest3Demo;
@@ -77,6 +78,7 @@ package {
 			_demo = new TriangleTest1Demo(_assetManager);
 			_demo = new TriangleTest3Demo(_assetManager);
 			_demo = new MyFirstFilterDemo(_assetManager);
+			_demo = new MyFirstStyleDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 
@@ -141,7 +143,7 @@ package {
 
 			var uiList:Vector.<DisplayObject> = new <DisplayObject>[];
 
-			var chk:Check = _demo.createDemoCheckBox(function():void{
+			var chk:Check = _demo.createDemoCheckBox(function(chk:Check):void{
 				if(chk.isSelected) {
 					_starling.skipUnchangedFrames = true;
 				} else {

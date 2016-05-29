@@ -3,47 +3,48 @@ package demos {
 	import feathers.controls.Slider;
 
 	import harayoki.starling.FixedLayoutBitmapTextController;
-	import harayoki.starling.filters.PosterizationFilter;
+	import harayoki.starling.styles.PosterizationStyle;
 
 	import misc.MyFontManager;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
-	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
-	import starling.filters.FilterChain;
 	import starling.filters.FragmentFilter;
+	import starling.styles.MeshStyle;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
-	
-	public class MyFirstFilterDemo extends DemoBase {
+
+	public class MyFirstStyleDemo extends DemoBase {
 
 		private var _quad1:Quad;
 		private var _quad2:Quad;
 		private var _quad3:Quad;
 		private var _quad4:Quad;
-		private var _filter2:FragmentFilter;
-		private var _filter3:FragmentFilter;
+
 		private var _filter4:FragmentFilter;
 
-		public function MyFirstFilterDemo(assetManager:AssetManager, starling:Starling = null) {
+		private var _style2:PosterizationStyle;
+		private var _style3:PosterizationStyle;
+		private var _style4:PosterizationStyle;
+
+		public function MyFirstStyleDemo(assetManager:AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
 			super(assetManager, starling);
 		}
 
-		public override function getBackgroundDisplay():DisplayObject {
-			var bg:Image = new Image(_assetManager.getTexture("white"));
-			bg.textureSmoothing = TextureSmoothing.NONE;
-			bg.color = 0x111111; // サンプル画像のalphaが見やすいように
-			return bg;
-		}
-
 		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
+			var chk:Check;
+			chk = createDemoCheckBox(function(chk:Check):void{
+				_setStyle(chk.isSelected);
+			}, true);
+			out.push(createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("STYLE")]));
 
-			var chk:Check = createDemoCheckBox(function(chk:Check):void{
+			chk = createDemoCheckBox(function(chk:Check):void{
 				_toggleFilter();
 			}, true);
 			out.push(createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("FILTER")]));
@@ -56,52 +57,39 @@ package demos {
 
 		public override function start():void {
 
-			_quad1 = _addImage(50, 30, "Normal");
-			_quad2 = _addImage(170, 30 , "Posterization");
-			_quad3 = _addImage(50, 170 , "Poster.. + Blur");
-			_quad4 = _addImage(170, 170 , "Blur + Poster..");
+			_quad1 = _addImage(50, 30, "Default Style");
+			_quad2 = _addImage(170, 30 , "Posterization(Fixed)");
+			_quad3 = _addImage(50, 170 , "Posterization2");
+			_quad4 = _addImage(170, 170 , "Poster.. + Blur");
 
-			var pFilter2:PosterizationFilter =_createPosterizationFilter();
-			var pFilter3:PosterizationFilter =_createPosterizationFilter();
-			var pFilter4:PosterizationFilter =_createPosterizationFilter();
+			_filter4 = new BlurFilter(4,4);
 
-			_filter2 = pFilter2;
-			_filter3 = new FilterChain(pFilter3, _createBlurFilter());
-			_filter4 = new FilterChain(_createBlurFilter(), pFilter4);
+			_style2 = _createPosterizationStyle(8, 8, 4, 2); // MSX screen8
+			_style3 = _createPosterizationStyle(3, 3, 12, 4);
+			_style4 = _createPosterizationStyle(3, 3, 12, 4);
 
 			_toggleFilter();
+			_setStyle(true);
 
-			var sliderRed:Slider = _createSlider(30, 320, pFilter2.redDiv, "RED DIV", function(value:int):void{
-				pFilter2.redDiv = value;
-				pFilter3.redDiv = value;
-				pFilter4.redDiv = value;
+			var sliderRed:Slider = _createSlider(30, 320, _style3.redDiv, "RED DIV", function(value:int):void{
+				_style3.redDiv = value;
+				_style4.redDiv = value;
 			});
 
-			var sliderGreen:Slider = _createSlider(30, 350, pFilter2.greenDiv, "GREEN DIV", function(value:int):void{
-				pFilter2.greenDiv = value;
-				pFilter3.greenDiv = value;
-				pFilter4.greenDiv = value;
+			var sliderGreen:Slider = _createSlider(30, 350, _style3.greenDiv, "GREEN DIV", function(value:int):void{
+				_style3.greenDiv = value;
+				_style4.greenDiv = value;
 			});
-			var sliderBlue:Slider = _createSlider(30, 380, pFilter2.blueDiv, "BLUE DIV", function(value:int):void{
-				pFilter2.blueDiv = value;
-				pFilter3.blueDiv = value;
-				pFilter4.blueDiv = value;
+			var sliderBlue:Slider = _createSlider(30, 380, _style3.blueDiv, "BLUE DIV", function(value:int):void{
+				_style3.blueDiv = value;
+				_style4.blueDiv = value;
 			});
 
-			var sliderAlpha:Slider = _createSlider(30, 410, pFilter2.alphaDiv, "ALPHA DIV", function(value:int):void{
-				pFilter2.alphaDiv = value;
-				pFilter3.alphaDiv = value;
-				pFilter4.alphaDiv = value;
+			var sliderAlpha:Slider = _createSlider(30, 410, _style3.alphaDiv, "ALPHA DIV", function(value:int):void{
+				_style3.alphaDiv = value;
+				_style4.alphaDiv = value;
 			});
 
-		}
-
-		private function _createPosterizationFilter():PosterizationFilter {
-			return new PosterizationFilter(8, 8, 4, 2); // MSX screen 8 + alpha
-		}
-
-		private function _createBlurFilter():BlurFilter {
-			return new BlurFilter(4, 2);
 		}
 
 		private function _addImage(xx:int, yy:int, title:String=""):Quad {
@@ -119,10 +107,24 @@ package demos {
 			return quad;
 		}
 
-		private function _toggleFilter():void{
-			_quad2.filter = _quad2.filter ? null : _filter2;
-			_quad3.filter = _quad3.filter ? null : _filter3;
+		private function _toggleFilter():void {
 			_quad4.filter = _quad4.filter ? null : _filter4;
+		}
+
+		private function _setStyle(active:Boolean):void{
+			_quad2.setStyle(active ? _style2 : null);
+			_quad3.setStyle(active ? _style3 : null);
+			_quad4.setStyle(active ? _style4 : null);
+
+			// force update if is is skipUnchangedFrames is true.
+			// 強制画面更新(skipUnchangedFramesがtrueだとStyleをNullにしただけだと更新が入らない
+			alpha = 0.9999999;
+			alpha = 1.0;
+
+		}
+
+		private function _createPosterizationStyle(rDiv:int,gDiv:int,bDiv:int,aDiv:int):PosterizationStyle {
+			return new PosterizationStyle(rDiv, gDiv, bDiv, aDiv);
 		}
 
 		private function _createSlider(xx:int, yy:int, value:int, title:String, onChange:Function):Slider {

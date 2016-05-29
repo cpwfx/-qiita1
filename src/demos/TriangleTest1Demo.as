@@ -29,16 +29,9 @@ package demos {
 			super(assetManager, starling);
 		}
 
-		public override function getBackgroundDisplay():DisplayObject {
-			var bg:Image = new Image(_assetManager.getTexture("white"));
-			bg.textureSmoothing = TextureSmoothing.NONE;
-			bg.color = 0x111111;
-			return bg;
-		}
-
 		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 
-			var chk:Check = createDemoCheckBox(function():void{
+			var chk:Check = createDemoCheckBox(function(chk:Check):void{
 				_infoVisible = chk.isSelected;
 			});
 			chk.isSelected = _infoVisible;

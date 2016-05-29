@@ -8,10 +8,12 @@ package demos {
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextFormat;
+	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
 
@@ -36,8 +38,12 @@ package demos {
 		public function addAssets(assets:Array):void {
 			return;
 		}
+
 		public function getBackgroundDisplay():DisplayObject {
-			return null;
+			var bg:Image = new Image(_assetManager.getTexture("white"));
+			bg.textureSmoothing = TextureSmoothing.NONE;
+			bg.color = 0x111111;
+			return bg;
 		}
 
 		public function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
@@ -73,7 +79,7 @@ package demos {
 			}
 			chk.isSelected = isSelected;
 			chk.addEventListener(Event.CHANGE, function(ev:Event):void {
-				callback && callback();
+				callback && callback(chk);
 			})
 			return chk;
 		}
