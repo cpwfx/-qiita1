@@ -61,7 +61,7 @@ package {
 
 		public function StarlingMain() {
 
-			if(_startCallback) {
+			if (_startCallback) {
 				_startCallback.apply(null, [_starling]);
 			}
 
@@ -79,15 +79,28 @@ package {
 			_demo = new MyFirstFilterDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
+
+			// 順序を確実に保たないと入れ子アトラスが解決できない模様 (atlas.png内に別のatlasがある)
+			_assetManager.enqueue('assets/atlas.png');
+			_assetManager.enqueue('assets/atlas.xml');
+
+			// load main assets
+			_assetManager.loadQueue(function(ratio:Number):void {
+				if(ratio == 1) {
+					_loadSubAssets();
+				}
+			});
+
+		}
+		private function _loadSubAssets():void {
+
 			var assetsCandidates:Array = [];
 			_demo.addAssets(assetsCandidates);
 			assetsCandidates.push("assets/metalworks_desktop_custom.xml");
 			assetsCandidates.push('assets/colorbars.xml');
-			assetsCandidates.push('assets/atlas.png');
-			assetsCandidates.push('assets/atlas.xml');
 
 			var assetsAdded:Array = [];
-			//重複を省く 順序を保たないと入れ子アトラスが解決できない模様 (atlas.png内にcolorbarsがある)
+			//重複を省く
 			for(var i:int=0; i < assetsCandidates.length; i++) {
 				var file:String = assetsCandidates[i];
 				if(assetsAdded.indexOf(file) == -1) {
