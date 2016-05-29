@@ -97,14 +97,17 @@ class PosterizationEffect extends FilterEffect
 			"frc ft1, ft0",
 			"sub ft0, ft0, ft1",
 
-			// ft0を掛けた際より1小さい値(fc1)で割る 吸着処理
+			// ft0を掛けた際より1小さい値(fc1)で割る
 			"div ft0, ft0, fc1",
+
+			// 1.0を超える部分ができるので正規化
+			"sat ft0, ft0",
 
 			// PMAをやり直す rgb *= a
 			"mul ft0.xyz, ft0.xyz, ft0.www",
 
-			// ft0(テンポラリ)の値を0~1の範囲におさめたものを出力(oc)
-			"sat oc, ft0"].join("\n");
+			// ocに出力
+			"mov oc, ft0"].join("\n");
 
 		return Program.fromSource(vertexShader, fragmentShader);
 	}
@@ -133,7 +136,7 @@ class PosterizationEffect extends FilterEffect
 	public function get blueDiv():Number { return _divs0[2]; }
 	public function set blueDiv(value:Number):void { _divs0[2] = value; _divs1[2] = value - 1.0; }
 
-	public function get alphaDiv():Number { return _divs0[3] + 1.0; }
-	public function set alphaDiv(value:Number):void { _divs0[3] = value -1.0 ; _divs1[3] = value -1.0; }
+	public function get alphaDiv():Number { return _divs0[3]; }
+	public function set alphaDiv(value:Number):void { _divs0[3] = value; _divs1[3] = value -1.0; }
 
 }
