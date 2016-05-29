@@ -1,34 +1,24 @@
 package demos {
-	import feathers.controls.Button;
 	import feathers.controls.Check;
-	import feathers.controls.Label;
 	import feathers.controls.Slider;
-	import feathers.controls.text.BitmapFontTextRenderer;
-	import feathers.core.ITextRenderer;
-	import feathers.motion.Slide;
-	import feathers.text.BitmapFontTextFormat;
 
 	import harayoki.starling.FixedLayoutBitmapTextController;
-
 	import harayoki.starling.filters.PosterizationFilter;
 
 	import misc.MyFontManager;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
-	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
 	import starling.filters.FilterChain;
 	import starling.filters.FragmentFilter;
-	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
-
+	
 	public class MyFirstFilterDemo extends DemoBase {
 
 		private var _quad1:Quad;

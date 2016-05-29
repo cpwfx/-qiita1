@@ -1,12 +1,9 @@
 package harayoki.feathers.themes
 {
-	import feathers.themes.*;
-
-	import starling.core.Starling;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 
-	public class CustomMetalWorksTheme extends BaseCustomMetalWorksMobileTheme implements IAsyncTheme
+	public class CustomMetalWorksTheme extends BaseCustomMetalWorksMobileTheme
 	{
 
 		public function CustomMetalWorksTheme(atlas:TextureAtlas, fontName:String="_sans")
@@ -22,11 +19,6 @@ package harayoki.feathers.themes
 
 		public function get dummyTexture():Texture {
 			return BaseCustomMetalWorksMobileTheme.dummyTexture;
-		}
-
-		public function isCompleteForStarling(starling:Starling):Boolean
-		{
-			return true;
 		}
 
 		protected override function initializeStage():void {
