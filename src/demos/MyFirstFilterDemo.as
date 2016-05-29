@@ -102,7 +102,7 @@ package demos {
 		}
 
 		private function _createPosterizationFilter():PosterizationFilter {
-			return new PosterizationFilter(8, 8, 4); // MSX screen 8 + alpha
+			return new PosterizationFilter(8, 8, 4, 2); // MSX screen 8 + alpha
 		}
 
 		private function _createBlurFilter():BlurFilter {

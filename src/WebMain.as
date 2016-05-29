@@ -8,7 +8,7 @@ package {
 
 	import starling.core.Starling;
 
-	[SWF(width = "640", height = "960", frameRate = "60", backgroundColor = "#333333")]
+	[SWF(width = "640", height = "960", frameRate = "60", backgroundColor = "#111111")]
 	public class WebMain extends Sprite {
 		public function WebMain() {
 			stage.align = StageAlign.TOP_LEFT;
