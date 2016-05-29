@@ -1,7 +1,12 @@
 package demos {
 	import feathers.controls.Button;
+	import feathers.controls.Check;
+	import feathers.controls.Label;
 	import feathers.controls.Slider;
+	import feathers.controls.text.BitmapFontTextRenderer;
+	import feathers.core.ITextRenderer;
 	import feathers.motion.Slide;
+	import feathers.text.BitmapFontTextFormat;
 
 	import harayoki.starling.FixedLayoutBitmapTextController;
 
@@ -11,8 +16,10 @@ package demos {
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
 	import starling.filters.FilterChain;
@@ -44,21 +51,17 @@ package demos {
 			return bg;
 		}
 
-		public override function getBottomButtons(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
+		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 
-			var btn:DisplayObject;
-			var bgTexture:Texture = _assetManager.getTexture("border1");
-
-			btn = _demoHelper.createButton(_createText("FILTER ON/OFF"), function():void {
+			var chk:Check = createDemoCheckBox(function():void{
 				_toggleFilter();
-			}, bgTexture);
-			out.push(btn);
+			}, true);
+			out.push(createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("FILTER")]));
 
 			return out;
 		}
 
 		public override function addAssets(assets:Array):void {
-			assets.push("assets/lena.jpg");
 		}
 
 		public override function start():void {
@@ -83,6 +86,7 @@ package demos {
 				pFilter3.redDiv = value;
 				pFilter4.redDiv = value;
 			});
+
 			var sliderGreen:Slider = _createSlider(30, 350, pFilter2.greenDiv, "GREEN DIV", function(value:int):void{
 				pFilter2.greenDiv = value;
 				pFilter3.greenDiv = value;
@@ -99,6 +103,7 @@ package demos {
 				pFilter3.alphaDiv = value;
 				pFilter4.alphaDiv = value;
 			});
+
 		}
 
 		private function _createPosterizationFilter():PosterizationFilter {
@@ -147,8 +152,9 @@ package demos {
 			slider.maximum = 64;
 			slider.value = value;
 			slider.step = 1;
+			slider.scaleY = 0.5;
 			slider.x = xx + textWidth + 10;
-			slider.y = yy;
+			slider.y = yy - 3;
 			slider.addEventListener(Event.CHANGE, function(ev:Event):void{
 				textControl.setTextWithPadding(title + ": " + slider.value);
 				onChange(slider.value);

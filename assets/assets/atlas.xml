@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:04eea906e3c65eff09816bbcd24c9b68:09a4136fbcceed5057155152bd47b417:cde709370900f12288f3449eded86f07$ -->
-<TextureAtlas imagePath="atlas.png" width="808" height="258">
-    <SubTexture name="alphabet" x="621" y="152" width="76" height="78"/>
-    <SubTexture name="border1" x="41" y="237" width="13" height="12" frameX="-2" frameY="-2" frameWidth="16" frameHeight="16"/>
-    <SubTexture name="box1line" x="48" y="204" width="8" height="8"/>
-    <SubTexture name="colorbars" x="39" y="204" width="7" height="31" frameX="0" frameY="0" frameWidth="8" frameHeight="32"/>
-    <SubTexture name="dot12x12" x="23" y="253" width="5" height="4" frameX="-4" frameY="-4" frameWidth="12" frameHeight="12"/>
-    <SubTexture name="dot16x16" x="23" y="253" width="5" height="4" frameX="-6" frameY="-6" frameWidth="16" frameHeight="16"/>
-    <SubTexture name="gradation_mono" x="1" y="1" width="2" height="256"/>
-    <SubTexture name="kana_only" x="519" y="1" width="148" height="149"/>
-    <SubTexture name="lena" x="519" y="152" width="100" height="100"/>
-    <SubTexture name="maptip" x="699" y="131" width="108" height="54"/>
-    <SubTexture name="minimal_mobile" x="5" y="1" width="512" height="201" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
-    <SubTexture name="oukan" x="23" y="238" width="16" height="13"/>
-    <SubTexture name="pict1" x="669" y="1" width="128" height="128"/>
-    <SubTexture name="quad_star" x="5" y="238" width="16" height="16"/>
-    <SubTexture name="tofu" x="48" y="214" width="8" height="8"/>
-    <SubTexture name="topleft_star" x="5" y="204" width="32" height="32"/>
-    <SubTexture name="white" x="30" y="253" width="2" height="2"/>
+<!-- $TexturePacker:SmartUpdate:3a4e064f59d4390e890e5b91bc395aa5:c1d71a8d061c329a3778c8354e96321a:cde709370900f12288f3449eded86f07$ -->
+<TextureAtlas imagePath="atlas.png" width="258" height="436">
+    <SubTexture name="alphabet" x="151" y="258" width="76" height="78"/>
+    <SubTexture name="border1" x="238" y="258" width="13" height="12" frameX="-2" frameY="-2" frameWidth="16" frameHeight="16"/>
+    <SubTexture name="box1line" x="238" y="272" width="8" height="8"/>
+    <SubTexture name="colorbars" x="229" y="258" width="7" height="31" frameX="0" frameY="0" frameWidth="8" frameHeight="32"/>
+    <SubTexture name="dot12x12" x="131" y="428" width="5" height="4" frameX="-4" frameY="-4" frameWidth="12" frameHeight="12"/>
+    <SubTexture name="dot16x16" x="131" y="428" width="5" height="4" frameX="-6" frameY="-6" frameWidth="16" frameHeight="16"/>
+    <SubTexture name="gradation_mono" x="253" y="156" width="2" height="256"/>
+    <SubTexture name="kana_only" x="1" y="156" width="148" height="149"/>
+    <SubTexture name="lena" x="151" y="156" width="100" height="100"/>
+    <SubTexture name="maptip" x="131" y="338" width="108" height="54"/>
+    <SubTexture name="metalworks_desktop_custom" x="1" y="1" width="256" height="153" frameX="0" frameY="0" frameWidth="256" frameHeight="256"/>
+    <SubTexture name="oukan" x="165" y="394" width="16" height="13"/>
+    <SubTexture name="pict1" x="1" y="307" width="128" height="128"/>
+    <SubTexture name="quad_star" x="131" y="307" width="16" height="16"/>
+    <SubTexture name="tofu" x="131" y="325" width="8" height="8"/>
+    <SubTexture name="topleft_star" x="131" y="394" width="32" height="32"/>
+    <SubTexture name="white" x="229" y="291" width="2" height="2"/>
 </TextureAtlas>
