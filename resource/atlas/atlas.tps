@@ -203,6 +203,7 @@
             <key type="filename">maptip.png</key>
             <key type="filename">pict1.png</key>
             <key type="filename">quad_star.png</key>
+            <key type="filename">testpt.png</key>
             <key type="filename">topleft_star.png</key>
             <key type="filename">white.png</key>
             <struct type="IndividualSpriteSettings">
@@ -228,6 +229,7 @@
             <filename>white.png</filename>
             <filename>lena.jpg</filename>
             <filename>feathers/metalworks_desktop_custom.png</filename>
+            <filename>testpt.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
