@@ -9,18 +9,11 @@ package {
 	import demos.TriangleTest3Demo;
 
 	import feathers.controls.Check;
-	
-	import feathers.themes.StyleNameFunctionTheme;
-	
+
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
-	import flash.utils.setTimeout;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
-
-	import harayoki.feathers.themes.CustomMinimalTheme;
-
-	import harayoki.starling.FixedLayoutBitmapTextController;
 
 	import misc.DemoHelper;
 	import misc.MyFontManager;
@@ -29,7 +22,6 @@ package {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
-	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import starling.utils.AssetManager;
 
