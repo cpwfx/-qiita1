@@ -10,11 +10,9 @@ package demos {
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Quad;
-	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
 	import starling.filters.FragmentFilter;
-	import starling.styles.MeshStyle;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 	import starling.utils.AssetManager;
