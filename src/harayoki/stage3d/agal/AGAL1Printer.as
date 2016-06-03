@@ -8,7 +8,7 @@ package harayoki.stage3d.agal {
 			var printer:AGAL1Printer = new AGAL1Printer();
 			var r:AGAL1Registers = printer.getRegisters();
 			printer.move(
-				r.vt1, r.vc1
+				r.vt1, r.vc1.xx
 			).move(
 				r.op, r.vt1
 			);
@@ -24,6 +24,10 @@ package harayoki.stage3d.agal {
 
 		public function clear():void {
 			// TODO
+		}
+
+		public function print():String {
+
 		}
 
 		////////// implements //////////

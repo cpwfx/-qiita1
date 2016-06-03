@@ -4,6 +4,10 @@ package harayoki.stage3d.agal {
 	
 	public interface IAGAL1Printer {
 
+		function clear():void;
+
+		function print():String;
+
 		/**
 		 * [mov] 0x00
 		 * move data from source1 to destination, component-wise
