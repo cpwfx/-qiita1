@@ -1,5 +1,6 @@
 package harayoki.stage3d.agal.registers {
-	public class AGALRegisterVertexTemporary extends AGALRegister implements IAGALDestinationRegister{
+	public class AGALRegisterVertexTemporary extends AGALRegister{
+
 		public function AGALRegisterVertexTemporary(index:uint) {
 			super("vt", index);
 		}

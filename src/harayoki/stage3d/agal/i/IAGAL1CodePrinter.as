@@ -1,18 +1,67 @@
-package harayoki.stage3d.agal {
-	import harayoki.stage3d.agal.registers.IAGALDestinationRegister;
-	import harayoki.stage3d.agal.registers.IAGALRegister;
-	
-	public interface IAGAL1Printer {
+package harayoki.stage3d.agal.i {
+	public interface IAGAL1CodePrinter {
+
+		// @see http://jacksondunstan.com/articles/1664
 
 		function clear():void;
 
 		function print():String;
 
+		function appendCodeDirectly(code:String):IAGAL1CodePrinter;
+
+		function prependCodeDirectly(code:String):IAGAL1CodePrinter;
+
 		/**
 		 * [mov] 0x00
 		 * move data from source1 to destination, component-wise
 		 */
-		function move(destination:IAGALDestinationRegister, source1:IAGALRegister):IAGAL1Printer
+		function move(dest:IAGALDestinationRegister, src1:IAGALRegister):IAGAL1CodePrinter
+
+		/**
+		 * [add] 0x01
+		 * destination = source1 + source2, component-wise
+		 */
+		function add(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL1CodePrinter;
+
+		/**
+		 * [sub] 0x02
+		 *  destination = source1 - source2, component-wise
+		 */
+		function subtract(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL1CodePrinter;
+
+		/**
+		 *  [mul] 0x03
+		 *  destination = source1 * source2, component-wise
+		 */
+		function multiply(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL1CodePrinter;
+
+		/**
+		 * [div] 0x04
+		 * destination = source1 / source2, component-wise
+		 */
+		function divide(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL1CodePrinter;
+
+
+		/**
+		 * [frc] 0x08
+		 * destination = source1 - (float)floor(source1), component-wise
+		 */
+		function fractional(dest:IAGALDestinationRegister, src1:IAGALRegister):IAGAL1CodePrinter;
+
+		/**
+		 * [sat] 0x16
+		 * destination = maximum(minimum(source1,1),0), component-wise
+		 */
+		function saturate(dest:IAGALDestinationRegister, src1:IAGALRegister):IAGAL1CodePrinter;
+
+
+		/**
+		 * [tex] 0x28 (fragment shader only)
+		 * destination equals load from texture source2 at coordinates source1.
+		 * In this case, source2 must be in sampler format.
+		 */
+		function textureSample(
+			dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALSamplerRegister, flags:String="<2d, liner>"):IAGAL1CodePrinter;
 
 	}
 }
@@ -22,37 +71,7 @@ package harayoki.stage3d.agal {
 
 
 
- add
-
- 0x01
-
- add
-
- destination = source1 + source2, component-wise
-
- sub
-
- 0x02
-
- subtract
-
- destination = source1 - source2, component-wise
-
- mul
-
- 0x03
-
- multiply
-
- destination = source1 * source2, component-wise
-
- div
-
- 0x04
-
- divide
-
- destination = source1 / source2, component-wise
+ function xxx(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL1CodePrinter;
 
  rcp
 
@@ -78,13 +97,6 @@ package harayoki.stage3d.agal {
 
  destination = maximum(source1,source2), component-wise
 
- frc
-
- 0x08
-
- fractional
-
- destination = source1 - (float)floor(source1), component-wise
 
  sqt
 
@@ -196,13 +208,7 @@ package harayoki.stage3d.agal {
 
  destination = -source1, component-wise
 
- sat
 
- 0x16
-
- saturate
-
- destination = maximum(minimum(source1,1),0), component-wise
 
  m33
 
@@ -254,13 +260,6 @@ package harayoki.stage3d.agal {
 
  If single scalar source component is less than zero, fragment is discarded and not drawn to the frame buffer. (Destination register must be set to all 0)
 
- tex
-
- 0x28
-
- texture sample (fragment shader only)
-
- destination equals load from texture source2 at coordinates source1. In this case, source2 must be in sampler format.
 
  sge
 

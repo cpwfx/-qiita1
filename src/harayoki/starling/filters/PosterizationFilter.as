@@ -58,6 +58,8 @@ package harayoki.starling.filters {
 import flash.display3D.Context3D;
 import flash.display3D.Context3DProgramType;
 
+import harayoki.stage3d.agal.AGAL1CodePrinter;
+
 import starling.rendering.FilterEffect;
 import starling.rendering.Program;
 
@@ -76,38 +78,15 @@ class PosterizationEffect extends FilterEffect
 	{
 		var vertexShader:String = STD_VERTEX_SHADER;
 
-			//回転行列を座標に掛け合わせる
-			//"m44 op, va0, vc0 \n" +
+		// STD_VERTEX_SHADER
+		//回転行列を座標に掛け合わせる
+		//"m44 op, va0, vc0 \n" +
+		//カラーはそのまま受けわたす
+		//"mov v0, va1";
 
-			//カラーはそのまま受けわたす
-			//"mov v0, va1";
-
-		var fragmentShader:String = [
-
-			// ft0(テンポラリ)にテクスチャカラーを取得するお決まりコード v0:texture coordinates fs0:texture参照
-			tex("ft0", "v0", 0, texture), // tex == ft0, v0, fs0 <2d, linear>
-
-			// PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
-			"div ft0.xyz, ft0.xyz, ft0.www",
-
-			// 各チャンネルにRGBA定数値(fc0)を掛け合わせる
-			"mul ft0, ft0, fc0",
-
-			// ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
-			"frc ft1, ft0",
-			"sub ft0, ft0, ft1",
-
-			// ft0を掛けた際より1小さい値(fc1)で割る
-			"div ft0, ft0, fc1",
-
-			// 1.0を超える部分ができるので正規化
-			"sat ft0, ft0",
-
-			// PMAをやり直す rgb *= a
-			"mul ft0.xyz, ft0.xyz, ft0.www",
-
-			// ocに出力
-			"mov oc, ft0"].join("\n");
+		var printer:AGAL1CodePrinter = new PosterizationAGALCodePrinter();
+		printer.prependCodeDirectly(tex("ft0", "v0", 0, texture)); // tex ft0, v0, fs0 <2d, linear>
+		var fragmentShader:String = printer.print();
 
 		return Program.fromSource(vertexShader, fragmentShader);
 	}
@@ -139,4 +118,50 @@ class PosterizationEffect extends FilterEffect
 	public function get alphaDiv():Number { return _divs0[3]; }
 	public function set alphaDiv(value:Number):void { _divs0[3] = value; _divs1[3] = value -1.0; }
 
+}
+
+internal class PosterizationAGALCodePrinter extends AGAL1CodePrinter {
+
+	public override function print():String {
+
+		/*
+		 fragmentShader = [
+
+		 // ft0(テンポラリ)にテクスチャカラーを取得するお決まりコード v0:texture coordinates fs0:texture参照
+		 tex("ft0", "v0", 0, texture), // tex == ft0, v0, fs0 <2d, linear>
+
+		 // PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
+		 "div ft0.xyz, ft0.xyz, ft0.www",
+
+		 // 各チャンネルにRGBA定数値(fc0)を掛け合わせる
+		 "mul ft0, ft0, fc0",
+
+		 // ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
+		 "frc ft1, ft0",
+		 "sub ft0, ft0, ft1",
+
+		 // ft0を掛けた際より1小さい値(fc1)で割る
+		 "div ft0, ft0, fc1",
+
+		 // 1.0を超える部分ができるので正規化
+		 "sat ft0, ft0",
+
+		 // PMAをやり直す rgb *= a
+		 "mul ft0.xyz, ft0.xyz, ft0.www",
+
+		 // ocに出力
+		 "mov oc, ft0"].join("\n");
+		 */
+
+		divide(ft0.xyz, ft0.xyz, ft0.www);
+		multiply(ft0, ft0, fc0);
+		fractional(ft1, ft0);
+		subtract(ft0, ft0, ft1);
+		divide(ft0, ft0, fc1);
+		saturate(ft0, ft0);
+		multiply(ft0.xyz, ft0.xyz, ft0.www);
+		move(oc, ft0);
+
+		return super.print();
+	}
 }

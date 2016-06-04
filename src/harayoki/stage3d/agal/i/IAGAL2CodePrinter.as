@@ -1,14 +1,12 @@
-package harayoki.stage3d.agal {
-	import harayoki.stage3d.agal.IAGALDestinationRegister;
-
-	public interface IAGAL2Printer extends IAGAL1Printer{
+package harayoki.stage3d.agal.i {
+	public interface IAGAL2CodePrinter extends IAGAL1CodePrinter{
 
 		/**
 		 * [ddx] 0x1a
 		 * partial derivative in X
 		 * Load partial derivative in X of source1 into destination.
 		 */
-		function ddx(destination:IAGALDestinationRegister, source1:IAGALRegister):IAGAL2Printer;
+		function ddx(destination:IAGALDestinationRegister, source1:IAGALRegister):IAGAL2CodePrinter;
 	}
 }
 
