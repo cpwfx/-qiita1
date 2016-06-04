@@ -21,6 +21,7 @@ package {
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
+	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.textures.TextureAtlas;
@@ -45,6 +46,7 @@ package {
 			);
 			_starling.skipUnchangedFrames = true;
 			_starling.stage.color = 0x000000;
+			_starling.stage.blendMode = BlendMode.AUTO; // NONE?
 			_starling.start();
 
 		}
