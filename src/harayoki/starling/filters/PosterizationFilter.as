@@ -66,12 +66,10 @@ import starling.rendering.Program;
 class PosterizationEffect extends FilterEffect
 {
 	private var _divs0:Vector.<Number>;
-	private var _divs1:Vector.<Number>;
 
 	public function PosterizationEffect()
 	{
 		_divs0 = new Vector.<Number>(4, true);
-		_divs1 = new Vector.<Number>(4, true);
 	}
 
 	override protected function createProgram():Program
@@ -84,9 +82,11 @@ class PosterizationEffect extends FilterEffect
 		//カラーはそのまま受けわたす
 		//"mov v0, va1";
 
-		var printer:AGAL1CodePrinter = new PosterizationAGALCodePrinter();
+		var printer:MyAGALCodePrinter = new MyAGALCodePrinter();
 		printer.prependCodeDirectly(tex("ft0", "v0", 0, texture)); // tex ft0, v0, fs0 <2d, linear>
 		var fragmentShader:String = printer.print();
+
+		// trace(fragmentShader);
 
 		return Program.fromSource(vertexShader, fragmentShader);
 	}
@@ -98,69 +98,67 @@ class PosterizationEffect extends FilterEffect
 			0,
 			_divs0
 		);
-		context.setProgramConstantsFromVector(
-			Context3DProgramType.FRAGMENT,
-			1,
-			_divs1
-		);
 		super.beforeDraw(context);
 	}
 
 	public function get redDiv():Number { return _divs0[0]; }
-	public function set redDiv(value:Number):void { _divs0[0] = value; _divs1[0] = value - 1.0; }
+	public function set redDiv(value:Number):void { _divs0[0] = value; }
 
 	public function get greenDiv():Number { return _divs0[1]; }
-	public function set greenDiv(value:Number):void { _divs0[1] = value; _divs1[1] = value - 1.0; }
+	public function set greenDiv(value:Number):void { _divs0[1] = value; }
 
 	public function get blueDiv():Number { return _divs0[2]; }
-	public function set blueDiv(value:Number):void { _divs0[2] = value; _divs1[2] = value - 1.0; }
+	public function set blueDiv(value:Number):void { _divs0[2] = value; }
 
 	public function get alphaDiv():Number { return _divs0[3]; }
-	public function set alphaDiv(value:Number):void { _divs0[3] = value; _divs1[3] = value -1.0; }
+	public function set alphaDiv(value:Number):void { _divs0[3] = value; }
 
 }
 
-internal class PosterizationAGALCodePrinter extends AGAL1CodePrinter {
+internal class MyAGALCodePrinter extends AGAL1CodePrinter {
 
 	public override function print():String {
 
-		/*
-		 fragmentShader = [
-
-		 // ft0(テンポラリ)にテクスチャカラーを取得するお決まりコード v0:texture coordinates fs0:texture参照
-		 tex("ft0", "v0", 0, texture), // tex == ft0, v0, fs0 <2d, linear>
-
-		 // PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
-		 "div ft0.xyz, ft0.xyz, ft0.www",
-
-		 // 各チャンネルにRGBA定数値(fc0)を掛け合わせる
-		 "mul ft0, ft0, fc0",
-
-		 // ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
-		 "frc ft1, ft0",
-		 "sub ft0, ft0, ft1",
-
-		 // ft0を掛けた際より1小さい値(fc1)で割る
-		 "div ft0, ft0, fc1",
-
-		 // 1.0を超える部分ができるので正規化
-		 "sat ft0, ft0",
-
-		 // PMAをやり直す rgb *= a
-		 "mul ft0.xyz, ft0.xyz, ft0.www",
-
-		 // ocに出力
-		 "mov oc, ft0"].join("\n");
-		 */
-
+		// PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
 		divide(ft0.xyz, ft0.xyz, ft0.www);
+
+		// 各チャンネルにRGBA定数値(fc0)を掛け合わせる
 		multiply(ft0, ft0, fc0);
+
+		// ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
 		fractional(ft1, ft0);
 		subtract(ft0, ft0, ft1);
-		divide(ft0, ft0, fc1);
+
+		// ft0の各要素から1を引いた値をft1に作る
+		move(ft1, fc0);
+		saturate(ft1, ft1); // 全要素が2以上であることが保証されているので(1,1,1,1)になる
+		subtract(ft1, fc0, ft1);
+
+		// ft0の値より1小さい値で割る
+		divide(ft0, ft0, ft1);
+
+		// 1.0を超える部分ができるので正規化
 		saturate(ft0, ft0);
+
+		// PMAをやり直す rgb *= a
 		multiply(ft0.xyz, ft0.xyz, ft0.www);
+
+		// ocに出力
 		move(oc, ft0);
+
+		/* output
+		 div ft0.xyz, ft0.xyz, ft0.www
+		 mul ft0, ft0, fc0
+		 frc ft1, ft0
+		 sub ft0, ft0, ft1
+		 mov ft1, fc0
+		 sat ft1, ft1
+		 sub ft1, fc0, ft1
+		 div ft0, ft0, ft1
+		 sat ft0, ft0
+		 mul ft0.xyz, ft0.xyz, ft0.www
+		 mov oc, ft0
+		 */
 
 		return super.print();
 	}
