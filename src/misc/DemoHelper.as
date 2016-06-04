@@ -114,7 +114,7 @@ package misc {
 				while(i--) {
 					var image:Image = sp.getChildAt(i) as Image
 					if(image) {
-						image.textureSmoothing = TextureSmoothing.NONE;TextureSmoothing
+						image.textureSmoothing = TextureSmoothing.NONE;
 					}
 				}
 			}
