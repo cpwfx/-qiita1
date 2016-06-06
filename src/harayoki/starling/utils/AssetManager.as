@@ -892,10 +892,11 @@ package harayoki.starling.utils
                         if(bmd) {
                             texture.root.uploadBitmapData(bmd);
                             Starling.current.stage.setRequiresRedraw();
-                            setTimeout(function():void{
+                            setTimeout(function():void{ // １フレーム中に何度もイベントを投げないようにまとめる
+                                if (_verbose) log("texture restored from memory");
                                 _numRestoredTextures++;
                                 if (_numLostTextures == _numRestoredTextures)
-                                    dispatchEventWith(Event.TEXTURES_RESTORED);
+                                    dispatchEventWith(Event.TEXTURES_RESTORED, false);
                             },1);
                             return;
                         }
