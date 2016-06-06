@@ -1,10 +1,10 @@
 package misc {
 	import harayoki.starling.BitmapFontUtil;
+	import harayoki.starling.utils.AssetManager;
 	import harayoki.util.CharCodeUtil;
 
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	import starling.utils.AssetManager;
 
 	public class MyFontManager {
 

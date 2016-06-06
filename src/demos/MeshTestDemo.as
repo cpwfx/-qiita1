@@ -1,4 +1,6 @@
 package demos {
+	import harayoki.starling.utils.AssetManager;
+
 	import starling.core.Starling;
 	import starling.display.Canvas;
 	import starling.display.Image;
@@ -6,8 +8,7 @@ package demos {
 	import starling.display.MeshBatch;
 	import starling.rendering.IndexData;
 	import starling.rendering.VertexData;
-	import starling.utils.AssetManager;
-	
+
 	public class MeshTestDemo extends DemoBase {
 		public function MeshTestDemo(assetManager:AssetManager, starling:Starling=null) {
 			super(assetManager, starling);

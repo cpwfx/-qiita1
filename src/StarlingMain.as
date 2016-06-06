@@ -15,6 +15,7 @@ package {
 	import flash.geom.Rectangle;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
+	import harayoki.starling.utils.AssetManager;
 
 	import misc.DemoHelper;
 	import misc.MyFontManager;
@@ -25,7 +26,6 @@ package {
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.textures.TextureAtlas;
-	import starling.utils.AssetManager;
 
 	public class StarlingMain extends Sprite {
 

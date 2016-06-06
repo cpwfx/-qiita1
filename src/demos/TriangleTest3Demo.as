@@ -4,7 +4,8 @@ package demos {
 	import harayoki.starling.FixedLayoutBitmapTextController;
 
 	import harayoki.starling.display.Triangle;
-
+	import harayoki.starling.utils.AssetManager;
+	
 	import misc.*;
 
 	import starling.core.Starling;
@@ -34,7 +35,7 @@ package demos {
 		private var _infoTextControl2:FixedLayoutBitmapTextController;
 		private var _title:DisplayObject;
 
-		public function TriangleTest3Demo(assetManager:AssetManager, starling:Starling = null) {
+		public function TriangleTest3Demo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 		}
 

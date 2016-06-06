@@ -4,7 +4,8 @@ package demos {
 
 	import harayoki.starling.FixedLayoutBitmapTextController;
 	import harayoki.starling.filters.PosterizationFilter;
-
+	import harayoki.starling.utils.AssetManager;
+	
 	import misc.MyFontManager;
 
 	import starling.core.Starling;
@@ -29,7 +30,7 @@ package demos {
 		private var _filter3:FragmentFilter;
 		private var _filter4:FragmentFilter;
 
-		public function MyFirstFilterDemo(assetManager:AssetManager, starling:Starling = null) {
+		public function MyFirstFilterDemo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
 			super(assetManager, starling);
 		}

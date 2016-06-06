@@ -1,6 +1,7 @@
 package harayoki.starling {
 	import flash.geom.Rectangle;
 
+	import harayoki.starling.utils.AssetManager;
 	import harayoki.util.CharCodeUtil;
 
 	import starling.text.BitmapChar;
@@ -8,9 +9,8 @@ package harayoki.starling {
 	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
-	import starling.utils.AssetManager;
 	import starling.utils.StringUtil;
-
+	
 	public class BitmapFontUtil {
 
 		private static var _idlist:Vector.<int> = new <int>[];

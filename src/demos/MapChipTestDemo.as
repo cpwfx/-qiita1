@@ -1,6 +1,7 @@
 package demos {
 	import harayoki.starling.BitmapFontUtil;
-
+	import harayoki.starling.utils.AssetManager;
+	
 	import misc.MyFontManager;
 
 	import starling.core.Starling;
@@ -9,7 +10,7 @@ package demos {
 	
 	public class MapChipTestDemo extends DemoBase {
 
-		public function MapChipTestDemo(assetManager:AssetManager, starling:Starling=null) {
+		public function MapChipTestDemo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling=null) {
 			super(assetManager, starling);
 		}
 

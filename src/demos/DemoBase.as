@@ -3,6 +3,8 @@ package demos {
 
 	import flash.geom.Rectangle;
 
+	import harayoki.starling.utils.AssetManager;
+
 	import misc.DemoHelper;
 	import misc.MyFontManager;
 
@@ -20,7 +22,7 @@ package demos {
 	public class DemoBase extends Sprite{
 
 		internal var _starling:Starling;
-		internal var _assetManager:AssetManager;
+		internal var _assetManager:harayoki.starling.utils.AssetManager;
 		internal var _demoHelper:DemoHelper;
 		internal var _assets:Array;
 
@@ -28,7 +30,7 @@ package demos {
 
 		public var frontDisplay:Boolean = false;
 		
-		public function DemoBase(assetManager:AssetManager, starling:Starling=null) {
+		public function DemoBase(assetManager:harayoki.starling.utils.AssetManager, starling:Starling=null) {
 			_assets = [];
 			_starling = starling ? starling : Starling.current;
 			_assetManager = assetManager;

@@ -1,17 +1,17 @@
 package demos {
 	import harayoki.starling.BitmapFontUtil;
 	import harayoki.starling.FixedLayoutBitmapTextController;
+	import harayoki.starling.utils.AssetManager;
 	import harayoki.util.CharCodeUtil;
-	
+
 	import misc.MyFontManager;
-	
+
 	import starling.core.Starling;
 	import starling.events.Event;
 	import starling.text.BitmapChar;
 	import starling.text.BitmapFont;
 	import starling.textures.Texture;
 	import starling.utils.Align;
-	import starling.utils.AssetManager;
 
 	public class ScoreTextDemo extends DemoBase {
 

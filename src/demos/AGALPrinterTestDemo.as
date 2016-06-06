@@ -1,13 +1,14 @@
 package demos {
 	import harayoki.stage3d.agal.AGAL1CodePrinter;
-
+	import harayoki.starling.utils.AssetManager;
+	
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.utils.AssetManager;
 
 	public class AGALPrinterTestDemo extends DemoBase {
 
-		public function AGALPrinterTestDemo(assetManager:AssetManager, starling:Starling = null) {
+		public function AGALPrinterTestDemo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 		}
 
