@@ -228,7 +228,7 @@ package harayoki.starling.utils
         {
             if (out == null) out = new <BitmapData>[];
 
-            for each (var name:String in getTextureNames(prefix, sNames))
+            for each (var name:String in getBitmapDataNames(prefix, sNames))
                 out[out.length] = getBitmapData(name); // avoid 'push'
 
             sNames.length = 0;
@@ -877,7 +877,6 @@ package harayoki.starling.utils
                     // テクスチャ作成前に前処理を通す
                     var bmd:BitmapData;
                     bmd = (asset as Bitmap).bitmapData;
-                    addBitmapData(name, bmd);
                     keepBitmapData = false;
                     if(_beforeTextureCreation != null) {
                         keepBitmapData = _beforeTextureCreation(name, bmd);
