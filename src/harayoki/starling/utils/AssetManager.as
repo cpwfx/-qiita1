@@ -1,16 +1,7 @@
-// =================================================================================================
-//
-//	Starling Framework
-//	Copyright Gamua GmbH. All Rights Reserved.
-//
-//	This program is free software. You can redistribute and/or modify it
-//	in accordance with the terms of the accompanying license agreement.
-//
-// =================================================================================================
-
 package harayoki.starling.utils
 {
     import flash.display.Bitmap;
+    import flash.display.BitmapData;
     import flash.display.Loader;
     import flash.display.LoaderInfo;
     import flash.events.HTTPStatusEvent;
@@ -32,7 +23,7 @@ package harayoki.starling.utils
     import flash.utils.describeType;
     import flash.utils.getQualifiedClassName;
     import flash.utils.setTimeout;
-    
+
     import starling.core.Starling;
     import starling.events.Event;
     import starling.events.EventDispatcher;
@@ -43,7 +34,7 @@ package harayoki.starling.utils
     import starling.textures.TextureAtlas;
     import starling.textures.TextureOptions;
     import starling.utils.SystemUtil;
-    
+
     /** Dispatched when all textures have been restored after a context loss. */
     [Event(name="texturesRestored", type="starling.events.Event")]
     
@@ -139,7 +130,10 @@ package harayoki.starling.utils
         private var _xmls:Dictionary;
         private var _objects:Dictionary;
         private var _byteArrays:Dictionary;
-        
+
+        private var _bitmapDatas:Dictionary; // custom!
+        private var _beforeTextureCreation:Function;
+
         /** helper objects */
         private static var sNames:Vector.<String> = new <String>[];
         
@@ -157,6 +151,7 @@ package harayoki.starling.utils
             _xmls = new Dictionary();
             _objects = new Dictionary();
             _byteArrays = new Dictionary();
+            _bitmapDatas = new Dictionary(); // custom!
             _numConnections = 3;
             _verbose = true;
             _queue = [];
@@ -181,8 +176,65 @@ package harayoki.starling.utils
             
             for each (var byteArray:ByteArray in _byteArrays)
                 byteArray.clear();
+
+            for each (var bitmapData:BitmapData in _bitmapDatas) // cusotm!
+                bitmapData.dispose();
+
+            _beforeTextureCreation = null;
+
         }
-        
+
+        ///////////////////// custom for bitmapdata ////////////////////
+
+
+        public function setBeforeTextureCreationCallback(beforeTextureCreation:Function):void {
+            _beforeTextureCreation = beforeTextureCreation;
+        }
+
+        public function addBitmapData(name:String, bmd:BitmapData):void
+        {
+            log("Adding BitmapData '" + name + "'");
+
+            if (name in _bitmapDatas)
+            {
+                log("Warning: name was already in use; the previous bitmapdata will be replaced.");
+                _bitmapDatas[name].dispose();
+            }
+
+            _bitmapDatas[name] = bmd;
+        }
+
+        public function removeBitmapData(name:String, dispose:Boolean=true):void
+        {
+            log("Removing BitmapData '" + name + "'");
+
+            if (dispose && name in _bitmapDatas)
+                _bitmapDatas[name].dispose();
+
+            delete _bitmapDatas[name];
+        }
+
+
+        public function getBitmapData(name:String):BitmapData {
+            return _bitmapDatas[name];
+        }
+
+        public function getBitmapDataNames(prefix:String="", out:Vector.<String>=null):Vector.<String> // custom!
+        {
+            return getDictionaryKeys(_bitmapDatas, prefix, out);
+        }
+
+        public function getBitmapDatas(prefix:String="", out:Vector.<BitmapData>=null):Vector.<BitmapData> // custom!
+        {
+            if (out == null) out = new <BitmapData>[];
+
+            for each (var name:String in getTextureNames(prefix, sNames))
+                out[out.length] = getBitmapData(name); // avoid 'push'
+
+            sNames.length = 0;
+            return out;
+        }
+
         // retrieving
         
         /** Returns a texture with a certain name. The method first looks through the directly
@@ -782,7 +834,9 @@ package harayoki.starling.utils
                 var bytes:ByteArray;
                 var object:Object = null;
                 var xml:XML = null;
-                
+                var keepBitmapData:Boolean;
+
+
                 // the 'current' instance might have changed by now
                 // if we're running in a set-up with multiple instances.
                 _starling.makeCurrent();
@@ -819,17 +873,57 @@ package harayoki.starling.utils
                 }
                 else if (asset is Bitmap)
                 {
+
+                    // テクスチャ作成前に前処理を通す
+                    var bmd:BitmapData;
+                    bmd = (asset as Bitmap).bitmapData;
+                    addBitmapData(name, bmd);
+                    keepBitmapData = false;
+                    if(_beforeTextureCreation != null) {
+                        keepBitmapData = _beforeTextureCreation(name, bmd);
+                    }
+
                     texture = Texture.fromData(asset, options);
                     texture.root.onRestore = function():void
                     {
                         _numLostTextures++;
+
+                        // BitmapDataが残っていればそこからテクスチャ再アップロード
+                        bmd = getBitmapData(name)
+                        if(bmd) {
+                            texture.root.uploadBitmapData(bmd);
+                            Starling.current.stage.setRequiresRedraw();
+                            setTimeout(function():void{
+                                _numRestoredTextures++;
+                                if (_numLostTextures == _numRestoredTextures)
+                                    dispatchEventWith(Event.TEXTURES_RESTORED);
+                            },1);
+                            return;
+                        }
+
                         loadRawAsset(rawAsset, null, function(asset:Object):void
                         {
+
                             try
                             {
                                 if (asset == null) throw new Error("Reload failed");
+
+                                // テクスチャ作成前に前処理を通す
+                                bmd = (asset as Bitmap).bitmapData;
+                                keepBitmapData = false;
+                                if(_beforeTextureCreation != null) {
+                                    keepBitmapData = _beforeTextureCreation(name, bmd);
+                                }
+
                                 texture.root.uploadBitmap(asset as Bitmap);
-                                asset.bitmapData.dispose();
+
+                                // bitmapDataを保持または破棄
+                                if(keepBitmapData) {
+                                    addBitmapData(name, bmd);
+                                } else {
+                                    bmd.dispose();
+                                }
+
                             }
                             catch (e:Error)
                             {
@@ -844,7 +938,13 @@ package harayoki.starling.utils
                         });
                     };
 
-                    asset.bitmapData.dispose();
+                    // テクスチャ作成後に後処理を通す
+                    if(keepBitmapData) {
+                        addBitmapData(name, bmd);
+                    } else {
+                        bmd.dispose();
+                    }
+
                     addTexture(name, texture);
                     onComplete();
                 }
