@@ -1,35 +1,27 @@
 package {
-	import demos.AGALPrinterTestDemo;
-	import demos.DemoBase;
-	import demos.MapChipTestDemo;
-	import demos.MeshTestDemo;
-	import demos.MyFirstFilterDemo;
-	import demos.MyFirstStyleDemo;
-	import demos.ScoreTextDemo;
-	import demos.TriangleTest1Demo;
-	import demos.TriangleTest3Demo;
-
-	import feathers.controls.Check;
-
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Stage;
+	import flash.filters.BlurFilter;
+	import flash.filters.DisplacementMapFilter;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
-	import harayoki.feathers.themes.CustomMetalWorksTheme;
 	import harayoki.starling.utils.AssetManager;
 
-	import misc.DemoHelper;
-	import misc.MyFontManager;
 	import misc.ViewportUtil;
 
 	import starling.core.Starling;
 	import starling.display.BlendMode;
-	import starling.display.DisplayObject;
+	import starling.display.Quad;
 	import starling.display.Sprite;
-	import starling.textures.TextureAtlas;
+	import starling.text.TextField;
+	import starling.text.TextFormat;
+	import starling.utils.Align;
 
 	public class StarlingMain extends Sprite {
 
-		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
+		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 640, 1024);
 
 		private static var _starling:Starling;
 		private static var _startCallback:Function;
@@ -45,14 +37,11 @@ package {
 				CONTENTS_SIZE
 			);
 			_starling.skipUnchangedFrames = true;
-			_starling.stage.color = 0x000000;
-			_starling.stage.blendMode = BlendMode.AUTO; // NONE?
+			_starling.stage.color = 0x111111;
 			_starling.start();
 
 		}
 
-		private var _demo:DemoBase;
-		private var _demoHelper:DemoHelper;
 		private var _assetManager:AssetManager;
 
 		public function StarlingMain() {
@@ -63,101 +52,84 @@ package {
 
 			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE, true);
 
-			_demoHelper = new DemoHelper(Starling.current, this, true);
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-			_demo = new ScoreTextDemo(_assetManager);
-			_demo = new MeshTestDemo(_assetManager);
-			_demo = new MapChipTestDemo(_assetManager);
-			_demo = new TriangleTest1Demo(_assetManager);
-			_demo = new TriangleTest3Demo(_assetManager);
-			_demo = new MyFirstStyleDemo(_assetManager);
-			_demo = new AGALPrinterTestDemo(_assetManager);
-			_demo = new MyFirstFilterDemo(_assetManager);
+			_assetManager.enqueue('assets/kota.png');
+			_assetManager.enqueueWithName('assets/kota.png',"kota2");
+			_assetManager.enqueueWithName('assets/kota.png',"kota3");
 
-			MyFontManager.setupAsset(_assetManager);
+			_assetManager.setBeforeTextureCreationCallback(onBeforeTextureCreation);
 
-			// 順序を確実に保たないと入れ子アトラスが解決できない模様 (atlas.png内に別のatlasがある)
-			_assetManager.enqueue('assets/atlas.png');
-			_assetManager.enqueue('assets/atlas.xml');
-
-			// load main assets
 			_assetManager.loadQueue(function(ratio:Number):void {
 				if(ratio == 1) {
-					_loadSubAssets();
-				}
-			});
-
-		}
-		private function _loadSubAssets():void {
-
-			var assetsCandidates:Array = [];
-			_demo.addAssets(assetsCandidates);
-			assetsCandidates.push("assets/metalworks_desktop_custom.xml");
-			assetsCandidates.push('assets/colorbars.xml');
-
-			var assetsAdded:Array = [];
-			//重複を省く
-			for(var i:int=0; i < assetsCandidates.length; i++) {
-				var file:String = assetsCandidates[i];
-				if(assetsAdded.indexOf(file) == -1) {
-					assetsAdded.push(file);
-					_assetManager.enqueue(file);
-				}
-			}
-
-			_assetManager.loadQueue(function(ratio:Number):void {
-			    if(ratio == 1) {
 					_start();
 				}
 			});
 
-			//if(_context3DFillModeControl) {
-			//	_context3DFillModeControl.setContext(Starling.current.context);
-			//}
+		}
 
+		private function onBeforeTextureCreation(name:String, bmd:BitmapData):Boolean {
+			if(name=="kota") {
+				return true; // 保持する
+			}
+
+			if(name =="kota2") {
+				var bFilter:BlurFilter = new BlurFilter(1, 8);
+				bmd.applyFilter(bmd, bmd.rect, bmd.rect.topLeft, bFilter);
+				return false; // 保持しない
+			}
+
+			if(name =="kota3") {
+				var mapBmd:BitmapData = new BitmapData(bmd.width, bmd.height,false,0xffffffff);
+				mapBmd.perlinNoise(40,10,10,10,true,true);
+
+				var dFilter:DisplacementMapFilter =
+					new DisplacementMapFilter(mapBmd, new Point(0,0), 1, 0, 16, 1 );
+				bmd.applyFilter(bmd, bmd.rect, bmd.rect.topLeft, dFilter);
+
+				return true; // 保持する
+			}
+
+			return false;
 		}
 
 		private function _start():void {
 
-			MyFontManager.setup();
+			var format:TextFormat = new TextFormat("_sans", 12, 0xffffff);
+			format.horizontalAlign = Align.LEFT;
 
-			var themeAtlas:TextureAtlas = _assetManager.getTextureAtlas("metalworks_desktop_custom");
-			var theme:CustomMetalWorksTheme = new CustomMetalWorksTheme(themeAtlas, MyFontManager.baseFont.name);
-			theme.dummyTexture = _assetManager.getTexture("white");
+			var bmd1:BitmapData = _assetManager.getBitmapData("kota");
+			var bmd2:BitmapData = _assetManager.getBitmapData("kota2");
+			var bmd3:BitmapData = _assetManager.getBitmapData("kota3");
 
-			var bg:DisplayObject = _demo.getBackgroundDisplay();
-			if (bg) {
-				bg.width = CONTENTS_SIZE.width;
-				bg.height = CONTENTS_SIZE.height;
-				addChild(bg);
-			}
+			var tf0:TextField = new TextField(500, 60, "", format);
+			tf0.text = "BitmapDatas : " + _assetManager.getBitmapDataNames() + "\n" +
+				"Textures : " + _assetManager.getTextureNames();
+			tf0.x = 60; tf0.y = 20;
+			addChild(tf0);
 
-			addChild(_demo)
-			_demo.start();
+			var tf1:TextField = new TextField(500, 30, "kota  bitmapdata:"+bmd1, format);
+			tf1.x = 60; tf1.y = 70;
+			addChild(tf1);
+			var tf2:TextField = new TextField(500, 30, "kota2 bitmapdata:"+bmd2 + " + BlurFilter", format);
+			tf2.x = 60; tf2.y = 370;
+			addChild(tf2);
+			var tf3:TextField = new TextField(500, 30, "kota3 bitmapdata:"+bmd3 + " + DisplacementMapFilter", format);
+			tf3.x = 60; tf3.y = 670;
+			addChild(tf3);
 
-			var uiList:Vector.<DisplayObject> = new <DisplayObject>[];
+			var img1:Quad = Quad.fromTexture(_assetManager.getTexture("kota"));
+			img1.x = 60; img1.y = 100;
+			addChild(img1);
 
-			var chk:Check = _demo.createDemoCheckBox(function(chk:Check):void{
-				if(chk.isSelected) {
-					_starling.skipUnchangedFrames = true;
-				} else {
-					_starling.skipUnchangedFrames = false;
-				}
-			}, true);
-			uiList.push(_demo.createDemoWrapSprite(new <DisplayObject>[chk, _demo.createDemoText("SkpUnchngdFrms")]));
+			var img2:Quad = Quad.fromTexture(_assetManager.getTexture("kota2"));
+			img2.x = 60; img2.y = 400;
+			addChild(img2);
 
-			// 各デモでボタンを追加 nullが入っていると改行になる
-			_demo.setBottomUI(uiList);
-
-			if(uiList.length > 0) {
-				_demoHelper.loacateBottomLeft(uiList, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
-			}
-
-			if(_demo.frontDisplay) {
-				addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
-			}
+			var img3:Quad = Quad.fromTexture(_assetManager.getTexture("kota3"));
+			img3.x = 60; img3.y = 700;
+			addChild(img3);
 
 		}
 
