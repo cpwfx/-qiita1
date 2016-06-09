@@ -11,10 +11,12 @@ package {
 
 	import feathers.controls.Check;
 
+	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
+	import harayoki.colors.ColorRGBHSV;
 	import harayoki.starling.utils.AssetManager;
 
 	import misc.DemoHelper;
@@ -25,6 +27,7 @@ package {
 	import starling.display.BlendMode;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
+	import starling.events.Event;
 	import starling.textures.TextureAtlas;
 
 	public class StarlingMain extends Sprite {
@@ -81,6 +84,15 @@ package {
 			// 順序を確実に保たないと入れ子アトラスが解決できない模様 (atlas.png内に別のatlasがある)
 			_assetManager.enqueue('assets/atlas.png');
 			_assetManager.enqueue('assets/atlas.xml');
+
+			_assetManager.setBeforeTextureCreationCallback(function(name:String,bmd:BitmapData):Boolean{
+				if(name=="atlas") {
+					return true; // trueを返すとBitmapDataを保持
+				}
+			});
+			_assetManager.addEventListener(Event.TEXTURES_RESTORED, function(ev:Event):void {
+				trace("TEXTURES_RESTORED");
+			});
 
 			// load main assets
 			_assetManager.loadQueue(function(ratio:Number):void {
@@ -159,6 +171,9 @@ package {
 				addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
 			}
 
+
+			var c:ColorRGBHSV = ColorRGBHSV.fromRGB(255,127,255);
+			ColorRGBHSV.test(c);
 		}
 
 	}

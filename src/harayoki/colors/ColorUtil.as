@@ -1,13 +1,14 @@
-package harayoki.util {
+package harayoki.colors {
 	public class ColorUtil {
 
-		/** RGB -> HSB(Object)
+		/** RGB -> HSV(Object)
 		 * @param r 0～255
 		 * @param g 0～255
 		 * @param b 0～255
-		 * @return {h:hue, s:saturation b:brightness}
+		 * @param out
+		 * @return {h:hue, s:saturation v:brightness}
 		 */
-		public static function Rgb2HsbObj(r:int, g:int, b:int):Object {
+		public static function Rgb2HsvObj(r:int, g:int, b:int, out:Object=null):Object {
 			var cmax:Number = Math.max(r, g, b);
 			var cmin:Number = Math.min(r, g, b);
 			var brightness:Number = cmax / 255;
@@ -29,15 +30,20 @@ package harayoki.util {
 					hue = hue + 1.0;
 				}
 			}
-			return {h:hue, s:saturation, b:brightness};
+			out = out || {};
+			out.h = hue;
+			out.s = saturation;
+			out.v = brightness;
+			return out;
 		}
 
-		/** HSB -> RGB(Object)
+		/** HSV -> RGB(Object)
 		 * @param hue 0.0 ~ 1.0
 		 * @param saturation 0.0 ~ 1.0
 		 * @param brightness 0.0 ~ 1.0
+		 * @param out
 		 */
-		public static function Hsb2RgbObject(hue:Number, saturation:Number, brightness:Number):Object {
+		public static function Hsv2RgbObject(hue:Number, saturation:Number, brightness:Number, out:Object=null):Object {
 			var r:int = 0;
 			var g:int = 0;
 			var b:int = 0;
@@ -82,7 +88,11 @@ package harayoki.util {
 						break;
 				}
 			}
-			return {r:r, g:g, b:b};
+			out = out || {};
+			out.r = r;
+			out.g = g;
+			out.b = b;
+			return out;
 		}
 
 
@@ -91,8 +101,8 @@ package harayoki.util {
 		 * @param saturation 0.0 ~ 1.0
 		 * @param brightness 0.0 ~ 1.0
 		 */
-		public static function Hsb2RgbUint(hue:Number, saturation:Number, brightness:Number):uint {
-			var color:Object = Hsb2RgbObject(hue, saturation, brightness);
+		public static function Hsv2RgbUint(hue:Number, saturation:Number, brightness:Number):uint {
+			var color:Object = Hsv2RgbObject(hue, saturation, brightness);
 			return (color.r << 16) | (color.g << 8) | (color.b << 0);
 		}
 	}
