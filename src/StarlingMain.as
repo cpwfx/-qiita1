@@ -5,6 +5,7 @@ package {
 	import demos.MeshTestDemo;
 	import demos.MyFirstFilterDemo;
 	import demos.MyFirstStyleDemo;
+	import demos.ColorPaletteTestDemo;
 	import demos.ScoreTextDemo;
 	import demos.TriangleTest1Demo;
 	import demos.TriangleTest3Demo;
@@ -14,9 +15,6 @@ package {
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.geom.Rectangle;
-
-	import harayoki.colors.ColorRGBHSV;
-	import harayoki.colors.NesPalette;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
 	import harayoki.starling.utils.AssetManager;
@@ -31,7 +29,7 @@ package {
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.textures.TextureAtlas;
-	
+
 	public class StarlingMain extends Sprite {
 
 		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
@@ -82,6 +80,7 @@ package {
 			_demo = new MyFirstStyleDemo(_assetManager);
 			_demo = new AGALPrinterTestDemo(_assetManager);
 			_demo = new MyFirstFilterDemo(_assetManager);
+			_demo = new ColorPaletteTestDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 
@@ -173,15 +172,6 @@ package {
 
 			if(_demo.frontDisplay) {
 				addChild(_demo); // 最後にaddするとdrawコールを1少なくできることがある
-			}
-
-			//var c:ColorRGBHSV = ColorRGBHSV.fromRGB(255,127,255);
-			//ColorRGBHSV.test(c);
-
-			var palettes:Vector.<ColorRGBHSV> = NesPalette.getAll();
-			for (var i:int=0;i<palettes.length;i++) {
-				var c:ColorRGBHSV = palettes[i];
-				trace("NesPalette#"+i, c);
 			}
 
 		}
