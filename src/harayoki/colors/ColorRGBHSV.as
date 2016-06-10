@@ -20,6 +20,24 @@ package harayoki.colors {
 
 		private static var _workObj:Object = {};
 
+		public static function fromRGBString(rgbString:String):ColorRGBHSV {
+			// FFFFFF -> 255,255,255
+			if(rgbString.indexOf("#")==0) {
+				rgbString = rgbString.slice(1);
+			}
+			rgbString = ("000000" + rgbString).slice(-6);
+			var col:ColorRGBHSV = new ColorRGBHSV();
+			col._r = parseInt("0x"+rgbString.slice(0,2), 16);
+			col._g = parseInt("0x"+rgbString.slice(2,4), 16);
+			col._b = parseInt("0x"+rgbString.slice(4,6), 16);
+			col._updateHSVfromRGB();
+			return col;
+		}
+		
+		public static function fromRGBColor(color:Number):ColorRGBHSV {
+			return fromRGBString(color.toString(16));
+		}
+
 		public static function fromRGB(r:uint,g:uint,b:uint):ColorRGBHSV {
 			var col:ColorRGBHSV = new ColorRGBHSV();
 			col._r = r;
