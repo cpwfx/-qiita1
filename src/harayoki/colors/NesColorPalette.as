@@ -1,8 +1,7 @@
 package harayoki.colors {
 	import starling.utils.Color;
 
-	public class NesPalette {
-		//public static const A:ColorRGBHSV = ColorRGBHSV.fromHSV(0,0,0);
+	public class NesColorPalette implements IColorPalette{
 
 		private static var _colors:Vector.<ColorRGBHSV> = _init();
 
@@ -110,16 +109,20 @@ package harayoki.colors {
 			return v;
 		}
 
-		public static function getByIndex(index:int):ColorRGBHSV {
+		public function NesColorPalette() {
+
+		}
+
+		public function getByIndex(index:int):ColorRGBHSV {
 			var col:ColorRGBHSV = _colors[index];
 			return col;
 		}
 
-		public static function getAll():Vector.<ColorRGBHSV> {
+		public function getAll():Vector.<ColorRGBHSV> {
 			return _colors.slice();
 		}
 
-		public static function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV {
+		public function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV {
 			var distance:Number = Number.POSITIVE_INFINITY;
 			var found:ColorRGBHSV;
 			for each( var c:ColorRGBHSV in _colors) {
@@ -135,7 +138,7 @@ package harayoki.colors {
 			return found;
 		}
 
-		public static function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV {
+		public function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV {
 			var distance:Number = Number.POSITIVE_INFINITY;
 			var found:ColorRGBHSV;
 			for each( var c:ColorRGBHSV in _colors) {

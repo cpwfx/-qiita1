@@ -1,6 +1,7 @@
 package demos {
 	import harayoki.colors.ColorRGBHSV;
-	import harayoki.colors.NesPalette;
+	import harayoki.colors.IColorPalette;
+	import harayoki.colors.NesColorPalette;
 	import harayoki.starling.utils.AssetManager;
 
 	import starling.core.Starling;
@@ -21,8 +22,10 @@ package demos {
 
 		public override function start():void {
 
+			var palette:IColorPalette = new NesColorPalette();
+
 			var texture:Texture;
-			var palettes:Vector.<ColorRGBHSV> = NesPalette.getAll();
+			var palettes:Vector.<ColorRGBHSV> = palette.getAll();
 			for (var i:int=0;i<palettes.length;i++) {
 				var c:ColorRGBHSV = palettes[i];
 				trace("NesPalette#"+i, c);
@@ -36,25 +39,26 @@ package demos {
 				quad.y = 32 + 16 * ~~(i / 16);
 				addChild(quad);
 			}
+
 			var intermediateHSV:ColorRGBHSV =
-				ColorRGBHSV.getIntermediateColorByHSV(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+				ColorRGBHSV.getIntermediateColorByHSV(palette.getByIndex(10), palette.getByIndex(11));
 			trace("intermediateHSV", intermediateHSV);
 
 			var intermediateRGB:ColorRGBHSV =
-				ColorRGBHSV.getIntermediateColorByRGB(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+				ColorRGBHSV.getIntermediateColorByRGB(palette.getByIndex(10), palette.getByIndex(11));
 			trace("intermediateRGB", intermediateRGB);
 			
 			var distanceRGB:uint =
-				ColorRGBHSV.getDistanceByRGBSquared(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+				ColorRGBHSV.getDistanceByRGBSquared(palette.getByIndex(10), palette.getByIndex(11));
 			trace("distanceRGB", distanceRGB);
 			
 			var distanceHSV:Number =
-				ColorRGBHSV.getDistanceByHSVSquared(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+				ColorRGBHSV.getDistanceByHSVSquared(palette.getByIndex(10), palette.getByIndex(11));
 			trace("distanceHSV", distanceHSV);
 
-			trace("nearestHSV", NesPalette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
+			trace("nearestHSV", palette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
 
-			trace("getNearestByRGB", NesPalette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
+			trace("getNearestByRGB", palette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
 		}
 
 	}
