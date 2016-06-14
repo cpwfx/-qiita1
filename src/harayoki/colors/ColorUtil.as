@@ -96,7 +96,7 @@ package harayoki.colors {
 		}
 
 
-			/** HSB -> RGB(unit)
+		/** HSB -> RGB(unit)
 		 * @param hue 0.0 ~ 1.0
 		 * @param saturation 0.0 ~ 1.0
 		 * @param brightness 0.0 ~ 1.0

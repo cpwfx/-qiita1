@@ -118,6 +118,11 @@ package harayoki.colors {
 		public static function getAll():Vector.<ColorRGBHSV> {
 			return _colors.slice();
 		}
+
+		public static function getNearestByHSB(col:ColorRGBHSV):ColorRGBHSV {
+			return null;//TODO 実装
+		}
+
 	}
 }
 

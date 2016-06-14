@@ -180,6 +180,33 @@ package harayoki.colors {
 			return c;
 		}
 
+		/**
+		 * RGB空間での距離の二乗を返す
+		 */
+		public static function getDistanceByRGBSquared(color1:ColorRGBHSV, color2:ColorRGBHSV):Number {
+			var dr:int = (color1._r - color2._r);
+			var dg:int = (color1._g - color2._g);
+			var db:int = (color1._b - color2._b);
+			dr *= dr;
+			dg *= dg;
+			db *= db;
+			return dr + dg + db;
+		}
+
+		/**
+		 * HSV空間での距離の二乗を返す
+		 * @param brightnessRatio 輝度の重み
+		 */
+		public static function getDistanceByHSVSquared(color1:ColorRGBHSV, color2:ColorRGBHSV, brightnessRatio:Number=1.0):Number {
+			var dh:Number = (color1._h - color2._h);
+			var ds:Number = (color1._s - color2._s);
+			var dv:Number = (color1._v - color2._v) / brightnessRatio;
+			dh *= dh;
+			ds *= ds;
+			dv *= dv;
+			return dh + ds+ dv;
+		}
+
 		private function _updateRGBfromHSV():void {
 			ColorUtil.Hsv2RgbObject(_h, _s, _v, _workObj);
 			_r = _validateRGBValue(_workObj.r);

@@ -43,7 +43,14 @@ package demos {
 			var intermediateRGB:ColorRGBHSV =
 				ColorRGBHSV.getIntermediateColorByRGB(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
 			trace("intermediateRGB", intermediateRGB);
-
+			
+			var distanceRGB:uint =
+				ColorRGBHSV.getDistanceByRGBSquared(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+			trace("distanceRGB", distanceRGB);
+			
+			var distanceHSV:Number =
+				ColorRGBHSV.getDistanceByHSVSquared(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+			trace("distanceHSV", distanceHSV);
 		}
 
 	}
