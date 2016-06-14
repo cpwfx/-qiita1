@@ -4,6 +4,13 @@ package harayoki.colors {
 	public class NesColorPalette implements IColorPalette{
 
 		private static var _colors:Vector.<ColorRGBHSV> = _init();
+		private static var _nearestRGBCache: Object = {};
+		private static var _nearestHSVCache: Object = {};
+
+		public static function clearNearestCache():void {
+			_nearestRGBCache = {};
+			_nearestHSVCache = {};
+		}
 
 		private static function _init():Vector.<ColorRGBHSV> {
 			var v:Vector.<ColorRGBHSV> = new <ColorRGBHSV>[];
@@ -123,34 +130,54 @@ package harayoki.colors {
 		}
 
 		public function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV {
+
+			if(!color) return null;
+
+			var key:String = color.toRGBHexString();
+			var found:ColorRGBHSV = _nearestHSVCache[key] as ColorRGBHSV;
+			if(found) return found;
+
 			var distance:Number = Number.POSITIVE_INFINITY;
-			var found:ColorRGBHSV;
 			for each( var c:ColorRGBHSV in _colors) {
 				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c);
 				if(d == 0) {
-					return c;
+					found = c;
+					break;
 				}
 				if(distance > d) {
 					distance = d;
 					found = c;
 				}
 			}
+
+			_nearestHSVCache[key] = found;
+
 			return found;
 		}
 
 		public function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV {
+
+			if(!color) return null;
+
+			var key:String = color.toRGBHexString();
+			var found:ColorRGBHSV = _nearestRGBCache[key] as ColorRGBHSV;
+			if(found) return found;
+
 			var distance:Number = Number.POSITIVE_INFINITY;
-			var found:ColorRGBHSV;
 			for each( var c:ColorRGBHSV in _colors) {
 				var d:Number = ColorRGBHSV.getDistanceByRGBSquared(color, c);
 				if(d == 0) {
-					return c;
+					found = c;
+					break;
 				}
 				if(distance > d) {
 					distance = d;
 					found = c;
 				}
 			}
+
+			_nearestRGBCache[key] = found;
+
 			return found;
 		}
 	}

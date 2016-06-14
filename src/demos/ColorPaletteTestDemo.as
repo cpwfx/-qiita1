@@ -57,7 +57,9 @@ package demos {
 			trace("distanceHSV", distanceHSV);
 
 			trace("nearestHSV", palette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
+			trace("nearestHSV", palette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
 
+			trace("getNearestByRGB", palette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
 			trace("getNearestByRGB", palette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
 		}
 
