@@ -20,6 +20,44 @@ package harayoki.colors {
 
 		private static var _workObj:Object = {};
 
+		/**
+		 * Saturation値を正規化して、0.0〜1.0の範囲にする 範囲外のものは切り捨て
+		 */
+		private static function _validateSaturation(num:Number):Number {
+			return Math.max(Math.min(1.0, num), 0.0);
+		}
+
+		/**
+		 * Brightness値を正規化して、0.0〜1.0の範囲にする 範囲外のものは切り捨て
+		 */
+		private static function _validateBrightness(num:Number):Number {
+			return Math.max(Math.min(1.0, num), 0.0);
+		}
+
+		/**
+		 * Hue値を正規化して、0.0〜1.0の範囲にする 範囲外のものは１周して収まる
+		 */
+		private static function _validateHue(num:Number):Number {
+			while(num>1.0) {
+				num-=1.0;
+			}
+			while(num<0.0) {
+				num+=1.0;
+			}
+			return num;
+		}
+
+		/**
+		 * RGBAとしての値を正規化して、0〜255の範囲にする
+		 */
+		private static function _validateRGBValue(num:uint):uint {
+			return Math.min(255, num);
+		}
+
+		/**
+		 *  RGB指定(文字)でカラーを作成 a値は255固定
+		 *  ex) "#FF0000" または "FF0000"
+		 */
 		public static function fromRGBString(rgbString:String):ColorRGBHSV {
 			// FFFFFF -> 255,255,255
 			if(rgbString.indexOf("#")==0) {
@@ -30,30 +68,65 @@ package harayoki.colors {
 			col._r = parseInt("0x"+rgbString.slice(0,2), 16);
 			col._g = parseInt("0x"+rgbString.slice(2,4), 16);
 			col._b = parseInt("0x"+rgbString.slice(4,6), 16);
+			col._a = 255;
 			col._updateHSVfromRGB();
 			return col;
 		}
-		
+
+		/**
+		 *  RGB指定(数値)でカラーを作成 a値は255固定
+		 *  ex) 0xff0000
+		 */
 		public static function fromRGBColor(color:Number):ColorRGBHSV {
 			return fromRGBString(color.toString(16));
 		}
 
-		public static function fromRGB(r:uint,g:uint,b:uint):ColorRGBHSV {
+		/**
+		 *  RGB(A)指定(それぞれ 0~255)でカラーを作成
+		 */
+		public static function fromRGB(r:uint, g:uint, b:uint, a:uint=255):ColorRGBHSV {
 			var col:ColorRGBHSV = new ColorRGBHSV();
-			col._r = r;
-			col._g = g;
-			col._b = b;
+			col._r = _validateRGBValue(r);
+			col._g = _validateRGBValue(g);
+			col._b = _validateRGBValue(b);
+			col._a = _validateRGBValue(a);
 			col._updateHSVfromRGB();
 			return col;
 		}
 
-		public static function fromHSV(h:Number,s:Number,v:Number):ColorRGBHSV {
+		/**
+		 * HSV(A)指定でカラーを作成
+		 */
+		public static function fromHSV(h:Number, s:Number, v:Number, a:uint=255):ColorRGBHSV {
 			var col:ColorRGBHSV = new ColorRGBHSV();
-			col._h = h;
-			col._s = s;
-			col._v = v;
+			col._h = _validateHue(h);
+			col._s = _validateSaturation(s);
+			col._v = _validateBrightness(v);
+			col._a = _validateRGBValue(a);
 			col._updateRGBfromHSV();
 			return col;
+		}
+
+		/**
+		 * HSV空間でのカラー中間値を得る
+		 */
+		public static function getIntermediateColorByHSV(color1:ColorRGBHSV, color2:ColorRGBHSV):ColorRGBHSV {
+			var h:Number = (color1._h + color2._h) * 0.5;
+			var s:Number = (color1._s + color2._s) * 0.5;
+			var v:Number = (color1._v + color2._v) * 0.5;
+			var a:uint = Math.floor((color1._a + color2._a) * 0.5 + 0.5);
+			return ColorRGBHSV.fromHSV(h, s, v, a);
+		}
+
+		/**
+		 * RGB空間でのカラー中間値を得る
+		 */
+		public static function getIntermediateColorByRGB(color1:ColorRGBHSV, color2:ColorRGBHSV):ColorRGBHSV {
+			var r:uint = Math.floor((color1._r + color2._r) * 0.5 + 0.5);
+			var g:uint = Math.floor((color1._g + color2._g) * 0.5 + 0.5);
+			var b:uint = Math.floor((color1._b + color2._b) * 0.5 + 0.5);
+			var a:uint = Math.floor((color1._a + color2._a) * 0.5 + 0.5);
+			return ColorRGBHSV.fromRGB(r, g, b, a);
 		}
 
 		private var _a:uint = 255;
@@ -109,16 +182,18 @@ package harayoki.colors {
 
 		private function _updateRGBfromHSV():void {
 			ColorUtil.Hsv2RgbObject(_h, _s, _v, _workObj);
-			_r = _workObj.r;
-			_g = _workObj.g;
-			_b = _workObj.b;
+			_r = _validateRGBValue(_workObj.r);
+			_g = _validateRGBValue(_workObj.g);
+			_b = _validateRGBValue(_workObj.b);
+			_a = _validateRGBValue(_a);
 		}
 
 		private function _updateHSVfromRGB():void {
 			ColorUtil.Rgb2HsvObj(_r, _g, _b, _workObj);
-			_h = _workObj.h;
-			_s = _workObj.s;
-			_v = _workObj.v;
+			_h = _validateHue(_workObj.h);
+			_s = _validateSaturation(_workObj.s);
+			_v = _validateBrightness(_workObj.v);
+			_a = _validateRGBValue(_a);
 		}
 
 		public function get r():uint {

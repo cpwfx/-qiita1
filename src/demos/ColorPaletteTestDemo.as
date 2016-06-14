@@ -36,6 +36,13 @@ package demos {
 				quad.y = 32 + 16 * ~~(i / 16);
 				addChild(quad);
 			}
+			var intermediateHSV:ColorRGBHSV =
+				ColorRGBHSV.getIntermediateColorByHSV(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+			trace("intermediateHSV", intermediateHSV);
+
+			var intermediateRGB:ColorRGBHSV =
+				ColorRGBHSV.getIntermediateColorByRGB(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
+			trace("intermediateRGB", intermediateRGB);
 
 		}
 
