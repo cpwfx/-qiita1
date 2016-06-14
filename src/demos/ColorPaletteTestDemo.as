@@ -51,6 +51,10 @@ package demos {
 			var distanceHSV:Number =
 				ColorRGBHSV.getDistanceByHSVSquared(NesPalette.getByIndex(10), NesPalette.getByIndex(11));
 			trace("distanceHSV", distanceHSV);
+
+			trace("nearestHSV", NesPalette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
+
+			trace("getNearestByRGB", NesPalette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
 		}
 
 	}

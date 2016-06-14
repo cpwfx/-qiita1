@@ -119,10 +119,37 @@ package harayoki.colors {
 			return _colors.slice();
 		}
 
-		public static function getNearestByHSB(col:ColorRGBHSV):ColorRGBHSV {
-			return null;//TODO 実装
+		public static function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV {
+			var distance:Number = Number.POSITIVE_INFINITY;
+			var found:ColorRGBHSV;
+			for each( var c:ColorRGBHSV in _colors) {
+				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c);
+				if(d == 0) {
+					return c;
+				}
+				if(distance > d) {
+					distance = d;
+					found = c;
+				}
+			}
+			return found;
 		}
 
+		public static function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV {
+			var distance:Number = Number.POSITIVE_INFINITY;
+			var found:ColorRGBHSV;
+			for each( var c:ColorRGBHSV in _colors) {
+				var d:Number = ColorRGBHSV.getDistanceByRGBSquared(color, c);
+				if(d == 0) {
+					return c;
+				}
+				if(distance > d) {
+					distance = d;
+					found = c;
+				}
+			}
+			return found;
+		}
 	}
 }
 
