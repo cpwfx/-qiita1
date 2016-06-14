@@ -116,8 +116,14 @@ package harayoki.colors {
 			return v;
 		}
 
-		public function NesColorPalette() {
+		private var _name:String;
 
+		public function NesColorPalette(name:String="nes palette") {
+			_name = name;
+		}
+
+		public function get name():String {
+			return _name;
 		}
 
 		public function getByIndex(index:int):ColorRGBHSV {

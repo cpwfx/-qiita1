@@ -2,6 +2,11 @@ package harayoki.colors {
 	public interface IColorPalette {
 
 		/**
+		 * パレット名を得る
+		 */
+		function get name():String;
+
+		/**
 		 * パレット番号でカラーを得る
 		 */
 		function getByIndex(index:int):ColorRGBHSV;

@@ -1,6 +1,8 @@
 package demos {
 	import feathers.controls.Check;
 
+	import flash.display.BitmapData;
+
 	import flash.geom.Rectangle;
 
 	import harayoki.starling.utils.AssetManager;
@@ -38,7 +40,11 @@ package demos {
 		}
 
 		public function addAssets(assets:Array):void {
-			return;
+		}
+
+		public function beforeTextureCreationCallback(name:String, bmd:BitmapData):Boolean{
+			trace("beforeTextureCreationCallback", name, bmd);
+			return true;
 		}
 
 		public function getBackgroundDisplay():DisplayObject {

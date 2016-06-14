@@ -137,11 +137,13 @@ package harayoki.colors {
 		private var _s:Number = 0;
 		private var _v:Number = 0;
 
+		public var name:String = "";
+
 		public function ColorRGBHSV() {
 		}
 
 		public function toString():String {
-			return "[Color RGBA:" +[_r,_g,_b,_a].join(",") + " HSB:" +[_h,_s,_v].join(",")+ "]";
+			return "[Color RGBA"+ (name ? "(" + name + ")" : "") +":" +[_r,_g,_b,_a].join(",") + " HSB:" +[_h,_s,_v].join(",")+ "]";
 		}
 
 		public function toRGBHexString():String {
@@ -221,6 +223,40 @@ package harayoki.colors {
 			_s = _validateSaturation(_workObj.s);
 			_v = _validateBrightness(_workObj.v);
 			_a = _validateRGBValue(_a);
+		}
+
+		public function updateRGBANumber(color:Number):void {
+			color &= 0xffffffff;
+			_r = (color & 0xff000000) >> 24;
+			_g = (color & 0x00ff0000) >> 16;
+			_b = (color & 0x0000ff00) >> 8;
+			_a = (color & 0x000000ff);
+			_updateHSVfromRGB();
+		}
+
+		public function updateARGBNumber(color:Number):void {
+			color &= 0xffffffff;
+			_a = (color & 0xff000000) >> 24;
+			_r = (color & 0x00ff0000) >> 16;
+			_g = (color & 0x0000ff00) >> 8;
+			_b = (color & 0x000000ff);
+			_updateHSVfromRGB();
+		}
+
+		public function updateRGBA(r:uint, g:uint, b:uint, a:uint=255):void {
+			_r = _validateRGBValue(r);
+			_g = _validateRGBValue(g);
+			_b = _validateRGBValue(b);
+			_a = _validateRGBValue(a);
+			_updateHSVfromRGB();
+		}
+
+		public function updateHSVA(h:Number, s:Number, v:Number, a:uint=255):void {
+			_h = _validateHue(h);
+			_s = _validateSaturation(s);
+			_v = _validateBrightness(v);
+			_a = _validateRGBValue(a);
+			_updateRGBfromHSV();
 		}
 
 		public function get r():uint {

@@ -115,12 +115,20 @@ package {
 			var assetsAdded:Array = [];
 			//重複を省く
 			for(var i:int=0; i < assetsCandidates.length; i++) {
-				var file:String = assetsCandidates[i];
-				if(assetsAdded.indexOf(file) == -1) {
-					assetsAdded.push(file);
-					_assetManager.enqueue(file);
+				var file:Object = assetsCandidates[i];
+				if(file is String) {
+					if(assetsAdded.indexOf(file) == -1) {
+						assetsAdded.push(file);
+						_assetManager.enqueue(file);
+					}
+				} else {
+					for(var key:String in file) {
+						_assetManager.enqueueWithName(file[key], key);
+					}
 				}
 			}
+
+			_assetManager.setBeforeTextureCreationCallback(_demo.beforeTextureCreationCallback);
 
 			_assetManager.loadQueue(function(ratio:Number):void {
 			    if(ratio == 1) {
