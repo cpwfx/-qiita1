@@ -15,7 +15,7 @@ out/
 *.ipa
 *.apk
 
-*リカバリ_*
+リカバリ*
 .DS_Store
 Thumbs.db
 .idea

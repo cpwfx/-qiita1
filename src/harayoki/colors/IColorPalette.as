@@ -19,7 +19,7 @@ package harayoki.colors {
 		/**
 		 * HSB空間で最も近いカラーを得る
 		 */
-		function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV;
+		function getNearestByHSB(color:ColorRGBHSV, brightnessRatio:Number=1.0):ColorRGBHSV;
 
 		/**
 		 * RGB空間で最も近いカラーを得る

@@ -135,7 +135,7 @@ package harayoki.colors {
 			return _colors.slice();
 		}
 
-		public function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV {
+		public function getNearestByHSB(color:ColorRGBHSV, brightnessRatio:Number=1.0):ColorRGBHSV {
 
 			if(!color) return null;
 
@@ -145,7 +145,7 @@ package harayoki.colors {
 
 			var distance:Number = Number.POSITIVE_INFINITY;
 			for each( var c:ColorRGBHSV in _colors) {
-				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c);
+				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c, brightnessRatio);
 				if(d == 0) {
 					found = c;
 					break;

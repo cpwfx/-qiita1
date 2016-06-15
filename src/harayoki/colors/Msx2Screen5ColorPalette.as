@@ -4,6 +4,8 @@ package harayoki.colors {
 	public class Msx2Screen5ColorPalette implements IColorPalette{
 
 		private static var _colors:Vector.<ColorRGBHSV> = _init();
+		private static var _intermediates:Vector.<ColorRGBHSV> = _init();
+
 		private static var _nearestRGBCache: Object = {};
 		private static var _nearestHSVCache: Object = {};
 
@@ -41,6 +43,16 @@ package harayoki.colors {
 			v[0x0E] = createColor("灰", 5, 5, 5);
 			v[0x0F] = createColor("白", 7, 7, 7);
 
+			// 中間色を作る
+			for (var i:int = 0 ;i < v.length; i++) {
+				for (var j:int = 0 ;j< v.length; j++) {
+					if(j == i) continue;
+					var col1:ColorRGBHSV = v[i];
+					var col2:ColorRGBHSV = v[j];
+					if(ColorRGBHSV.equals(col1, col2)) continue;
+				}
+			}
+
 			return v;
 		}
 
@@ -63,7 +75,7 @@ package harayoki.colors {
 			return _colors.slice();
 		}
 
-		public function getNearestByHSB(color:ColorRGBHSV):ColorRGBHSV {
+		public function getNearestByHSB(color:ColorRGBHSV, brightnessRatio:Number=1.0):ColorRGBHSV {
 
 			if(!color) return null;
 
@@ -73,7 +85,7 @@ package harayoki.colors {
 
 			var distance:Number = Number.POSITIVE_INFINITY;
 			for each( var c:ColorRGBHSV in _colors) {
-				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c);
+				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c, brightnessRatio);
 				if(d == 0) {
 					found = c;
 					break;

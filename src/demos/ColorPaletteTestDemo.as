@@ -35,21 +35,18 @@ package demos {
 		}
 
 		public override function beforeTextureCreationCallback(name:String, bmd:BitmapData):Boolean {
-			if(name == "kota1") {
+			if(name == "kota0") {
+				ColorPaletteUtil.applyPaletteRGB(_nesPalette, bmd, bmd);
+			}else if(name == "kota1") {
 				ColorPaletteUtil.applyPaletteRGB(_nesPalette, bmd, bmd);
 			}
 			else if(name == "kota2") {
-				ColorPaletteUtil.applyPaletteRGB(_msx1Palette, bmd, bmd);
+				ColorPaletteUtil.applyPaletteHSV(_nesPalette, bmd, bmd, 1.5);
 			}
 			return true;
 		}
 
 		public override function start():void {
-
-			var quad0:Quad = Quad.fromTexture(_assetManager.getTexture("kota0"));
-			quad0.x = 1; quad0.y = 2;
-			quad0.scale = 0.5;
-			addChild(quad0);
 
 			var quad1:Quad = Quad.fromTexture(_assetManager.getTexture("kota1"));
 			quad1.x = 1; quad1.y = 125;
@@ -66,6 +63,11 @@ package demos {
 			var i:int;
 			var c:ColorRGBHSV;
 			var quad:Quad;
+
+			var quad0:Quad = Quad.fromTexture(_assetManager.getTexture("kota0"));
+			quad0.x = 1; quad0.y = 2;
+			quad0.scale = 0.5;
+			addChild(quad0);
 
 			texture = _assetManager.getTexture("white");
 			palettes = _nesPalette.getAll();

@@ -48,6 +48,26 @@ package harayoki.colors {
 		}
 
 		/**
+		 * カラーが同じものかチェック
+		 */
+		public static function equals(color1:ColorRGBHSV, color2:ColorRGBHSV):Boolean
+		{
+			if(color1 == color2) {
+				return true;
+			}
+			if(!color1 || !color2) {
+				return false;
+			}
+			return color1._r == color2._r &&
+				color1._g == color2._g &&
+				color1._b == color2._b &&
+				color1._a == color2._a &&
+				color1._h == color2._h &&
+				color1._s == color2._s &&
+				color1._v == color2._v;
+		}
+
+		/**
 		 * RGBAとしての値を正規化して、0〜255の範囲にする
 		 */
 		private static function _validateRGBValue(num:uint):uint {
@@ -202,7 +222,7 @@ package harayoki.colors {
 		public static function getDistanceByHSVSquared(color1:ColorRGBHSV, color2:ColorRGBHSV, brightnessRatio:Number=1.0):Number {
 			var dh:Number = (color1._h - color2._h);
 			var ds:Number = (color1._s - color2._s);
-			var dv:Number = (color1._v - color2._v) / brightnessRatio;
+			var dv:Number = (color1._v - color2._v) * brightnessRatio;
 			dh *= dh;
 			ds *= ds;
 			dv *= dv;
