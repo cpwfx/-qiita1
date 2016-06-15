@@ -17,13 +17,18 @@ package demos {
 	public class ColorPaletteTestDemo extends DemoBase {
 
 		private var _harfMatrix:Matrix;
-		private var _nesPalette:NesColorPalette = new NesColorPalette();
-		private var _msx1Palette:Msx1ColorPalette = new Msx1ColorPalette();
+		private var _nesPalette:NesColorPalette;
+		private var _msx1Palette:Msx1ColorPalette;
 
 		public function ColorPaletteTestDemo(assetManager:AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 			_harfMatrix = new Matrix();
 			_harfMatrix.scale(0.5, 0.5);
+			_msx1Palette = new Msx1ColorPalette();
+			_nesPalette = new NesColorPalette();
+			_nesPalette.hueDistanceCalculationRatio = 1.00;
+			_nesPalette.saturationDistanceCalculationRatio = 0.50;
+			_nesPalette.brightnessDistanceCalculationRatio = 1.50;
 		}
 
 		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
@@ -49,7 +54,7 @@ package demos {
 				ColorPaletteUtil.applyPaletteRGB(_nesPalette, bmd2, bmd2);
 			}
 			else if(name == "kota3") {
-				ColorPaletteUtil.applyPaletteHSV(_nesPalette, bmd2, bmd2, 1);
+				ColorPaletteUtil.applyPaletteHSV(_nesPalette, bmd2, bmd2);
 			}
 			return bmd2;
 		}
@@ -115,8 +120,8 @@ package demos {
 				ColorRGBHSV.getDistanceByHSVSquared(_nesPalette.getByIndex(10), _nesPalette.getByIndex(11));
 			trace("distanceHSV", distanceHSV);
 
-			trace("nearestHSV", _nesPalette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
-			trace("nearestHSV", _nesPalette.getNearestByHSB(ColorRGBHSV.fromRGB(255, 0, 0)));
+			trace("nearestHSV", _nesPalette.getNearestByHSV(ColorRGBHSV.fromRGB(255, 0, 0)));
+			trace("nearestHSV", _nesPalette.getNearestByHSV(ColorRGBHSV.fromRGB(255, 0, 0)));
 
 			trace("getNearestByRGB", _nesPalette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
 			trace("getNearestByRGB", _nesPalette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));

@@ -219,9 +219,11 @@ package harayoki.colors {
 		 * HSV空間での距離の二乗を返す
 		 * @param brightnessRatio 輝度の重み
 		 */
-		public static function getDistanceByHSVSquared(color1:ColorRGBHSV, color2:ColorRGBHSV, brightnessRatio:Number=1.0):Number {
-			var dh:Number = (color1._h - color2._h);
-			var ds:Number = (color1._s - color2._s);
+		public static function getDistanceByHSVSquared(
+			color1:ColorRGBHSV, color2:ColorRGBHSV,
+			hueRatio:Number=1.0, saturationRatio:Number=1.0, brightnessRatio:Number=1.0):Number {
+			var dh:Number = (color1._h - color2._h) * hueRatio;
+			var ds:Number = (color1._s - color2._s) * saturationRatio;
 			var dv:Number = (color1._v - color2._v) * brightnessRatio;
 			dh *= dh;
 			ds *= ds;

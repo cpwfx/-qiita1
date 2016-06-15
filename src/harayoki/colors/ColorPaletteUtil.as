@@ -30,7 +30,11 @@ package harayoki.colors {
 			return out;
 		}
 
-		public static function applyPaletteHSV(palette:IColorPalette, bmd:BitmapData, out:BitmapData=null, brightnessRatio:Number=1.0):BitmapData {
+		public static function applyPaletteHSV(
+			palette:IColorPalette,
+			bmd:BitmapData,
+			out:BitmapData=null
+		):BitmapData {
 			if(!out) {
 				out = new BitmapData(bmd.width, bmd.height, true, 0);
 			}
@@ -41,7 +45,7 @@ package harayoki.colors {
 				for (var xx:uint = 0; xx < bmd.width; xx++) {
 					var index:int = xx + yy * bmd.width;
 					_workColor.updateARGBNumber(colors[index]);
-					var color:ColorRGBHSV = palette.getNearestByHSB(_workColor, brightnessRatio);
+					var color:ColorRGBHSV = palette.getNearestByHSV(_workColor);
 					colors[index] = color.toARGBNumber();
 				}
 			}
