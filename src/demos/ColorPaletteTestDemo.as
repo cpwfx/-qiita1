@@ -4,7 +4,7 @@ package demos {
 
 	import harayoki.colors.ColorPaletteUtil;
 	import harayoki.colors.ColorRGBHSV;
-	import harayoki.colors.Msx2Screen5ColorPalette;
+	import harayoki.colors.Msx1ColorPalette;
 	import harayoki.colors.NesColorPalette;
 	import harayoki.starling.utils.AssetManager;
 
@@ -18,7 +18,7 @@ package demos {
 
 		private var _harfMatrix:Matrix;
 		private var _nesPalette:NesColorPalette = new NesColorPalette();
-		private var _msx1Palette:Msx2Screen5ColorPalette = new Msx2Screen5ColorPalette();
+		private var _msx1Palette:Msx1ColorPalette = new Msx1ColorPalette();
 
 		public function ColorPaletteTestDemo(assetManager:AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
