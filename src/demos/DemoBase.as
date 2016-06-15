@@ -42,9 +42,9 @@ package demos {
 		public function addAssets(assets:Array):void {
 		}
 
-		public function beforeTextureCreationCallback(name:String, bmd:BitmapData):Boolean{
+		public function beforeTextureCreationCallback(name:String, bmd:BitmapData):BitmapData{
 			trace("beforeTextureCreationCallback", name, bmd);
-			return true;
+			return null;
 		}
 
 		public function getBackgroundDisplay():DisplayObject {

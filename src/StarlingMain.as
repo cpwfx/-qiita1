@@ -88,10 +88,11 @@ package {
 			_assetManager.enqueue('assets/atlas.png');
 			_assetManager.enqueue('assets/atlas.xml');
 
-			_assetManager.setBeforeTextureCreationCallback(function(name:String,bmd:BitmapData):Boolean{
+			_assetManager.setBeforeTextureCreationCallback(function(name:String,bmd:BitmapData):BitmapData{
 				if(name=="atlas") {
-					return true; // trueを返すとBitmapDataを保持
+					_assetManager.addBitmapData(name, bmd);
 				}
+				return null;
 			});
 			_assetManager.addEventListener(Event.TEXTURES_RESTORED, function(ev:Event):void {
 				trace("TEXTURES_RESTORED");
