@@ -834,8 +834,7 @@ package harayoki.starling.utils
                 var bytes:ByteArray;
                 var object:Object = null;
                 var xml:XML = null;
-                var keepBitmapData:Boolean;
-
+                //var keepBitmapData:Boolean;
 
                 // the 'current' instance might have changed by now
                 // if we're running in a set-up with multiple instances.
@@ -877,18 +876,18 @@ package harayoki.starling.utils
                     // テクスチャ作成前に前処理を通す
                     var bmd:BitmapData;
                     bmd = (asset as Bitmap).bitmapData;
-                    keepBitmapData = false;
                     if(_beforeTextureCreation != null) {
-                        keepBitmapData = _beforeTextureCreation(name, bmd);
+                        // 別のbmdへのすげ替えを許可
+                        bmd = _beforeTextureCreation(name, bmd) || bmd;
                     }
 
-                    texture = Texture.fromData(asset, options);
+                    texture = Texture.fromData(bmd, options);
                     texture.root.onRestore = function():void
                     {
                         _numLostTextures++;
 
                         // BitmapDataが残っていればそこからテクスチャ再アップロード
-                        bmd = getBitmapData(name)
+                        bmd = getBitmapData(name);
                         if(bmd) {
                             texture.root.uploadBitmapData(bmd);
                             Starling.current.stage.setRequiresRedraw();
@@ -908,19 +907,17 @@ package harayoki.starling.utils
                             {
                                 if (asset == null) throw new Error("Reload failed");
 
-                                // テクスチャ作成前に前処理を通す
+                                // テクスチャ作成前に前処理を通す 保持したい場合はハンドラ側でaddBitmapDataする
                                 bmd = (asset as Bitmap).bitmapData;
-                                keepBitmapData = false;
                                 if(_beforeTextureCreation != null) {
-                                    keepBitmapData = _beforeTextureCreation(name, bmd);
+                                    // 別のbmdへのすげ替えを許可
+                                    bmd = _beforeTextureCreation(name, bmd) || bmd;
                                 }
 
-                                texture.root.uploadBitmap(asset as Bitmap);
+                                texture.root.uploadBitmap(bmd as Bitmap);
 
-                                // bitmapDataを保持または破棄
-                                if(keepBitmapData) {
-                                    addBitmapData(name, bmd);
-                                } else {
+                                // bitmapDataが保持されていなければ破棄
+                                if(!getBitmapData(name)) {
                                     bmd.dispose();
                                 }
 
@@ -938,10 +935,8 @@ package harayoki.starling.utils
                         });
                     };
 
-                    // テクスチャ作成後に後処理を通す
-                    if(keepBitmapData) {
-                        addBitmapData(name, bmd);
-                    } else {
+                    // bitmapDataが保持されていなければ破棄
+                    if(!getBitmapData(name)) {
                         bmd.dispose();
                     }
 
