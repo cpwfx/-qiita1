@@ -34,6 +34,7 @@ package demos {
 			assets.push({ kota0: 'assets/kota.png'});
 			assets.push({ kota1: 'assets/kota.png'});
 			assets.push({ kota2: 'assets/kota.png'});
+			assets.push({ kota3: 'assets/kota.png'});
 		}
 
 		public override function beforeTextureCreationCallback(name:String, bmd1:BitmapData):BitmapData {
@@ -42,10 +43,13 @@ package demos {
 			bmd2.draw(bmd1, _harfMatrix, null, null, null, false);
 			if(name == "kota0") {
 			}else if(name == "kota1") {
-				ColorPaletteUtil.applyPaletteRGB(_nesPalette, bmd2, bmd2);
+				ColorPaletteUtil.applyPaletteRGB(_msx1Palette, bmd2, bmd2);
 			}
 			else if(name == "kota2") {
-				ColorPaletteUtil.applyPaletteHSV(_nesPalette, bmd2, bmd2, 1.5);
+				ColorPaletteUtil.applyPaletteRGB(_nesPalette, bmd2, bmd2);
+			}
+			else if(name == "kota3") {
+				ColorPaletteUtil.applyPaletteHSV(_nesPalette, bmd2, bmd2, 1);
 			}
 			return bmd2;
 		}
@@ -58,14 +62,19 @@ package demos {
 			addChild(quad0);
 
 			var quad1:Quad = Quad.fromTexture(_assetManager.getTexture("kota1"));
-			quad1.x = 1; quad1.y = 125;
+			quad1.x = 162; quad1.y = 2;
 			quad1.textureSmoothing = TextureSmoothing.NONE;
 			addChild(quad1);
 
 			var quad2:Quad = Quad.fromTexture(_assetManager.getTexture("kota2"));
-			quad2.x = 162; quad2.y = 125;
+			quad2.x = 1; quad2.y = 125;
 			quad2.textureSmoothing = TextureSmoothing.NONE;
 			addChild(quad2);
+
+			var quad3:Quad = Quad.fromTexture(_assetManager.getTexture("kota3"));
+			quad3.x = 162; quad3.y = 125;
+			quad3.textureSmoothing = TextureSmoothing.NONE;
+			addChild(quad3);
 
 			var texture:Texture;
 			var palettes:Vector.<ColorRGBHSV>;

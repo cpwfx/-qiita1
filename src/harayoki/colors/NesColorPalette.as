@@ -1,16 +1,9 @@
 package harayoki.colors {
 	import starling.utils.Color;
 
-	public class NesColorPalette implements IColorPalette{
+	public class NesColorPalette extends ColorPaletteBase{
 
-		private static var _colors:Vector.<ColorRGBHSV> = _init();
-		private static var _nearestRGBCache: Object = {};
-		private static var _nearestHSVCache: Object = {};
-
-		public static function clearNearestCache():void {
-			_nearestRGBCache = {};
-			_nearestHSVCache = {};
-		}
+		private static var sColors:Vector.<ColorRGBHSV> = _init();
 
 		private static function _init():Vector.<ColorRGBHSV> {
 			var v:Vector.<ColorRGBHSV> = new <ColorRGBHSV>[];
@@ -116,76 +109,11 @@ package harayoki.colors {
 			return v;
 		}
 
-		private var _name:String;
-
 		public function NesColorPalette(name:String="nes palette") {
-			_name = name;
+			super(name);
+			_colors = sColors.slice();
 		}
-
-		public function get name():String {
-			return _name;
-		}
-
-		public function getByIndex(index:int):ColorRGBHSV {
-			var col:ColorRGBHSV = _colors[index];
-			return col;
-		}
-
-		public function getAll():Vector.<ColorRGBHSV> {
-			return _colors.slice();
-		}
-
-		public function getNearestByHSB(color:ColorRGBHSV, brightnessRatio:Number=1.0):ColorRGBHSV {
-
-			if(!color) return null;
-
-			var key:String = color.toRGBHexString();
-			var found:ColorRGBHSV = _nearestHSVCache[key] as ColorRGBHSV;
-			if(found) return found;
-
-			var distance:Number = Number.POSITIVE_INFINITY;
-			for each( var c:ColorRGBHSV in _colors) {
-				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c, brightnessRatio);
-				if(d == 0) {
-					found = c;
-					break;
-				}
-				if(distance > d) {
-					distance = d;
-					found = c;
-				}
-			}
-
-			_nearestHSVCache[key] = found;
-
-			return found;
-		}
-
-		public function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV {
-
-			if(!color) return null;
-
-			var key:String = color.toRGBHexString();
-			var found:ColorRGBHSV = _nearestRGBCache[key] as ColorRGBHSV;
-			if(found) return found;
-
-			var distance:Number = Number.POSITIVE_INFINITY;
-			for each( var c:ColorRGBHSV in _colors) {
-				var d:Number = ColorRGBHSV.getDistanceByRGBSquared(color, c);
-				if(d == 0) {
-					found = c;
-					break;
-				}
-				if(distance > d) {
-					distance = d;
-					found = c;
-				}
-			}
-
-			_nearestRGBCache[key] = found;
-
-			return found;
-		}
+		
 	}
 }
 

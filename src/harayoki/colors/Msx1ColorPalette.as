@@ -1,18 +1,10 @@
 package harayoki.colors {
-	public class Msx1ColorPalette implements IColorPalette{
+	public class Msx1ColorPalette extends ColorPaletteBase{
 
 		private static var _colorsMSX1:Vector.<ColorRGBHSV>;
 		private static var _colorsMSX2:Vector.<ColorRGBHSV>;
 		private static var _intermediateColoesMSX1:Vector.<ColorRGBHSV>;
 		private static var _intermediateColoesMSX2:Vector.<ColorRGBHSV>;
-
-		private static var _nearestRGBCache: Object = {};
-		private static var _nearestHSVCache: Object = {};
-
-		public static function clearNearestCache():void {
-			_nearestRGBCache = {};
-			_nearestHSVCache = {};
-		}
 
 		private static function _createMsx1Color(
 			name:String, rgbString:String, transparent:Boolean=false):ColorRGBHSV {
@@ -108,11 +100,8 @@ package harayoki.colors {
 			_intermediateColoesMSX2 = _createIntermediateColors(v);
 		}
 
-		private var _name:String;
-		private var _colors:Vector.<ColorRGBHSV>;
-		private var _intermediateColoes:Vector.<ColorRGBHSV>;
-
 		public function Msx1ColorPalette(name:String="msx1 palette", useMsx2Mode:Boolean=false) {
+			super(name);
 			_name = name;
 			if(useMsx2Mode) {
 				_initMsx2();
@@ -123,71 +112,6 @@ package harayoki.colors {
 				_colors = _colorsMSX1;
 				_intermediateColoes = _intermediateColoesMSX1;
 			}
-		}
-
-		public function get name():String {
-			return _name;
-		}
-
-		public function getByIndex(index:int):ColorRGBHSV {
-			var col:ColorRGBHSV = _colors[index];
-			return col;
-		}
-
-		public function getAll():Vector.<ColorRGBHSV> {
-			return _colors.slice();
-		}
-
-		public function getNearestByHSB(color:ColorRGBHSV, brightnessRatio:Number=1.0):ColorRGBHSV {
-
-			if(!color) return null;
-
-			var key:String = color.toRGBHexString();
-			var found:ColorRGBHSV = _nearestHSVCache[key] as ColorRGBHSV;
-			if(found) return found;
-
-			var distance:Number = Number.POSITIVE_INFINITY;
-			for each( var c:ColorRGBHSV in _colors) {
-				var d:Number = ColorRGBHSV.getDistanceByHSVSquared(color, c, brightnessRatio);
-				if(d == 0) {
-					found = c;
-					break;
-				}
-				if(distance > d) {
-					distance = d;
-					found = c;
-				}
-			}
-
-			_nearestHSVCache[key] = found;
-
-			return found;
-		}
-
-		public function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV {
-
-			if(!color) return null;
-
-			var key:String = color.toRGBHexString();
-			var found:ColorRGBHSV = _nearestRGBCache[key] as ColorRGBHSV;
-			if(found) return found;
-
-			var distance:Number = Number.POSITIVE_INFINITY;
-			for each( var c:ColorRGBHSV in _colors) {
-				var d:Number = ColorRGBHSV.getDistanceByRGBSquared(color, c);
-				if(d == 0) {
-					found = c;
-					break;
-				}
-				if(distance > d) {
-					distance = d;
-					found = c;
-				}
-			}
-
-			_nearestRGBCache[key] = found;
-
-			return found;
 		}
 	}
 }
