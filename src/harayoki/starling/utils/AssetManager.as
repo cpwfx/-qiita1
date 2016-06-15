@@ -914,7 +914,7 @@ package harayoki.starling.utils
                                     bmd = _beforeTextureCreation(name, bmd) || bmd;
                                 }
 
-                                texture.root.uploadBitmap(bmd as Bitmap);
+                                texture.root.uploadBitmapData(bmd as BitmapData);
 
                                 // bitmapDataが保持されていなければ破棄
                                 if(!getBitmapData(name)) {
