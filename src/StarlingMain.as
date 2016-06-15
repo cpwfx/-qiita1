@@ -69,15 +69,20 @@ package {
 
 		}
 
-		private function onBeforeTextureCreation(name:String, bmd:BitmapData):Boolean {
+		private function onBeforeTextureCreation(name:String, bmd:BitmapData):BitmapData {
 			if(name=="kota") {
-				return true; // 保持する
+				// 保持しない //
+				return null;
 			}
 
 			if(name =="kota2") {
 				var bFilter:BlurFilter = new BlurFilter(1, 8);
 				bmd.applyFilter(bmd, bmd.rect, bmd.rect.topLeft, bFilter);
-				return false; // 保持しない
+				var bmd2:BitmapData = new BitmapData(bmd.width ,bmd.height);
+				bmd2.copyPixels(bmd,
+					new flash.geom.Rectangle(10, 10, bmd.width - 20, bmd.height - 20), new Point(10, 10));
+				_assetManager.addBitmapData(name, bmd2); // 別のBitmapDataで保持する
+				return bmd2; // テクスチャ作成用に別のBitmapDataを使う
 			}
 
 			if(name =="kota3") {
@@ -88,10 +93,11 @@ package {
 					new DisplacementMapFilter(mapBmd, new Point(0,0), 1, 0, 16, 1 );
 				bmd.applyFilter(bmd, bmd.rect, bmd.rect.topLeft, dFilter);
 
-				return true; // 保持する
+				_assetManager.addBitmapData(name, bmd); // 保持する
+				return null;
 			}
 
-			return false;
+			return null;
 		}
 
 		private function _start():void {
