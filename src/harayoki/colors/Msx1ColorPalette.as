@@ -1,11 +1,6 @@
 package harayoki.colors {
 	public class Msx1ColorPalette extends ColorPaletteBase{
 
-		private static var _colorsMSX1:Vector.<ColorRGBHSV>;
-		private static var _colorsMSX2:Vector.<ColorRGBHSV>;
-		private static var _intermediateColoesMSX1:Vector.<ColorRGBHSV>;
-		private static var _intermediateColoesMSX2:Vector.<ColorRGBHSV>;
-
 		private static function _createMsx1Color(
 			name:String, rgbString:String, transparent:Boolean=false):ColorRGBHSV {
 			var col:ColorRGBHSV = ColorRGBHSV.fromRGBString(rgbString);
@@ -23,25 +18,36 @@ package harayoki.colors {
 			return col;
 		}
 
-		private static function _createIntermediateColors(colors:Vector.<ColorRGBHSV>):Vector.<ColorRGBHSV> {
-			var v:Vector.<ColorRGBHSV> = new <ColorRGBHSV>[];
-
+		private function _createIntermediateColors():void {
+			var v:Vector.<ColorRGBHSV> = _colors;
+			var distance:Number;
 			// 中間色を作る
-			for (var i:int = 0 ;i < v.length; i++) {
-				for (var j:int = 0 ;j< v.length; j++) {
-					if(j == i) continue;
+			for (var i:int = 1 ;i < v.length -1; i++) { //col0は透明なので省く -1は重複省き
+				for (var j:int = 1 + 1 ;j< v.length; j++) { //col0は透明なので省く +1は重複省き
+					if(j <= i) continue; //同じ色は省く
 					var col1:ColorRGBHSV = v[i];
 					var col2:ColorRGBHSV = v[j];
-					if(ColorRGBHSV.equals(col1, col2)) continue;
+					//if(j == 15) continue;// 白とのディザは作らない
+					if(col1.s !=0 && col2.s != 0) { // 無彩色のディザは通す
+						if(i == 2) continue;// test
+						if(i == 12) continue;// test
+					}
+					var intermediateFrom:Vector.<uint> = new <uint>[i, j];
+					distance = Math.sqrt(ColorRGBHSV.getDistanceByRGBSquared(col1, col2));
+					trace(i,j,distance);
+					if(distance > 100) { //TODO 調整
+						var colRGB:ColorRGBHSV = ColorRGBHSV.getIntermediateColorByRGB(col1, col2);
+						colRGB.optionData.intermediateFrom = intermediateFrom;
+						_registerIntermediateColor(i, j, colRGB, _intermediateMapRGB, _intermediateColorsRGB);
+					}
+					var colHSV:ColorRGBHSV = ColorRGBHSV.getIntermediateColorByHSV(col1, col2);
+					colHSV.optionData.intermediateFrom = intermediateFrom;
+					_registerIntermediateColor(i, j, colHSV, _intermediateMapHSV, _intermediateColorsHSV);
 				}
 			}
-
-			return v;
 		}
 
-		private static function _initMsx1():void {
-
-			if(_colorsMSX1) return;
+		private function _initMsx1():void {
 
 			var v:Vector.<ColorRGBHSV>;
 			v = new <ColorRGBHSV>[];
@@ -66,13 +72,10 @@ package harayoki.colors {
 			v[0x0D] = _createMsx1Color("マゼンタ", "#B766B5");
 			v[0x0E] = _createMsx1Color("灰", "#CCCCCC");
 			v[0x0F] = _createMsx1Color("白", "#FFFFFF");
-			_colorsMSX1 = v;
-			_intermediateColoesMSX1 = _createIntermediateColors(v);
+			_colors = v;
 		}
 
-		private static function _initMsx2():void {
-
-			if(_colorsMSX2) return;
+		private function _initMsx2():void {
 
 			var v:Vector.<ColorRGBHSV>;
 			v = new <ColorRGBHSV>[];
@@ -96,22 +99,18 @@ package harayoki.colors {
 			v[0x0D] = _createMsx2Color("マゼンタ", 6, 5, 2);
 			v[0x0E] = _createMsx2Color("灰", 5, 5, 5);
 			v[0x0F] = _createMsx2Color("白", 7, 7, 7);
-			_colorsMSX2 = v;
-			_intermediateColoesMSX2 = _createIntermediateColors(v);
+			_colors = v;
 		}
 
-		public function Msx1ColorPalette(name:String="msx1 palette", useMsx2Mode:Boolean=false) {
+		public function Msx1ColorPalette(useMsx2Mode:Boolean=false,name:String="msx1 palette") {
 			super(name);
 			_name = name;
 			if(useMsx2Mode) {
 				_initMsx2();
-				_colors = _colorsMSX2;
-				_intermediateColoes = _intermediateColoesMSX2;
 			} else {
 				_initMsx1();
-				_colors = _colorsMSX1;
-				_intermediateColoes = _intermediateColoesMSX1;
 			}
+			_createIntermediateColors();
 		}
 	}
 }

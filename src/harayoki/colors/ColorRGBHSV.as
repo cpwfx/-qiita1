@@ -131,6 +131,7 @@ package harayoki.colors {
 		 * HSV空間でのカラー中間値を得る
 		 */
 		public static function getIntermediateColorByHSV(color1:ColorRGBHSV, color2:ColorRGBHSV):ColorRGBHSV {
+			if(!color1 || !color2) return null;
 			var h:Number = (color1._h + color2._h) * 0.5;
 			var s:Number = (color1._s + color2._s) * 0.5;
 			var v:Number = (color1._v + color2._v) * 0.5;
@@ -142,6 +143,7 @@ package harayoki.colors {
 		 * RGB空間でのカラー中間値を得る
 		 */
 		public static function getIntermediateColorByRGB(color1:ColorRGBHSV, color2:ColorRGBHSV):ColorRGBHSV {
+			if(!color1 || !color2) return null;
 			var r:uint = Math.floor((color1._r + color2._r) * 0.5 + 0.5);
 			var g:uint = Math.floor((color1._g + color2._g) * 0.5 + 0.5);
 			var b:uint = Math.floor((color1._b + color2._b) * 0.5 + 0.5);
@@ -159,23 +161,38 @@ package harayoki.colors {
 
 		public var name:String = "";
 
+		private var _optionData:Object;
+		public function get optionData():Object {
+			if(!_optionData) {
+				_optionData = {};
+			}
+			return _optionData;
+		}
+		public function hasOptionData():Boolean {
+			return !!_optionData;
+		}
+
 		public function ColorRGBHSV() {
 		}
 
 		public function toString():String {
-			return "[Color RGBA"+ (name ? "(" + name + ")" : "") +":" +[_r,_g,_b,_a].join(",") + " HSB:" +[_h,_s,_v].join(",")+ "]";
+			return "[Color"+ (name ? "(" + name + ")" : "") +" RGBA:" +toRGBAHexString() + " HSB:" +toHSVString()+ "]";
 		}
 
 		public function toRGBHexString():String {
-			return toRGBNumber().toString(16).toUpperCase();
+			return ("000000" + toRGBNumber().toString(16).toUpperCase()).slice(-6);
 		}
 
 		public function toRGBAHexString():String {
-			return toRGBANumber().toString(16).toUpperCase();
+			return ("00000000" + toRGBANumber().toString(16).toUpperCase()).slice(-8);
 		}
 
 		public function toARGBHexString():String {
-			return toARGBNumber().toString(16).toUpperCase();
+			return ("00000000" + toARGBNumber().toString(16).toUpperCase()).slice(-8);
+		}
+
+		public function toHSVString(fixed:uint=2):String {
+			return [_h.toFixed(fixed),_s.toFixed(fixed),_v.toFixed(fixed)].join("/");
 		}
 
 		public function toRGBNumber():uint {
@@ -199,6 +216,12 @@ package harayoki.colors {
 			c._h = _h;
 			c._s = _s;
 			c._v = _v;
+			if(_optionData) {
+				c._optionData = {};
+				for (var key:String in _optionData) {
+					c._optionData[key] = _optionData[key];
+				}
+			}
 			return c;
 		}
 

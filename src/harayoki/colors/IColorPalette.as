@@ -9,22 +9,53 @@ package harayoki.colors {
 		/**
 		 * パレット番号でカラーを得る
 		 */
-		function getByIndex(index:int):ColorRGBHSV;
+		function getColorByIndex(index:uint):ColorRGBHSV;
+
+		/**
+		 * ２つのカラーの中間カラー(RGB)を得る
+		 */
+		function getIntermediateColorRGBByIndex(index1:uint, index2:uint):ColorRGBHSV;
+
+		/**
+		 * ２つのカラーの中間カラー(HSV)を得る
+		 */
+		function getIntermediateColorHSVByIndex(index1:uint, index2:uint):ColorRGBHSV;
 
 		/**
 		 * すべてのカラーを得る
 		 */
-		function getAll():Vector.<ColorRGBHSV>;
+		function getColorsAll():Vector.<ColorRGBHSV>;
+
+		/**
+		 * すべての中間カラー(RGB)を得る
+		 */
+		function getIntermediateColorsRGBAll():Vector.<ColorRGBHSV>;
+
+		/**
+		 * すべての中間カラー(HSV)を得る
+		 */
+		function getIntermediateColorsHSVAll():Vector.<ColorRGBHSV>;
 
 		/**
 		 * HSV空間で最も近いカラーを得る
 		 */
-		function getNearestByHSV(color:ColorRGBHSV):ColorRGBHSV;
+		function getNearestByHSV(color:ColorRGBHSV, useIntermediate:Boolean):ColorRGBHSV;
 
 		/**
 		 * RGB空間で最も近いカラーを得る
 		 */
-		function getNearestByRGB(color:ColorRGBHSV):ColorRGBHSV;
+		function getNearestByRGB(color:ColorRGBHSV, useIntermediate:Boolean):ColorRGBHSV;
+
+		/**
+		 * そのカラーは中間色か？
+		 */
+		function isIntermediateColor(color:ColorRGBHSV):Boolean;
+
+		/**
+		 * 中間色の場合、元となったカラー番号を返す
+		 * ある場合fixedなVector(編集不可)、ない場合nullが帰る
+		 */
+		function getIntermediateBaseColorIndexes(color:ColorRGBHSV):Vector.<uint>;
 
 		/**
 		 * HSV空間の距離を計算する際のhue要素の重み付けを調整する

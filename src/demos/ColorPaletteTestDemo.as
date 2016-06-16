@@ -17,14 +17,19 @@ package demos {
 	public class ColorPaletteTestDemo extends DemoBase {
 
 		private var _harfMatrix:Matrix;
+		private var _doubleMatrix:Matrix;
 		private var _nesPalette:NesColorPalette;
-		private var _msx1Palette:Msx1ColorPalette;
+		private var _msx1Palette1:Msx1ColorPalette;
+		private var _msx1Palette2:Msx1ColorPalette;
 
 		public function ColorPaletteTestDemo(assetManager:AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 			_harfMatrix = new Matrix();
 			_harfMatrix.scale(0.5, 0.5);
-			_msx1Palette = new Msx1ColorPalette();
+			_doubleMatrix = new Matrix();
+			_doubleMatrix.scale(2.0, 2.0);
+			_msx1Palette1 = new Msx1ColorPalette();
+			_msx1Palette2 = new Msx1ColorPalette(true);
 			_nesPalette = new NesColorPalette();
 			_nesPalette.hueDistanceCalculationRatio = 1.00;
 			_nesPalette.saturationDistanceCalculationRatio = 0.50;
@@ -48,13 +53,13 @@ package demos {
 			bmd2.draw(bmd1, _harfMatrix, null, null, null, false);
 			if(name == "kota0") {
 			}else if(name == "kota1") {
-				ColorPaletteUtil.applyPaletteRGB(_msx1Palette, bmd2, bmd2);
+				ColorPaletteUtil.applyPaletteRGB(_nesPalette, false, bmd2, bmd2);
 			}
 			else if(name == "kota2") {
-				ColorPaletteUtil.applyPaletteRGB(_nesPalette, bmd2, bmd2);
+				ColorPaletteUtil.applyPaletteRGB(_msx1Palette1, true, bmd2, bmd2);
 			}
 			else if(name == "kota3") {
-				ColorPaletteUtil.applyPaletteHSV(_nesPalette, bmd2, bmd2);
+				ColorPaletteUtil.applyPaletteRGB(_msx1Palette2, true, bmd2, bmd2);
 			}
 			return bmd2;
 		}
@@ -63,21 +68,25 @@ package demos {
 
 			var quad0:Quad = Quad.fromTexture(_assetManager.getTexture("kota0"));
 			quad0.x = 1; quad0.y = 2;
+			quad0.scale = 1.0;
 			quad0.textureSmoothing = TextureSmoothing.NONE;
 			addChild(quad0);
 
 			var quad1:Quad = Quad.fromTexture(_assetManager.getTexture("kota1"));
 			quad1.x = 162; quad1.y = 2;
+			quad1.scale = 1.0;
 			quad1.textureSmoothing = TextureSmoothing.NONE;
 			addChild(quad1);
 
 			var quad2:Quad = Quad.fromTexture(_assetManager.getTexture("kota2"));
 			quad2.x = 1; quad2.y = 125;
+			quad2.scale = 1.0;
 			quad2.textureSmoothing = TextureSmoothing.NONE;
 			addChild(quad2);
 
 			var quad3:Quad = Quad.fromTexture(_assetManager.getTexture("kota3"));
 			quad3.x = 162; quad3.y = 125;
+			quad3.scale = 1.0;
 			quad3.textureSmoothing = TextureSmoothing.NONE;
 			addChild(quad3);
 
@@ -88,7 +97,7 @@ package demos {
 			var quad:Quad;
 
 			texture = _assetManager.getTexture("white");
-			palettes = _nesPalette.getAll();
+			palettes = _nesPalette.getColorsAll();
 			for (i=0;i<palettes.length;i++) {
 				c = palettes[i];
 				trace("NesPalette#"+i, c);
@@ -103,33 +112,19 @@ package demos {
 				quad.y = 280 + 16 * ~~(i / 16);
 				addChild(quad);
 			}
-
-			var intermediateHSV:ColorRGBHSV =
-				ColorRGBHSV.getIntermediateColorByHSV(_nesPalette.getByIndex(10), _nesPalette.getByIndex(11));
-			trace("intermediateHSV", intermediateHSV);
-
-			var intermediateRGB:ColorRGBHSV =
-				ColorRGBHSV.getIntermediateColorByRGB(_nesPalette.getByIndex(10), _nesPalette.getByIndex(11));
-			trace("intermediateRGB", intermediateRGB);
 			
 			var distanceRGB:uint =
-				ColorRGBHSV.getDistanceByRGBSquared(_nesPalette.getByIndex(10), _nesPalette.getByIndex(11));
+				ColorRGBHSV.getDistanceByRGBSquared(_nesPalette.getColorByIndex(10), _nesPalette.getColorByIndex(11));
 			trace("distanceRGB", distanceRGB);
 			
 			var distanceHSV:Number =
-				ColorRGBHSV.getDistanceByHSVSquared(_nesPalette.getByIndex(10), _nesPalette.getByIndex(11));
+				ColorRGBHSV.getDistanceByHSVSquared(_nesPalette.getColorByIndex(10), _nesPalette.getColorByIndex(11));
 			trace("distanceHSV", distanceHSV);
 
-			trace("nearestHSV", _nesPalette.getNearestByHSV(ColorRGBHSV.fromRGB(255, 0, 0)));
-			trace("nearestHSV", _nesPalette.getNearestByHSV(ColorRGBHSV.fromRGB(255, 0, 0)));
-
-			trace("getNearestByRGB", _nesPalette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
-			trace("getNearestByRGB", _nesPalette.getNearestByRGB(ColorRGBHSV.fromRGB(255, 0, 0)));
-
-			palettes = _msx1Palette.getAll();
+			palettes = _msx1Palette1.getColorsAll();
 			for (i=0;i<palettes.length;i++) {
 				c = palettes[i];
-				trace("Msx1Palette#"+i, c.name + " : " + c.toRGBHexString());
+				trace("Msx1Palette1#"+i, c);
 				quad = Quad.fromTexture(texture);
 				quad.textureSmoothing = TextureSmoothing.NONE;
 				quad.width = 16;
@@ -140,6 +135,25 @@ package demos {
 				quad.y = 360 + 16 * ~~(i / 16);
 				addChild(quad);
 			}
+
+			palettes = _msx1Palette2.getColorsAll();
+			for (i=0;i<palettes.length;i++) {
+				c = palettes[i];
+				trace("Msx1Palette2#"+i, c);
+				quad = Quad.fromTexture(texture);
+				quad.textureSmoothing = TextureSmoothing.NONE;
+				quad.width = 16;
+				quad.height = 16;
+				quad.color = c.toRGBNumber();
+				quad.alpha = c.a;
+				quad.x = 32 + 16 * (i % 16);
+				quad.y = 376 + 8 + 16 * ~~(i / 16);
+				addChild(quad);
+			}
+
+			//c = ColorRGBHSV.fromRGBColor(0xff0000);
+			//trace(c);
+
 
 		}
 
