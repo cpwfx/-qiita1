@@ -27,7 +27,7 @@ package harayoki.colors {
 					if(j <= i) continue; //同じ色は省く
 					var col1:ColorRGBHSV = v[i];
 					var col2:ColorRGBHSV = v[j];
-					//if(j == 15) continue;// 白とのディザは作らない
+					if(j == 15) continue;// 白とのディザは作らない
 					if(col1.s !=0 && col2.s != 0) { // 無彩色のディザは通す
 						if(i == 2) continue;// test
 						if(i == 12) continue;// test
@@ -35,7 +35,7 @@ package harayoki.colors {
 					var intermediateFrom:Vector.<uint> = new <uint>[i, j];
 					distance = Math.sqrt(ColorRGBHSV.getDistanceByRGBSquared(col1, col2));
 					trace(i,j,distance);
-					if(distance > 100) { //TODO 調整
+					if((distance < 300 && distance > 100)) { //TODO 調整
 						var colRGB:ColorRGBHSV = ColorRGBHSV.getIntermediateColorByRGB(col1, col2);
 						colRGB.optionData.intermediateFrom = intermediateFrom;
 						_registerIntermediateColor(i, j, colRGB, _intermediateMapRGB, _intermediateColorsRGB);

@@ -29,7 +29,7 @@ package harayoki.colors {
 					//中間色ならディザ処理
 					var intermediateFrom:Vector.<uint> = palette.getIntermediateBaseColorIndexes(color);
 					if(intermediateFrom) {
-						color = palette.getColorByIndex(intermediateFrom[(xx % 2 * 0 + yy % 2) == 1 ? 0 : 1])
+						color = palette.getColorByIndex(intermediateFrom[(xx % 2 * 1 + yy % 2) == 1 ? 0 : 1])
 					}
 					colors[index] = color.toARGBNumber();
 				}
