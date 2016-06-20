@@ -3,14 +3,6 @@ package harayoki.stage3d.agal.i {
 
 		// @see http://jacksondunstan.com/articles/1664
 
-		function clear():void;
-
-		function print():String;
-
-		function appendCodeDirectly(code:String):IAGAL1CodePrinter;
-
-		function prependCodeDirectly(code:String):IAGAL1CodePrinter;
-
 		/**
 		 * [mov] 0x00
 		 * move data from source1 to destination, component-wise

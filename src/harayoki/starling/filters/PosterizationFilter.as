@@ -146,20 +146,21 @@ internal class MyAGALCodePrinter extends AGAL1CodePrinter {
 		// ocに出力
 		move(oc, ft0);
 
-		/* output
-		 div ft0.xyz, ft0.xyz, ft0.www
-		 mul ft0, ft0, fc0
-		 frc ft1, ft0
-		 sub ft0, ft0, ft1
-		 mov ft1, fc0
-		 sat ft1, ft1
-		 sub ft1, fc0, ft1
-		 div ft0, ft0, ft1
-		 sat ft0, ft0
-		 mul ft0.xyz, ft0.xyz, ft0.www
-		 mov oc, ft0
-		 */
-
 		return super.print();
 	}
+
+	/* output
+	 div ft0.xyz, ft0.xyz, ft0.www
+	 mul ft0, ft0, fc0
+	 frc ft1, ft0
+	 sub ft0, ft0, ft1
+	 mov ft1, fc0
+	 sat ft1, ft1
+	 sub ft1, fc0, ft1
+	 div ft0, ft0, ft1
+	 sat ft0, ft0
+	 mul ft0.xyz, ft0.xyz, ft0.www
+	 mov oc, ft0
+	 */
+
 }
