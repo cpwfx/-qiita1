@@ -110,6 +110,7 @@ package harayoki.starling.styles {
 
 import flash.display3D.Context3D;
 
+import harayoki.stage3d.agal.AGAL1CodePrinterForBaselineExtendedProfile;
 import harayoki.starling.styles.PosterizationStyle;
 
 import starling.rendering.MeshEffect;
@@ -125,71 +126,21 @@ class PosterizationEffect extends MeshEffect
 
 	override protected function createProgram():Program
 	{
-		var vertexShader:String, fragmentShader:String;
-		var posterization:String = [
 
-			// _divs1の内容がv2に入っているのでft1に取り出す
-			"mov ft1, v2",
+		var useTexture:Boolean = !!texture;
 
-			// _divs2の内容がv3に入っているのでft2に取り出す
-			"mov ft2, v3",
+		var vertexShaderPrinter:VertexShaderPrinter = new VertexShaderPrinter();
+		vertexShaderPrinter.useTexture = useTexture;
 
-			// PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
-			"div ft0.xyz, ft0.xyz, ft0.www",
+		var fragmentShaderPrinter:FragmentShaderPrinter = new FragmentShaderPrinter();
+		fragmentShaderPrinter.useTexture = useTexture;
 
-			// 各チャンネルにRGBA定数値(ft1)を掛け合わせる ft1はもういらないので次の命令で上書き
-			"mul ft0, ft0, ft1",
-
-			// ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
-			"frc ft1, ft0",
-			"sub ft0, ft0, ft1",
-
-			// ft0を掛けた際より1小さい値(ft2)で割る
-			"div ft0, ft0, ft2",
-
-			// 1.0を超える部分ができるので正規化
-			"sat ft0, ft0",
-
-			// PMAをやり直す rgb *= a
-			"mul ft0.xyz, ft0.xyz, ft0.www",
-
-			// ocに出力
-			"mov oc, ft0"
-
-		].join("\n");
-		
-		if (texture)
-		{
-			vertexShader = [
-				"m44 op, va0, vc0", // 4x4 matrix transform to output clip-space
-				"mov v0, va1     ", // pass texture coordinates to fragment program
-				"mul v1, va2, vc4", // multiply alpha (vc4) with color (va2), pass to fp
-				"mov v2, va3     ", // pass posterization1 to fp // ※カスタムポイント
-				"mov v3, va4     "  // pass posterization2 to fp // ※カスタムポイント
-			].join("\n");
-
-			fragmentShader = [
-				tex("ft0", "v0", 0, texture) + // ft0(テンポラリ)にテクスチャカラーを取得するお決まりコード
-				"mul ft0, ft0, v1", // multiply color with texel color
-				posterization // ※カスタムポイント
-			].join("\n");
-		}
-		else
-		{
-			vertexShader = [
-				"m44 op, va0, vc0", // 4x4 matrix transform to output clipspace
-				"mul v0, va2, vc4", // multiply alpha (vc4) with color (va2)
-				"mov v2, va3     ", // pass posterization1 to fp // ※カスタムポイント
-				"mov v3, va4     "  // pass posterization2 to fp // ※カスタムポイント
-			].join("\n");
-
-			fragmentShader = [
-				"mov ft0, v0", posterization // ※カスタムポイント
-			].join("\n");
-
+		if(useTexture) {
+			// ft0(テンポラリ)にテクスチャカラーを取得するお決まりコード
+			fragmentShaderPrinter.prependCodeDirectly(tex("ft0", "v0", 0, texture));
 		}
 
-		return Program.fromSource(vertexShader, fragmentShader);
+		return Program.fromSource(vertexShaderPrinter.print(), fragmentShaderPrinter.print());
 	}
 
 	override public function get vertexFormat():VertexDataFormat
@@ -209,5 +160,71 @@ class PosterizationEffect extends MeshEffect
 		context.setVertexBufferAt(3, null);
 		context.setVertexBufferAt(4, null);
 		super.afterDraw(context);
+	}
+}
+
+internal class VertexShaderPrinter extends AGAL1CodePrinterForBaselineExtendedProfile {
+
+	public var useTexture:Boolean;
+
+	public override function print():String {
+
+		multiplyMatrix4x4(op, va0, vc0); // 4x4 matrix transform to output clip-space
+
+		if(useTexture) {
+			move(v0, va1); // pass texture coordinates to fragment program
+			multiply(v1, va2, vc4); // multiply alpha (vc4) with color (va2), pass to fp
+		} else {
+			multiply(v0, va2, vc4); // multiply alpha (vc4) with color (va2)
+		}
+
+		move(v2, va3); // pass posterization1 to fp
+		move(v3, va4); // pass posterization2 to fp
+
+		return super.print();
+	}
+}
+
+internal class FragmentShaderPrinter extends AGAL1CodePrinterForBaselineExtendedProfile {
+
+	public var useTexture:Boolean;
+
+	public override function print():String {
+
+		if(useTexture) {
+			multiply(ft0, ft0, v1); // multiply color with texel color
+		} else {
+			move(ft0, v0);
+		}
+
+		// _divs1の内容がv2に入っているのでft1に取り出す
+		move(ft1, v2);
+
+		// _divs2の内容がv3に入っているのでft2に取り出す
+		move(ft2, v3);
+
+		// PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
+		divide(ft0.xyz, ft0.xyz, ft0.www);
+
+		// 各チャンネルにRGBA定数値(ft1)を掛け合わせる ft1はもういらないので次の命令で上書き
+		multiply(ft0, ft0, ft1);
+
+		// ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
+		fractional(ft1, ft0);
+		subtract(ft0, ft0, ft1);
+
+		// ft0を掛けた際より1小さい値(ft2)で割る
+		divide(ft0, ft0, ft2);
+
+		// 1.0を超える部分ができるので正規化
+		saturate(ft0, ft0);
+
+		// PMAをやり直す rgb *= a
+		multiply(ft0.xyz, ft0.xyz, ft0.www);
+
+		// ocに出力
+		move(oc, ft0);
+
+		return super.print();
 	}
 }

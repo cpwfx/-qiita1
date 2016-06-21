@@ -83,8 +83,8 @@ package {
 			_demo = new TriangleTest3Demo(_assetManager);
 			_demo = new ColorPaletteTestDemo(_assetManager);
 			_demo = new AGALPrinterTestDemo(_assetManager);
-			_demo = new MyFirstStyleDemo(_assetManager);
 			_demo = new MyFirstFilterDemo(_assetManager);
+			_demo = new MyFirstStyleDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 
