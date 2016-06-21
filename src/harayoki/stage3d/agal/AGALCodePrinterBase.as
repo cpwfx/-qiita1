@@ -1,10 +1,9 @@
 package harayoki.stage3d.agal {
-	import harayoki.stage3d.agal.i.IAGAL1CodePrinter;
 	import harayoki.stage3d.agal.i.IAGALDestinationRegister;
 	import harayoki.stage3d.agal.i.IAGALRegister;
-	import harayoki.stage3d.agal.i.IAGALSamplerRegister;
 	import harayoki.stage3d.agal.registers.AGALRegisterFragmentConstant;
 	import harayoki.stage3d.agal.registers.AGALRegisterFragmentOutput;
+	import harayoki.stage3d.agal.registers.AGALRegisterFragmentSampler;
 	import harayoki.stage3d.agal.registers.AGALRegisterFragmentTemporary;
 	import harayoki.stage3d.agal.registers.AGALRegisterVarying;
 	import harayoki.stage3d.agal.registers.AGALRegisterVertexAttribute;
@@ -16,6 +15,7 @@ package harayoki.stage3d.agal {
 
 		private var _codes:Vector.<String>;
 		protected var regPool:AGALRegisterPool;
+		protected var maxNumToken:uint = 0;
 
 		public function AGALCodePrinterBase() {
 			_codes = new <String>[];
@@ -34,12 +34,14 @@ package harayoki.stage3d.agal {
 			if(code != null && code.length > 0) {
 				_codes.unshift(code.split("\n"));
 			}
+			_codeLengthCheck();
 		}
 
 		protected function _appendCodeDirectly(code:String):void {
 			if(code != null && code.length > 0) {
 				_codes.push(code.split("\n"));
 			}
+			_codeLengthCheck();
 		}
 
 		protected function _addCode(
@@ -55,7 +57,15 @@ package harayoki.stage3d.agal {
 				code += flags;
 			}
 			_codes.push(code);
+			_codeLengthCheck();
 		}
+
+		private function _codeLengthCheck():void {
+			if(maxNumToken > 0 && _codes.length > maxNumToken) {
+				throw new Error("Too many token:"+_codes.length + " max:" + maxNumToken);
+			}
+		}
+
 		////////// regs //////////
 
 		public const op:AGALRegisterVertexOutput = new AGALRegisterVertexOutput();
@@ -813,6 +823,39 @@ package harayoki.stage3d.agal {
 		public function get fc27():AGALRegisterFragmentConstant {
 			return regPool.getAGALRegisterFragmentConstant(27);
 		}
+
+		public function get fs0():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(0);
+		}
+
+		public function get fs1():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(1);
+		}
+
+		public function get fs2():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(2);
+		}
+
+		public function get fs3():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(3);
+		}
+
+		public function get fs4():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(4);
+		}
+
+		public function get fs5():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(5);
+		}
+
+		public function get fs6():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(6);
+		}
+
+		public function get fs7():AGALRegisterFragmentSampler {
+			return regPool.getAGALRegisterFragmentSampler(7);
+		}
+
 
 	}
 }

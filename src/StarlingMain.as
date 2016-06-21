@@ -14,6 +14,7 @@ package {
 
 	import flash.display.BitmapData;
 	import flash.display.Stage;
+	import flash.display3D.Context3DProfile;
 	import flash.geom.Rectangle;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
@@ -45,7 +46,10 @@ package {
 			_starling = new Starling(
 				StarlingMain,
 				nativeStage,
-				CONTENTS_SIZE
+				CONTENTS_SIZE,
+				null,
+				"auto",
+				Context3DProfile.STANDARD_CONSTRAINED // for 2016 smart phone
 			);
 			_starling.skipUnchangedFrames = true;
 			_starling.stage.color = 0x000000;
@@ -79,8 +83,8 @@ package {
 			_demo = new TriangleTest3Demo(_assetManager);
 			_demo = new ColorPaletteTestDemo(_assetManager);
 			_demo = new AGALPrinterTestDemo(_assetManager);
-			_demo = new MyFirstFilterDemo(_assetManager);
 			_demo = new MyFirstStyleDemo(_assetManager);
+			_demo = new MyFirstFilterDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 

@@ -7,6 +7,7 @@ package harayoki.stage3d.agal {
 	public class AGAL1CodePrinter extends AGALCodePrinterBase implements IAGAL1CodePrinter {
 
 		public function AGAL1CodePrinter() {
+			maxNumToken = 200;
 		}
 
 		public function prependCodeDirectly(code:String):IAGAL1CodePrinter {
@@ -196,4 +197,3 @@ package harayoki.stage3d.agal {
 
 	}
 }
-
