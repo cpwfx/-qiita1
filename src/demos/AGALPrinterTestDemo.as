@@ -1,5 +1,5 @@
 package demos {
-	import harayoki.stage3d.agal.AGAL1CodePrinter;
+	import harayoki.stage3d.agal.AGAL1CodePrinterForBaselineExtendedProfile;
 	import harayoki.starling.utils.AssetManager;
 	
 	import starling.core.Starling;

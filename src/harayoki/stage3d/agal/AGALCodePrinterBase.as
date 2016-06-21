@@ -30,14 +30,15 @@ package harayoki.stage3d.agal {
 			return _codes.join("\n");
 		}
 
-		protected function _prependCodeDirectly(code:String):void {
+
+		public function prependCodeDirectly(code:String):void {
 			if(code != null && code.length > 0) {
 				_codes.unshift(code.split("\n"));
 			}
 			_codeLengthCheck();
 		}
 
-		protected function _appendCodeDirectly(code:String):void {
+		public function appendCodeDirectly(code:String):void {
 			if(code != null && code.length > 0) {
 				_codes.push(code.split("\n"));
 			}
@@ -647,10 +648,6 @@ package harayoki.stage3d.agal {
 
 		public function get vt6():AGALRegisterVertexTemporary {
 			return regPool.getAGALRegisterVertexTemporary(6);
-		}
-
-		public function get vt7():AGALRegisterVertexTemporary {
-			return regPool.getAGALRegisterVertexTemporary(7);
 		}
 
 		public function get va0():AGALRegisterVertexAttribute {
