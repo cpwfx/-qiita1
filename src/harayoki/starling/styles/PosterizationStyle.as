@@ -7,14 +7,12 @@ package harayoki.starling.styles {
 	public class PosterizationStyle extends MeshStyle {
 
 		public static const VERTEX_FORMAT:VertexDataFormat =
-			MeshStyle.VERTEX_FORMAT.extend("divs1:float4").extend("divs2:float4");
+			MeshStyle.VERTEX_FORMAT.extend("divs1:float4");
 
 		private var _divs1:Vector.<Number>;
-		private var _divs2:Vector.<Number>;
 
 		public function PosterizationStyle(redDiv:uint=2, greenDiv:uint=4, blueDiv:uint=4, alphaDiv:uint=4):void {
 			_divs1 = new Vector.<Number>(4, true);
-			_divs2 = new Vector.<Number>(4, true);
 			setTo(redDiv, greenDiv, blueDiv, alphaDiv);
 		}
 
@@ -25,11 +23,6 @@ package harayoki.starling.styles {
 			_divs1[2] = Math.max(2.0, Math.abs(blueDiv));
 			_divs1[3] = Math.max(2.0, Math.abs(alphaDiv));
 
-			_divs2[0] = _divs1[0] - 1.0;
-			_divs2[1] = _divs1[1] - 1.0;
-			_divs2[2] = _divs1[2] - 1.0;
-			_divs2[3] = _divs1[3] - 1.0;
-
 			updateVertices();
 		}
 
@@ -38,7 +31,6 @@ package harayoki.starling.styles {
 			if (posterizationStyle) {
 				for (var i:int = 0; i < 4; ++i) {
 					_divs1[i] = posterizationStyle._divs1[i];
-					_divs2[i] = posterizationStyle._divs2[i];
 				}
 			}
 			super.copyFrom(meshStyle);
@@ -67,8 +59,6 @@ package harayoki.starling.styles {
 				for (var i:int=0; i<numVertices; ++i) {
 					vertexData.setPoint4D(i, "divs1",
 						_divs1[0], _divs1[1], _divs1[2], _divs1[3]);
-					vertexData.setPoint4D(i, "divs2",
-						_divs2[0], _divs2[1], _divs2[2], _divs2[3]);
 				}
 				setRequiresRedraw();
 			}
@@ -78,7 +68,6 @@ package harayoki.starling.styles {
 		public function set redDiv(value:Number):void
 		{
 			_divs1[0] = Math.max(2.0, Math.abs(value));
-			_divs2[0] = _divs1[0] - 1.0;
 			updateVertices();
 		}
 
@@ -86,7 +75,6 @@ package harayoki.starling.styles {
 		public function set greenDiv(value:Number):void
 		{
 			_divs1[1] = Math.max(2.0, Math.abs(value));
-			_divs2[1] = _divs1[1] - 1.0;
 			updateVertices();
 		}
 
@@ -94,7 +82,6 @@ package harayoki.starling.styles {
 		public function set blueDiv(value:Number):void
 		{
 			_divs1[2] = Math.max(2.0, Math.abs(value));
-			_divs2[2] = _divs1[2] - 1.0;
 			updateVertices();
 		}
 
@@ -102,7 +89,6 @@ package harayoki.starling.styles {
 		public function set alphaDiv(value:Number):void
 		{
 			_divs1[3] = Math.max(2.0, Math.abs(value));
-			_divs2[3] = _divs1[3] - 1.0;
 			updateVertices();
 		}
 	}
@@ -152,13 +138,11 @@ class PosterizationEffect extends MeshEffect
 	{
 		super.beforeDraw(context);
 		vertexFormat.setVertexBufferAt(3, vertexBuffer, "divs1");
-		vertexFormat.setVertexBufferAt(4, vertexBuffer, "divs2");
 	}
 
 	override protected function afterDraw(context:Context3D):void
 	{
 		context.setVertexBufferAt(3, null);
-		context.setVertexBufferAt(4, null);
 		super.afterDraw(context);
 	}
 }
@@ -178,8 +162,7 @@ internal class VertexShaderPrinter extends AGAL1CodePrinterForBaselineExtendedPr
 			multiply(v0, va2, vc4); // multiply alpha (vc4) with color (va2)
 		}
 
-		move(v2, va3); // pass posterization1 to fp
-		move(v3, va4); // pass posterization2 to fp
+		move(v2, va3); // pass posterization param to fp
 
 		return super.print();
 	}
@@ -197,17 +180,21 @@ internal class FragmentShaderPrinter extends AGAL1CodePrinterForBaselineExtended
 			move(ft0, v0);
 		}
 
-		// _divs1の内容がv2に入っているのでft1に取り出す
+		// _divs1の内容がv2に入っているのでft1とft2に取り出す
 		move(ft1, v2);
-
-		// _divs2の内容がv3に入っているのでft2に取り出す
-		move(ft2, v3);
+		move(ft2, v2);
 
 		// PMA(premultiplied alpha)演算されているのを元の値に戻す  rgb /= a
 		divide(ft0.xyz, ft0.xyz, ft0.www);
 
 		// 各チャンネルにRGBA定数値(ft1)を掛け合わせる ft1はもういらないので次の命令で上書き
 		multiply(ft0, ft0, ft1);
+
+		// ft1の値を(1,1,1,1)にする (各要素が1以上であるのが前提条件)
+		saturate(ft1, ft1);
+
+		// ft2の各要素の値から1を引く
+		subtract(ft2, ft2, ft1);
 
 		// ft0の小数点以下を破棄 ft1 = ft0 - float(ft0)、ft0 -= ft1
 		fractional(ft1, ft0);
