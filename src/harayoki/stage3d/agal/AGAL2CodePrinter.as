@@ -980,43 +980,43 @@ package harayoki.stage3d.agal {
 
 		////////// agal2 //////////
 
-		public function partialDerivativeInX(destination:IAGALDestinationRegister, source1:IAGALRegister):IAGAL2CodePrinter {
-			// TODO 実装 ddx
+		public function partialDerivativeInX(dest:IAGALDestinationRegister, src1:IAGALRegister):IAGAL2CodePrinter {
+			_addCode("ddx", dest, src1);
 			return this;
 		}
 
-		public function partialDerivativeInY(destination:IAGALDestinationRegister, source1:IAGALRegister):IAGAL2CodePrinter {
-			// TODO 実装 ddy
+		public function partialDerivativeInY(dest:IAGALDestinationRegister, src1:IAGALRegister):IAGAL2CodePrinter {
+			_addCode("ddy", dest, src1);
 			return this;
 		}
 
-		public function ifEqualTo(destination:IAGALDestinationRegister, source1:IAGALRegister, source2:IAGALRegister):IAGAL2CodePrinter {
-			// TODO 実装 ife
+		public function ifEqualTo(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL2CodePrinter {
+			_addCode("ife", dest, src1, src2);
 			return this;
 		}
 
-		public function ifNotEqualTo(destination:IAGALDestinationRegister, source1:IAGALRegister, source2:IAGALRegister):IAGAL2CodePrinter {
-			// TODO 実装 ine
+		public function ifNotEqualTo(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL2CodePrinter {
+			_addCode("ine", dest, src1, src2);
 			return this;
 		}
 
-		public function ifGreaterThan(destination:IAGALDestinationRegister, source1:IAGALRegister, source2:IAGALRegister):IAGAL2CodePrinter {
-			// TODO 実装 ifg
+		public function ifGreaterThan(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL2CodePrinter {
+			_addCode("ifg", dest, src1, src2);
 			return this;
 		}
 
-		public function ifLessThan(destination:IAGALDestinationRegister, source1:IAGALRegister, source2:IAGALRegister):IAGAL2CodePrinter {
-			// TODO 実装 ifl
+		public function ifLessThan(dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister):IAGAL2CodePrinter {
+			_addCode("ifl", dest, src1, src2);
 			return this;
 		}
 
-		public function els(destination:IAGALDestinationRegister):IAGAL2CodePrinter {
-			// TODO 実装 els
+		public function els():IAGAL2CodePrinter {
+			_addOpeOnly("els");
 			return this;
 		}
 
-		public function endIf(destination:IAGALDestinationRegister):IAGAL2CodePrinter {
-			// TODO 実装 eif
+		public function endIf():IAGAL2CodePrinter {
+			_addOpeOnly("eif");
 			return this;
 		}
 	}

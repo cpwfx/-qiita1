@@ -44,6 +44,11 @@ package harayoki.stage3d.agal {
 			_codeLengthCheck();
 		}
 
+		protected function _addOpeOnly(ope:String):void {
+			_codes.push(ope);
+			_codeLengthCheck();
+		}
+
 		protected function _addCode(
 			ope:String, dest:IAGALDestinationRegister, src1:IAGALRegister, src2:IAGALRegister=null, flags:String=null):void {
 			var code:String = ope + " "+ dest.getCode() + ", " + src1.getCode();

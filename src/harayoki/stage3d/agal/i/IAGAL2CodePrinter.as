@@ -255,13 +255,13 @@ package harayoki.stage3d.agal.i {
 		 * [els] 0x20
 		 * Else block
 		 */
-		function els(destination:IAGALDestinationRegister):IAGAL2CodePrinter; // elseは予約語なのでels
+		function els():IAGAL2CodePrinter; // elseは予約語なのでels
 
 		/**
 		 * [eif] 0x21
 		 * Close if or else block.
 		 */
-		function endIf(destination:IAGALDestinationRegister):IAGAL2CodePrinter;
+		function endIf():IAGAL2CodePrinter;
 	}
 }
 
