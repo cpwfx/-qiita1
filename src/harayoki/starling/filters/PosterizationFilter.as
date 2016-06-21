@@ -58,7 +58,7 @@ package harayoki.starling.filters {
 import flash.display3D.Context3D;
 import flash.display3D.Context3DProgramType;
 
-import harayoki.stage3d.agal.AGAL2CodePrinter;
+import harayoki.stage3d.agal.AGAL1CodePrinter;
 
 import starling.rendering.FilterEffect;
 import starling.rendering.Program;
@@ -82,7 +82,7 @@ class PosterizationEffect extends FilterEffect
 		//カラーはそのまま受けわたす
 		//"mov v0, va1";
 
-		var printer:AGAL2CodePrinter = new MyAGALCodePrinter();
+		var printer:AGAL1CodePrinter = new MyAGALCodePrinter();
 		printer.prependCodeDirectly(tex("ft0", "v0", 0, texture)); // tex ft0, v0, fs0 <2d, linear/rgba>
 		var fragmentShader:String = printer.print();
 
@@ -113,7 +113,7 @@ class PosterizationEffect extends FilterEffect
 
 }
 
-internal class MyAGALCodePrinter extends AGAL2CodePrinter {
+internal class MyAGALCodePrinter extends AGAL1CodePrinter {
 
 	public override function print():String {
 
