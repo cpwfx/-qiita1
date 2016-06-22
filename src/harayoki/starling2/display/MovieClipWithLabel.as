@@ -1,4 +1,4 @@
-package harayoki.starling
+package harayoki.starling2.display
 {
 	import flash.geom.Point;
 

@@ -1,5 +1,5 @@
 package lazytest {
-	import harayoki.starling.MovieClipWithLabel;
+	import harayoki.starling2.MovieClipWithLabel;
 
 	import starling.display.Sprite;
 	import starling.events.Event;

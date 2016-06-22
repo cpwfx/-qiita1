@@ -3,8 +3,8 @@ package demos {
 
 	import flash.geom.Rectangle;
 
-	import harayoki.starling.display.Triangle;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.display.Triangle;
+	import harayoki.starling2.utils.AssetManager;
 	
 	import misc.*;
 
@@ -25,7 +25,7 @@ package demos {
 	public class TriangleTest1Demo extends DemoBase {
 
 		private var _infoVisible:Boolean = true;
-		public function TriangleTest1Demo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
+		public function TriangleTest1Demo(assetManager:harayoki.starling2.utils.AssetManager, starling:Starling = null) {
 			// frontDisplay = true;
 			super(assetManager, starling);
 		}

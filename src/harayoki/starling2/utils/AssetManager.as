@@ -1,4 +1,4 @@
-package harayoki.starling.utils
+package harayoki.starling2.utils
 {
     import flash.display.Bitmap;
     import flash.display.BitmapData;

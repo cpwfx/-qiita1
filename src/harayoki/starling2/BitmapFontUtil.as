@@ -1,7 +1,7 @@
-package harayoki.starling {
+package harayoki.starling2 {
 	import flash.geom.Rectangle;
 
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.utils.AssetManager;
 	import harayoki.util.CharCodeUtil;
 
 	import starling.text.BitmapChar;

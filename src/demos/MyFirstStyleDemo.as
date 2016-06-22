@@ -2,9 +2,9 @@ package demos {
 	import feathers.controls.Check;
 	import feathers.controls.Slider;
 
-	import harayoki.starling.FixedLayoutBitmapTextController;
-	import harayoki.starling.styles.PosterizationStyle;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.FixedLayoutBitmapTextController;
+	import harayoki.starling2.styles.PosterizationStyle;
+	import harayoki.starling2.utils.AssetManager;
 	
 	import misc.MyFontManager;
 
@@ -31,7 +31,7 @@ package demos {
 		private var _style3:PosterizationStyle;
 		private var _style4:PosterizationStyle;
 
-		public function MyFirstStyleDemo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
+		public function MyFirstStyleDemo(assetManager:harayoki.starling2.utils.AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
 			super(assetManager, starling);
 		}

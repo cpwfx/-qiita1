@@ -1,6 +1,6 @@
 package misc {
-	import harayoki.starling.BitmapFontUtil;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.BitmapFontUtil;
+	import harayoki.starling2.utils.AssetManager;
 	import harayoki.util.CharCodeUtil;
 
 	import starling.text.BitmapFont;

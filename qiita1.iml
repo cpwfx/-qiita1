@@ -65,7 +65,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/_starling_src_" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/AGALCodePrinters/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Starling2FiltersAndStyles/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Starling2FiltersAndStyles/AGALCodePrinters/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/_starling_src_" />
     </content>
     <orderEntry type="jdk" jdkName="AIRSDK_21" jdkType="Flex SDK Type (new)" />

@@ -18,7 +18,7 @@ package {
 	import flash.geom.Rectangle;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.utils.AssetManager;
 
 	import misc.DemoHelper;
 	import misc.MyFontManager;

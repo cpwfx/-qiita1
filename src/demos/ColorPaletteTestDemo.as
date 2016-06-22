@@ -6,7 +6,7 @@ package demos {
 	import harayoki.colors.ColorRGBHSV;
 	import harayoki.colors.Msx1ColorPalette;
 	import harayoki.colors.NesColorPalette;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.utils.AssetManager;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;

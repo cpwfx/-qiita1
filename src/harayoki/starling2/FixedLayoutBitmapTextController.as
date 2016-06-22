@@ -1,4 +1,4 @@
-package harayoki.starling {
+package harayoki.starling2 {
 
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
@@ -285,7 +285,7 @@ package harayoki.starling {
 	}
 }
 
-import harayoki.starling.FixedLayoutBitmapTextController;
+import harayoki.starling2.FixedLayoutBitmapTextController;
 
 import starling.display.DisplayObject;
 

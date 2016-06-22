@@ -1,5 +1,5 @@
 package demos {
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.utils.AssetManager;
 
 	import starling.core.Starling;
 	import starling.display.Canvas;

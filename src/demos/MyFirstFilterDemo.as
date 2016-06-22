@@ -2,9 +2,9 @@ package demos {
 	import feathers.controls.Check;
 	import feathers.controls.Slider;
 
-	import harayoki.starling.FixedLayoutBitmapTextController;
-	import harayoki.starling.filters.PosterizationFilter;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.FixedLayoutBitmapTextController;
+	import harayoki.starling2.filters.PosterizationFilter;
+	import harayoki.starling2.utils.AssetManager;
 	
 	import misc.MyFontManager;
 
@@ -30,7 +30,7 @@ package demos {
 		private var _filter3:FragmentFilter;
 		private var _filter4:FragmentFilter;
 
-		public function MyFirstFilterDemo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
+		public function MyFirstFilterDemo(assetManager:harayoki.starling2.utils.AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
 			super(assetManager, starling);
 		}

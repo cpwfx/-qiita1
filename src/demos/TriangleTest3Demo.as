@@ -1,10 +1,10 @@
 package demos {
 	import flash.geom.Rectangle;
 
-	import harayoki.starling.FixedLayoutBitmapTextController;
+	import harayoki.starling2.FixedLayoutBitmapTextController;
 
-	import harayoki.starling.display.Triangle;
-	import harayoki.starling.utils.AssetManager;
+	import harayoki.starling2.display.Triangle;
+	import harayoki.starling2.utils.AssetManager;
 	
 	import misc.*;
 
@@ -35,7 +35,7 @@ package demos {
 		private var _infoTextControl2:FixedLayoutBitmapTextController;
 		private var _title:DisplayObject;
 
-		public function TriangleTest3Demo(assetManager:harayoki.starling.utils.AssetManager, starling:Starling = null) {
+		public function TriangleTest3Demo(assetManager:harayoki.starling2.utils.AssetManager, starling:Starling = null) {
 			super(assetManager, starling);
 		}
 

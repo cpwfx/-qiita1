@@ -1,4 +1,4 @@
-package harayoki.starling.display
+package harayoki.starling2.display
 {
 	import flash.geom.Matrix;
 	import flash.geom.Point;
