@@ -1,6 +1,8 @@
 package demos {
 	import feathers.controls.Check;
+	import feathers.controls.Radio;
 	import feathers.controls.Slider;
+	import feathers.core.ToggleGroup;
 
 	import flash.geom.Rectangle;
 
@@ -14,9 +16,12 @@ package demos {
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.filters.FilterChain;
+	import starling.textures.Texture;
+	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 
@@ -31,6 +36,7 @@ package demos {
 		private var _filter3:ScanLineFilter;
 		private var _filterChain:FilterChain;
 		private var _rotation:Boolean = false;
+		private var _textures:Vector.<Texture>;
 
 		public function ScanLineFilterDemo(assetManager:AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
@@ -67,14 +73,22 @@ package demos {
 
 		public override function start():void {
 
+			_textures = new <Texture>[];
+			_textures.push(_assetManager.getTexture("lenna240"));
+			_textures.push(_assetManager.getTexture("manmaru240"));
+			_textures.push(_assetManager.getTexture("himawari240"));
+
 			var r:Number = 0.0;
 			var g:Number = 0.0;
 			var b:Number = 0.0;
 			var defaultColor = ((r*255) << 16) + ((g*255) << 8) + ((b*255) << 0);
 
-			_quad1 = _addImage(50, 10, "Scanline filter");
+			_quad1 = _addImage(50, 10, _textures[0], "Scanline filter");
 			_quad1.scale = 1.0;
-			_quad2 = _addImage(_quad1.x + _quad1.width * 0.5 + 20, _quad1.y - _quad1.height * 0.5, "Overlap another filter");
+			_quad2 = _addImage(
+				_quad1.x + _quad1.width * 0.5 + 20, _quad1.y - _quad1.height * 0.5,
+				_textures[0], "Overlap another filter"
+			);
 			_quad2.scale = 1.0;
 
 			_filter1 = _createScanLineFilter(defaultColor);
@@ -87,11 +101,16 @@ package demos {
 
 			var getColor:Function = function():uint {
 				return ((sliderRed.value*255) << 16) + ((sliderGreen.value*255) << 8) + ((sliderBlue.value*255) << 0);
-			}
+			};
 
 			var XX:int = 20;
 			var YY:int = 290;
 			var DY:int = 20;
+
+			var radio1:ToggleGroup = _createRadio(XX, YY, ["PIC1","PIC2","PIC3"], function(index:int):void {
+				_quad1.texture = _textures[index];
+			});
+			YY += DY;
 
 			var sliderDistance:Slider = _createSlider(XX, YY, _filter1.disatance, -8, 8, 1, "DISTANCE", function(value:int):void{
 				_filter1.disatance = value;
@@ -156,8 +175,8 @@ package demos {
 			return new ScanLineFilter();
 		}
 
-		private function _addImage(xx:int, yy:int, title:String=""):Quad {
-			var quad:Quad = Quad.fromTexture(_assetManager.getTexture("lenna240"));
+		private function _addImage(xx:int, yy:int, texture:Texture, title:String=""):Quad {
+			var quad:Quad = Quad.fromTexture(texture);
 			addChild(quad);
 			quad.x = xx;
 			quad.y = yy;
@@ -181,6 +200,35 @@ package demos {
 
 		private function _toggleRotate():void {
 			_rotation = !_rotation;
+		}
+
+		private function _createRadio(xx:int, yy:int, titles:Array, onChange:Function):ToggleGroup {
+
+			var partWidth:int = 64;
+			var group:ToggleGroup = new ToggleGroup();
+
+			for(var i:int=0; i< titles.length; i++) {
+
+				var radio:Radio = new Radio();
+				radio.x = xx;
+				radio.y = yy + 2;
+				radio.toggleGroup = group;
+				addChild(radio);
+				radio.scale = 0.5;
+
+				var titleSp:Sprite = _demoHelper.createSpriteText(titles[i], MyFontManager.baseFont.name);
+				titleSp.x = xx + 22;
+				titleSp.y = yy;
+				addChildAt(titleSp, 0);
+
+				xx += partWidth;
+			}
+
+			group.addEventListener(Event.CHANGE, function(ev:Event):void {
+				onChange.apply(null, [group.selectedIndex]);
+			});
+
+			return group;
 		}
 
 		private function _createSlider(xx:int, yy:int, value:int, min:Number, max:Number, step:Number, title:String, onChange:Function):Slider {
