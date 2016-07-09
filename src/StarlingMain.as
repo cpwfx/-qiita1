@@ -3,8 +3,8 @@ package {
 	import demos.DemoBase;
 	import demos.MapChipTestDemo;
 	import demos.MeshTestDemo;
-	import demos.MyFirstFilterDemo;
-	import demos.MyFirstStyleDemo;
+	import demos.PosterizationFilterDemo;
+	import demos.PosterizationStyleDemo;
 	import demos.ColorPaletteTestDemo;
 	import demos.ScoreTextDemo;
 	import demos.TriangleTest1Demo;
@@ -51,6 +51,7 @@ package {
 				"auto",
 				Context3DProfile.STANDARD_CONSTRAINED // for 2016 smart phone
 			);
+			_starling.enableErrorChecking = false;
 			_starling.skipUnchangedFrames = true;
 			_starling.stage.color = 0x000000;
 			_starling.stage.blendMode = BlendMode.AUTO; // NONE?
@@ -83,8 +84,8 @@ package {
 			_demo = new TriangleTest3Demo(_assetManager);
 			_demo = new ColorPaletteTestDemo(_assetManager);
 			_demo = new AGALPrinterTestDemo(_assetManager);
-			_demo = new MyFirstFilterDemo(_assetManager);
-			_demo = new MyFirstStyleDemo(_assetManager);
+			_demo = new PosterizationFilterDemo(_assetManager);
+			_demo = new PosterizationStyleDemo(_assetManager);
 
 			MyFontManager.setupAsset(_assetManager);
 
