@@ -2,35 +2,37 @@ package demos {
 	import feathers.controls.Check;
 	import feathers.controls.Slider;
 
+	import flash.geom.Rectangle;
+
 	import harayoki.starling2.FixedLayoutBitmapTextController;
-	import harayoki.starling2.filters.PosterizationFilter;
+	import harayoki.starling2.filters.ScanLineFilter;
 	import harayoki.starling2.utils.AssetManager;
-	
+
 	import misc.MyFontManager;
 
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
-	import starling.filters.BlurFilter;
 	import starling.filters.FilterChain;
-	import starling.filters.FragmentFilter;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
-	import starling.utils.AssetManager;
-	
+
 	public class ScanLineFilterDemo extends DemoBase {
+		
+		public static var  CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320 *2, 240 * 2 * 2);
 
 		private var _quad1:Quad;
 		private var _quad2:Quad;
-		private var _quad3:Quad;
-		private var _quad4:Quad;
-		private var _filter2:FragmentFilter;
-		private var _filter3:FragmentFilter;
-		private var _filter4:FragmentFilter;
+		private var _filter1:ScanLineFilter;
+		private var _filter2:ScanLineFilter;
+		private var _filter3:ScanLineFilter;
+		private var _filterChain:FilterChain;
+		private var _rotation:Boolean = false;
 
-		public function ScanLineFilterDemo(assetManager:harayoki.starling2.utils.AssetManager, starling:Starling = null) {
+		public function ScanLineFilterDemo(assetManager:AssetManager, starling:Starling = null) {
 			 frontDisplay = true;
 			super(assetManager, starling);
 		}
@@ -38,100 +40,155 @@ package demos {
 		public override function getBackgroundDisplay():DisplayObject {
 			var bg:Image = new Image(_assetManager.getTexture("white"));
 			bg.textureSmoothing = TextureSmoothing.NONE;
-			bg.color = 0x111111; // サンプル画像のalphaが見やすいように
+			bg.color = 0x333333; // サンプル画像のalphaが見やすいように
 			return bg;
 		}
 
 		public override function setBottomUI(out:Vector.<DisplayObject>):Vector.<DisplayObject> {
 
-			var chk:Check = createDemoCheckBox(function(chk:Check):void{
+			var chk1:Check = createDemoCheckBox(function(chk:Check):void{
 				_toggleFilter();
 			}, true);
-			out.push(createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("FILTER")]));
+			out.push(createDemoWrapSprite(new <DisplayObject>[chk1, createDemoText("TOGGLE FILTER")]));
+
+			var chk2:Check = createDemoCheckBox(function(chk:Check):void{
+				_toggleRotate();
+			}, false);
+			out.push(createDemoWrapSprite(new <DisplayObject>[chk2, createDemoText("ROTATE")]));
 
 			return out;
 		}
 
 		public override function addAssets(assets:Array):void {
+			assets.push("assets/lenna240.png");
+			assets.push("assets/manmaru240.png");
+			assets.push("assets/himawari240.png");
 		}
 
 		public override function start():void {
 
-			_quad1 = _addImage(50, 30, "Normal");
-			_quad2 = _addImage(170, 30 , "Posterization");
-			_quad3 = _addImage(50, 170 , "Poster.. + Blur");
-			_quad4 = _addImage(170, 170 , "Blur + Poster..");
+			var r:Number = 0.0;
+			var g:Number = 0.0;
+			var b:Number = 0.0;
+			var defaultColor = ((r*255) << 16) + ((g*255) << 8) + ((b*255) << 0);
 
-			var pFilter2:PosterizationFilter =_createPosterizationFilter();
-			var pFilter3:PosterizationFilter =_createPosterizationFilter();
-			var pFilter4:PosterizationFilter =_createPosterizationFilter();
+			_quad1 = _addImage(50, 10, "Scanline filter");
+			_quad1.scale = 1.0;
+			_quad2 = _addImage(_quad1.x + _quad1.width * 0.5 + 20, _quad1.y - _quad1.height * 0.5, "Overlap another filter");
+			_quad2.scale = 1.0;
 
-			_filter2 = pFilter2;
-			_filter3 = new FilterChain(pFilter3, _createBlurFilter());
-			_filter4 = new FilterChain(_createBlurFilter(), pFilter4);
+			_filter1 = _createScanLineFilter(defaultColor);
+			_filter2 = _createScanLineFilter(defaultColor);
+			_filter3 = _createScanLineFilter(defaultColor);
+			_filter3.degree = 45;
+			_filterChain = new FilterChain(_filter2, _filter3);
 
 			_toggleFilter();
 
-			var sliderRed:Slider = _createSlider(30, 320, pFilter2.redDiv, "RED DIV", function(value:int):void{
-				pFilter2.redDiv = value;
-				pFilter3.redDiv = value;
-				pFilter4.redDiv = value;
-			});
+			var getColor:Function = function():uint {
+				return ((sliderRed.value*255) << 16) + ((sliderGreen.value*255) << 8) + ((sliderBlue.value*255) << 0);
+			}
 
-			var sliderGreen:Slider = _createSlider(30, 350, pFilter2.greenDiv, "GREEN DIV", function(value:int):void{
-				pFilter2.greenDiv = value;
-				pFilter3.greenDiv = value;
-				pFilter4.greenDiv = value;
-			});
-			var sliderBlue:Slider = _createSlider(30, 380, pFilter2.blueDiv, "BLUE DIV", function(value:int):void{
-				pFilter2.blueDiv = value;
-				pFilter3.blueDiv = value;
-				pFilter4.blueDiv = value;
-			});
+			var XX:int = 20;
+			var YY:int = 290;
+			var DY:int = 20;
 
-			var sliderAlpha:Slider = _createSlider(30, 410, pFilter2.alphaDiv, "ALPHA DIV", function(value:int):void{
-				pFilter2.alphaDiv = value;
-				pFilter3.alphaDiv = value;
-				pFilter4.alphaDiv = value;
+			var sliderDistance:Slider = _createSlider(XX, YY, _filter1.disatance, -8, 8, 1, "DISTANCE", function(value:int):void{
+				_filter1.disatance = value;
+				_filter2.disatance = value;
+			});
+			YY += DY;
+
+			var sliderScale:Slider = _createSlider(XX, YY, _filter1.scale, 1, 16, 1, "SCALE   ", function(value:int):void{
+				_filter1.scale = value;
+				_filter2.scale = value;
+			});
+			YY += DY;
+
+			var sliderDegree:Slider = _createSlider(XX, YY, _filter1.degree, 0, 360, 5, "DIGREE  ", function(value:int):void{
+				_filter1.degree = value;
+				_filter2.degree = value;
+			});
+			YY += DY;
+
+			var sliderOffset:Slider = _createSlider(XX, YY, _filter2.offset, 0, 100, 1, "OFFSET  ", function(value:int):void{
+				_filter1.offset = value;
+				_filter2.offset = value;
+			});
+			YY += DY;
+
+			var sliderRed:Slider = _createSlider(XX, YY, r, 0, 1, 0.01, "RED     ", function(value:int):void{
+				_filter1.color = getColor();
+				_filter2.color = getColor();
+			});
+			YY += DY;
+
+			var sliderGreen:Slider = _createSlider(XX, YY, g, 0, 1, 0.01, "GREEN   ", function(value:int):void{
+				_filter1.color = getColor();
+				_filter2.color = getColor();
+			});
+			YY += DY;
+
+			var sliderBlue:Slider = _createSlider(XX, YY, b, 0, 1, 0.01, "BLUE    ", function(value:int):void{
+				_filter1.color = getColor();
+				_filter2.color = getColor();
+			});
+			YY += DY;
+
+			var sliderAlpha:Slider = _createSlider(XX, YY, _filter1.alpha, 0, 1, 0.01, "ALPHA   ", function(value:int):void{
+				_filter1.alpha = value;
+				_filter2.alpha = value;
+			});
+			YY += DY;
+
+			addEventListener(EnterFrameEvent.ENTER_FRAME, function(ev:EnterFrameEvent):void{
+				if(_rotation) {
+					_quad1.rotation += 0.01;
+				} else {
+					_quad1.rotation = 0.0;
+				}
+				_quad2.rotation = _quad1.rotation;
 			});
 
 		}
 
-		private function _createPosterizationFilter():PosterizationFilter {
-			return new PosterizationFilter(8, 8, 4, 2); // MSX screen 8 + alpha
-		}
-
-		private function _createBlurFilter():BlurFilter {
-			return new BlurFilter(4, 2);
+		private function _createScanLineFilter(color:uint):ScanLineFilter {
+			return new ScanLineFilter();
 		}
 
 		private function _addImage(xx:int, yy:int, title:String=""):Quad {
-			var quad:Quad = Quad.fromTexture(_assetManager.getTexture("lena"));
+			var quad:Quad = Quad.fromTexture(_assetManager.getTexture("lenna240"));
+			addChild(quad);
 			quad.x = xx;
 			quad.y = yy;
 			quad.textureSmoothing = TextureSmoothing.NONE;
-			addChild(quad);
 			if(title) {
 				var sp:DisplayObject = _demoHelper.createSpriteText(title, MyFontManager.baseFont.name, 150);
 				sp.x = quad.x;
 				sp.y = quad.getBounds(this).bottom + 2;
 				addChildAt(sp, 0);
 			}
+			quad.alignPivot();
+			quad.x += quad.width >> 1;
+			quad.y += quad.height >> 1;
 			return quad;
 		}
 
 		private function _toggleFilter():void{
-			_quad2.filter = _quad2.filter ? null : _filter2;
-			_quad3.filter = _quad3.filter ? null : _filter3;
-			_quad4.filter = _quad4.filter ? null : _filter4;
+			_quad1.filter = _quad1.filter ? null : _filter1;
+			_quad2.filter = _quad2.filter == _filterChain ? _filter3 : _filterChain;
 		}
 
-		private function _createSlider(xx:int, yy:int, value:int, title:String, onChange:Function):Slider {
+		private function _toggleRotate():void {
+			_rotation = !_rotation;
+		}
 
-			var textWidth:int = 90;
+		private function _createSlider(xx:int, yy:int, value:int, min:Number, max:Number, step:Number, title:String, onChange:Function):Slider {
+
+			var textWidth:int = 100;
 			var textControl:FixedLayoutBitmapTextController;
 			textControl = new FixedLayoutBitmapTextController(
-				MyFontManager.baseFont.name, title + ": XXX", 0xffffff, 0, textWidth);
+				MyFontManager.baseFont.name, title + ": XXXX", 0xffffff, 0, textWidth);
 			textControl.align = Align.LEFT;
 			textControl.setTextWithPadding(title + ": " + value);
 			textControl.displayObject.x = xx;
@@ -139,10 +196,10 @@ package demos {
 			addChildAt(textControl.displayObject, 0);
 
 			var slider:Slider = new Slider();
-			slider.minimum = 2;
-			slider.maximum = 64;
+			slider.minimum = min;
+			slider.maximum = max;
 			slider.value = value;
-			slider.step = 1;
+			slider.step = step;
 			slider.scaleY = 0.5;
 			slider.x = xx + textWidth + 10;
 			slider.y = yy - 3;

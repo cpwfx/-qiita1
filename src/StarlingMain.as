@@ -6,6 +6,7 @@ package {
 	import demos.PosterizationFilterDemo;
 	import demos.PosterizationStyleDemo;
 	import demos.ColorPaletteTestDemo;
+	import demos.ScanLineFilterDemo;
 	import demos.ScoreTextDemo;
 	import demos.TriangleTest1Demo;
 	import demos.TriangleTest3Demo;
@@ -15,6 +16,7 @@ package {
 	import flash.display.BitmapData;
 	import flash.display.Stage;
 	import flash.display3D.Context3DProfile;
+	import flash.geom.Rectangle;
 	import flash.geom.Rectangle;
 
 	import harayoki.feathers.themes.CustomMetalWorksTheme;
@@ -33,20 +35,36 @@ package {
 
 	public class StarlingMain extends Sprite {
 
-		private static const CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
+		private static const DEFAULT_CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320, 240 * 2);
 
 		private static var _starling:Starling;
 		private static var _startCallback:Function;
 
+		private static var DemoClass:Class;
+		private static var contentSize:Rectangle;
+
 		public static function start(nativeStage:Stage, startCallback:Function = null):void {
 			trace("Starling version :", Starling.VERSION);
+
+			DemoClass = ScoreTextDemo;
+			DemoClass = MeshTestDemo;
+			DemoClass = MapChipTestDemo;
+			DemoClass = TriangleTest1Demo;
+			DemoClass = TriangleTest3Demo;
+			DemoClass = ColorPaletteTestDemo;
+			DemoClass = AGALPrinterTestDemo;
+			DemoClass = PosterizationFilterDemo;
+			DemoClass = PosterizationStyleDemo;
+			DemoClass = ScanLineFilterDemo;
+
+			contentSize = (DemoClass.CONTENTS_SIZE as Rectangle) || DEFAULT_CONTENTS_SIZE;
 
 			_startCallback = startCallback;
 
 			_starling = new Starling(
 				StarlingMain,
 				nativeStage,
-				CONTENTS_SIZE,
+				contentSize,
 				null,
 				"auto",
 				Context3DProfile.STANDARD_CONSTRAINED // for 2016 smart phone
@@ -71,21 +89,14 @@ package {
 
 			trace("Stage3D profile:", _starling.profile);
 
-			ViewportUtil.setupViewPort(Starling.current, CONTENTS_SIZE, true);
 
 			_demoHelper = new DemoHelper(Starling.current, this, true);
 			_assetManager = new AssetManager();
 			_assetManager.verbose = true;
 
-			_demo = new ScoreTextDemo(_assetManager);
-			_demo = new MeshTestDemo(_assetManager);
-			_demo = new MapChipTestDemo(_assetManager);
-			_demo = new TriangleTest1Demo(_assetManager);
-			_demo = new TriangleTest3Demo(_assetManager);
-			_demo = new ColorPaletteTestDemo(_assetManager);
-			_demo = new AGALPrinterTestDemo(_assetManager);
-			_demo = new PosterizationFilterDemo(_assetManager);
-			_demo = new PosterizationStyleDemo(_assetManager);
+			_demo = new DemoClass(_assetManager);
+
+			ViewportUtil.setupViewPort(Starling.current, contentSize || DEFAULT_CONTENTS_SIZE, true);
 
 			MyFontManager.setupAsset(_assetManager);
 
@@ -158,8 +169,8 @@ package {
 
 			var bg:DisplayObject = _demo.getBackgroundDisplay();
 			if (bg) {
-				bg.width = CONTENTS_SIZE.width;
-				bg.height = CONTENTS_SIZE.height;
+				bg.width = contentSize.width;
+				bg.height = contentSize.height;
 				addChild(bg);
 			}
 
@@ -181,7 +192,7 @@ package {
 			_demo.setBottomUI(uiList);
 
 			if(uiList.length > 0) {
-				_demoHelper.loacateBottomLeft(uiList, CONTENTS_SIZE.width, CONTENTS_SIZE.height);
+				_demoHelper.loacateBottomLeft(uiList, contentSize.width, contentSize.height);
 			}
 
 			if(_demo.frontDisplay) {
