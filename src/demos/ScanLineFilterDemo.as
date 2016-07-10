@@ -90,7 +90,7 @@ package demos {
 			_filter3 = _createScanLineFilter(defaultColor);
 			_filter3.degree = 90;
 			_filter3.scale = 1.0;
-			_filter3.disatance = 1.0;
+			_filter3.strength = 1.0;
 			_filterChain = new FilterChain(_filter2, _filter3);
 
 			var filter1Selected:Boolean = true;
@@ -190,9 +190,9 @@ package demos {
 			});
 			yy += dy;
 
-			var sliderDistance:Slider = _createSlider(xx, yy, filters[0].disatance, -5, 5, 1, "DISTANCE", function(value:int):void{
+			var sliderDistance:Slider = _createSlider(xx, yy, filters[0].strength, 0, 5, 1, "STRENGTH", function(value:int):void{
 				for each(var filter:ScanLineFilter in filters) {
-					filter.disatance = value;
+					filter.strength = value;
 				}
 			});
 			yy += dy;
@@ -267,21 +267,7 @@ package demos {
 
 		}
 
-import feathers.controls.Radio;
-import feathers.controls.Slider;
-import feathers.core.ToggleGroup;
-
-import harayoki.starling2.FixedLayoutBitmapTextController;
-
-import harayoki.starling2.filters.ScanLineFilter;
-
-import misc.MyFontManager;
-
-import starling.display.Quad;
-import starling.textures.TextureSmoothing;
-import starling.utils.Align;
-
-private function _createScanLineFilter(color:uint):ScanLineFilter {
+		private function _createScanLineFilter(color:uint):ScanLineFilter {
 			return new ScanLineFilter();
 		}
 
