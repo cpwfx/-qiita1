@@ -191,7 +191,7 @@ package demos {
 			});
 			yy += dy;
 
-			var sliderDistance:Slider = _createSlider(xx, yy, filters[0].strength, 0, 5, 1, "STRENGTH", function(value:int):void{
+			var sliderStrength:Slider = _createSlider(xx, yy, filters[0].strength, -5, 5, 1, "STRENGTH", function(value:int):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.strength = value;
 				}
