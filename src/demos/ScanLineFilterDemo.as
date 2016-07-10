@@ -94,7 +94,7 @@ package demos {
 			_filterChain = new FilterChain(_filter2, _filter3);
 
 			var filter1Selected:Boolean = true;
-			var filter2Selected:Boolean = true;
+			var filter2Selected:Boolean = false;
 			var toggleFilters:Function = function():void {
 				_quad1.filter = filter1Selected ? _filter1 : null;
 				if(filter1Selected && filter2Selected) {
@@ -117,12 +117,12 @@ package demos {
 				toggleFilters();
 			}
 
-			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], toggleFilter1, 0, defaultColor, 20, 310);
-			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], toggleFilter2, 1, defaultColor, 340, 310);
+			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], filter1Selected, toggleFilter1, 0, defaultColor, 20, 310);
+			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], filter2Selected, toggleFilter2, 1, defaultColor, 340, 310);
 
 		}
 
-		private function _createUiSet(quad:Quad, filters:Vector.<ScanLineFilter>, onToggle:Function, picIndex:int, defaultColor:uint, xx:int, yy:int):void {
+		private function _createUiSet(quad:Quad, filters:Vector.<ScanLineFilter>, filterOn:Boolean, onToggle:Function, picIndex:int, defaultColor:uint, xx:int, yy:int):void {
 
 			var dy:int = 20;
 			var doRotateAnim:Boolean = false;
@@ -140,21 +140,22 @@ package demos {
 			var chk:Check;
 			var chkSp:Sprite;
 			var xx2:int = xx;
-			var dxx2:int = 70;
+			var dxx2:int = 90;
 
 			chk = createDemoCheckBox(function(chk:Check):void{
 				onToggle.apply(null, [chk.isSelected]);
-			}, true);
-			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Filter")]);
+			}, filterOn);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("ApplyFilter")]);
 			addChild(chkSp);
 			chkSp.x = xx2;
 			chkSp.y = yy;
-			xx2 += dxx2;
+
+			yy += dy;
 
 			chk = createDemoCheckBox(function(chk:Check):void{
 				doRotateAnim = !doRotateAnim;
 			}, false);
-			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Rotate")]);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("RotateTest")]);
 			addChild(chkSp);
 			chkSp.x = xx2;
 			chkSp.y = yy;
@@ -163,7 +164,7 @@ package demos {
 			chk = createDemoCheckBox(function(chk:Check):void{
 				doScaleAnim = !doScaleAnim;
 			}, false);
-			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Scale")]);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("ScaleTest")]);
 			addChild(chkSp);
 			chkSp.x = xx2;
 			chkSp.y = yy;
@@ -175,7 +176,7 @@ package demos {
 					doOffsetAnim ? Starling.juggler.add(filter) : Starling.juggler.remove(filter);
 				}
 			}, false);
-			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Offset")]);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("OffsetAnim")]);
 			addChild(chkSp);
 			chkSp.x = xx2;
 			chkSp.y = yy;
@@ -246,6 +247,13 @@ package demos {
 			});
 			yy += dy;
 
+			//var sliderAspect:Slider = _createSlider(xx, yy, filters[0].aspect, 0.1, 2.0, 0.01, "ASPECT  ", function(value:Number):void{
+			//	for each(var filter:ScanLineFilter in filters) {
+			//		filter.aspect = value;
+			//	}
+			//});
+			//yy += dy;
+
 			var theta1:Number = 0;
 			var theta2:Number = 0;
 			quad.addEventListener(EnterFrameEvent.ENTER_FRAME, function(ev:EnterFrameEvent):void{
@@ -258,7 +266,7 @@ package demos {
 				}
 				if(doScaleAnim) {
 					theta2 = (theta2 + 0.01) % (Math.PI * 2);
-					quad.scale = 1.0 + Math.sin(theta2 * 2) * 0.5;
+					quad.scale = 1.0 + Math.sin(theta2 * 2) * 0.25;
 				} else {
 					theta2 = 0;
 					quad.scale = 1.0;
