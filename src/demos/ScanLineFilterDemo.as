@@ -21,13 +21,13 @@ package demos {
 	import starling.events.Event;
 	import starling.filters.FilterChain;
 	import starling.textures.Texture;
-	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
 
 	public class ScanLineFilterDemo extends DemoBase {
 		
 		public static var  CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320 *2, 240 * 2 * 2);
+		private static const PIC_NAMES:Array = ["PIC1","PIC2","PIC3"];
 
 		private var _quad1:Quad;
 		private var _quad2:Quad;
@@ -35,7 +35,6 @@ package demos {
 		private var _filter2:ScanLineFilter;
 		private var _filter3:ScanLineFilter;
 		private var _filterChain:FilterChain;
-		private var _rotation:Boolean = false;
 		private var _textures:Vector.<Texture>;
 
 		public function ScanLineFilterDemo(assetManager:AssetManager, starling:Starling = null) {
@@ -56,11 +55,6 @@ package demos {
 				_toggleFilter();
 			}, true);
 			out.push(createDemoWrapSprite(new <DisplayObject>[chk1, createDemoText("TOGGLE FILTER")]));
-
-			var chk2:Check = createDemoCheckBox(function(chk:Check):void{
-				_toggleRotate();
-			}, false);
-			out.push(createDemoWrapSprite(new <DisplayObject>[chk2, createDemoText("ROTATE")]));
 
 			return out;
 		}
@@ -83,13 +77,11 @@ package demos {
 			var b:Number = 0.0;
 			var defaultColor = ((r*255) << 16) + ((g*255) << 8) + ((b*255) << 0);
 
-			_quad1 = _addImage(50, 10, _textures[0], "Scanline filter");
-			_quad1.scale = 1.0;
+			_quad1 = _addImage(40, 40, _textures[0], "Scanline filter");
 			_quad2 = _addImage(
-				_quad1.x + _quad1.width * 0.5 + 20, _quad1.y - _quad1.height * 0.5,
+				_quad1.x + 320 - _quad1.width * 0.5, _quad1.y - _quad1.height * 0.5,
 				_textures[0], "Overlap another filter"
 			);
-			_quad2.scale = 1.0;
 
 			_filter1 = _createScanLineFilter(defaultColor);
 			_filter2 = _createScanLineFilter(defaultColor);
@@ -99,76 +91,88 @@ package demos {
 
 			_toggleFilter();
 
+			_createUiSet(_quad1, _filter1, defaultColor, 20, 310);
+			_createUiSet(_quad2, _filter2, defaultColor, 340, 310);
+
+		}
+
+		private function _createUiSet(quad:Quad, filter:ScanLineFilter, defaultColor:uint, xx:int, yy:int):void {
+
+			var dy:int = 20;
+			var doRotation:Boolean = false;
+
+			var r:Number = ((defaultColor & 0xff0000) >> 16) / 255;
+			var g:Number = ((defaultColor & 0x00ff00) >> 8) / 255 ;
+			var b:Number = ((defaultColor & 0x0000ff)) / 255;
+
 			var getColor:Function = function():uint {
 				return ((sliderRed.value*255) << 16) + ((sliderGreen.value*255) << 8) + ((sliderBlue.value*255) << 0);
 			};
 
-			var XX:int = 20;
-			var YY:int = 290;
-			var DY:int = 20;
+			var chk:Check;
+			var chkSp:Sprite;
+			chk = createDemoCheckBox(function(chk:Check):void{
+				doRotation = !doRotation;
+			}, false);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("ROTATE")]);
+			addChild(chkSp);
 
-			var radio1:ToggleGroup = _createRadio(XX, YY, ["PIC1","PIC2","PIC3"], function(index:int):void {
-				_quad1.texture = _textures[index];
+			chkSp.x = xx;
+			chkSp.y = yy;
+			yy += dy + 10;
+
+			var radioGroup:ToggleGroup = _createRadio(xx, yy, PIC_NAMES, ~~(Math.random()*PIC_NAMES.length), function(index:int):void {
+				quad.texture = _textures[index];
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderDistance:Slider = _createSlider(XX, YY, _filter1.disatance, -8, 8, 1, "DISTANCE", function(value:int):void{
-				_filter1.disatance = value;
-				_filter2.disatance = value;
+			var sliderDistance:Slider = _createSlider(xx, yy, filter.disatance, -8, 8, 1, "DISTANCE", function(value:int):void{
+				filter.disatance = value;
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderScale:Slider = _createSlider(XX, YY, _filter1.scale, 1, 16, 1, "SCALE   ", function(value:int):void{
-				_filter1.scale = value;
-				_filter2.scale = value;
+			var sliderScale:Slider = _createSlider(xx, yy, filter.scale, 1, 16, 1, "SCALE   ", function(value:int):void{
+				filter.scale = value;
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderDegree:Slider = _createSlider(XX, YY, _filter1.degree, 0, 360, 5, "DIGREE  ", function(value:int):void{
-				_filter1.degree = value;
-				_filter2.degree = value;
+			var sliderDegree:Slider = _createSlider(xx, yy, filter.degree, 0, 360, 5, "DIGREE  ", function(value:int):void{
+				filter.degree = value;
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderOffset:Slider = _createSlider(XX, YY, _filter2.offset, 0, 100, 1, "OFFSET  ", function(value:int):void{
-				_filter1.offset = value;
-				_filter2.offset = value;
+			var sliderOffset:Slider = _createSlider(xx, yy, filter.offset, 0, 100, 1, "OFFSET  ", function(value:int):void{
+				filter.offset = value;
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderRed:Slider = _createSlider(XX, YY, r, 0, 1, 0.01, "RED     ", function(value:int):void{
-				_filter1.color = getColor();
-				_filter2.color = getColor();
+			var sliderRed:Slider = _createSlider(xx, yy, r, 0, 1, 0.01, "RED     ", function(value:int):void{
+				filter.color = getColor();
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderGreen:Slider = _createSlider(XX, YY, g, 0, 1, 0.01, "GREEN   ", function(value:int):void{
-				_filter1.color = getColor();
-				_filter2.color = getColor();
+			var sliderGreen:Slider = _createSlider(xx, yy, g, 0, 1, 0.01, "GREEN   ", function(value:int):void{
+				filter.color = getColor();
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderBlue:Slider = _createSlider(XX, YY, b, 0, 1, 0.01, "BLUE    ", function(value:int):void{
-				_filter1.color = getColor();
-				_filter2.color = getColor();
+			var sliderBlue:Slider = _createSlider(xx, yy, b, 0, 1, 0.01, "BLUE    ", function(value:int):void{
+				filter.color = getColor();
 			});
-			YY += DY;
+			yy += dy;
 
-			var sliderAlpha:Slider = _createSlider(XX, YY, _filter1.alpha, 0, 1, 0.01, "ALPHA   ", function(value:int):void{
-				_filter1.alpha = value;
-				_filter2.alpha = value;
+			var sliderAlpha:Slider = _createSlider(xx, yy, filter.alpha, 0, 1, 0.01, "ALPHA   ", function(value:int):void{
+				filter.alpha = value;
 			});
-			YY += DY;
+			yy += dy;
 
-			addEventListener(EnterFrameEvent.ENTER_FRAME, function(ev:EnterFrameEvent):void{
-				if(_rotation) {
-					_quad1.rotation += 0.01;
+			quad.addEventListener(EnterFrameEvent.ENTER_FRAME, function(ev:EnterFrameEvent):void{
+				if(doRotation) {
+					quad.rotation += 0.01;
 				} else {
-					_quad1.rotation = 0.0;
+					quad.rotation = 0.0;
 				}
-				_quad2.rotation = _quad1.rotation;
 			});
-
 		}
 
 		private function _createScanLineFilter(color:uint):ScanLineFilter {
@@ -198,11 +202,7 @@ package demos {
 			_quad2.filter = _quad2.filter == _filterChain ? _filter3 : _filterChain;
 		}
 
-		private function _toggleRotate():void {
-			_rotation = !_rotation;
-		}
-
-		private function _createRadio(xx:int, yy:int, titles:Array, onChange:Function):ToggleGroup {
+		private function _createRadio(xx:int, yy:int, titles:Array, selectedIndex:int, onChange:Function):ToggleGroup {
 
 			var partWidth:int = 64;
 			var group:ToggleGroup = new ToggleGroup();
@@ -227,6 +227,8 @@ package demos {
 			group.addEventListener(Event.CHANGE, function(ev:Event):void {
 				onChange.apply(null, [group.selectedIndex]);
 			});
+
+			group.selectedIndex = selectedIndex;
 
 			return group;
 		}
