@@ -1,5 +1,4 @@
 package demos {
-	import feathers.controls.Button;
 	import feathers.controls.Check;
 	import feathers.controls.Radio;
 	import feathers.controls.Slider;
@@ -21,7 +20,6 @@ package demos {
 	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
 	import starling.filters.FilterChain;
-	import starling.filters.FragmentFilter;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
 	import starling.utils.Align;
@@ -29,7 +27,7 @@ package demos {
 	public class ScanLineFilterDemo extends DemoBase {
 		
 		public static var  CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320 *2, 240 * 2 * 2);
-		private static const PIC_NAMES:Array = ["PIC1","PIC2","PIC3"];
+		private static const PIC_NAMES:Array = ["PIC1","PIC2","PIC3","PIC4"];
 
 		private var _quad1:Quad;
 		private var _quad2:Quad;
@@ -63,6 +61,7 @@ package demos {
 
 		public override function addAssets(assets:Array):void {
 			assets.push("assets/lenna240.png");
+			assets.push("assets/colors240.png");
 			assets.push("assets/manmaru240.png");
 			assets.push("assets/himawari240.png");
 		}
@@ -71,6 +70,7 @@ package demos {
 
 			_textures = new <Texture>[];
 			_textures.push(_assetManager.getTexture("lenna240"));
+			_textures.push(_assetManager.getTexture("colors240"));
 			_textures.push(_assetManager.getTexture("manmaru240"));
 			_textures.push(_assetManager.getTexture("himawari240"));
 
@@ -88,7 +88,9 @@ package demos {
 			_filter1 = _createScanLineFilter(defaultColor);
 			_filter2 = _createScanLineFilter(defaultColor);
 			_filter3 = _createScanLineFilter(defaultColor);
-			_filter3.degree = 45;
+			_filter3.degree = 90;
+			_filter3.scale = 1.0;
+			_filter3.disatance = 1.0;
 			_filterChain = new FilterChain(_filter2, _filter3);
 
 			var filter1Selected:Boolean = true;
@@ -115,12 +117,12 @@ package demos {
 				toggleFilters();
 			}
 
-			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], toggleFilter1, defaultColor, 20, 310);
-			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], toggleFilter2, defaultColor, 340, 310);
+			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], toggleFilter1, 0, defaultColor, 20, 310);
+			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], toggleFilter2, 1, defaultColor, 340, 310);
 
 		}
 
-		private function _createUiSet(quad:Quad, filters:Vector.<ScanLineFilter>, onToggle:Function, defaultColor:uint, xx:int, yy:int):void {
+		private function _createUiSet(quad:Quad, filters:Vector.<ScanLineFilter>, onToggle:Function, picIndex:int, defaultColor:uint, xx:int, yy:int):void {
 
 			var dy:int = 20;
 			var doRotateAnim:Boolean = false;
@@ -183,24 +185,12 @@ package demos {
 
 			xx2 = xx;
 
-			var btn:Button;
-			btn = new Button();
-			addChild(btn);
-			btn.x = xx2;
-			btn.y = yy;
-			btn.scaleX = 2.0;
-			btn.addEventListener(Event.TRIGGERED, function(ev:Event):void {
-				trace("*");
-			});
-
-			yy += dy + 10;
-
-			var radioGroup:ToggleGroup = _createRadio(xx, yy, PIC_NAMES, ~~(Math.random()*PIC_NAMES.length), function(index:int):void {
+			var radioGroup:ToggleGroup = _createRadio(xx, yy, PIC_NAMES, picIndex, function(index:int):void {
 				quad.texture = _textures[index];
 			});
 			yy += dy;
 
-			var sliderDistance:Slider = _createSlider(xx, yy, filters[0].disatance, -8, 8, 1, "DISTANCE", function(value:int):void{
+			var sliderDistance:Slider = _createSlider(xx, yy, filters[0].disatance, -5, 5, 1, "DISTANCE", function(value:int):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.disatance = value;
 				}
@@ -277,7 +267,21 @@ package demos {
 
 		}
 
-		private function _createScanLineFilter(color:uint):ScanLineFilter {
+import feathers.controls.Radio;
+import feathers.controls.Slider;
+import feathers.core.ToggleGroup;
+
+import harayoki.starling2.FixedLayoutBitmapTextController;
+
+import harayoki.starling2.filters.ScanLineFilter;
+
+import misc.MyFontManager;
+
+import starling.display.Quad;
+import starling.textures.TextureSmoothing;
+import starling.utils.Align;
+
+private function _createScanLineFilter(color:uint):ScanLineFilter {
 			return new ScanLineFilter();
 		}
 
