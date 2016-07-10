@@ -218,28 +218,28 @@ package demos {
 			});
 			yy += dy;
 
-			var sliderRed:Slider = _createSlider(xx, yy, r, 0, 1, 0.01, "RED     ", function(value:int):void{
+			var sliderRed:Slider = _createSlider(xx, yy, r, 0, 1, 0.01, "RED     ", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.color = getColor();
 				}
 			});
 			yy += dy;
 
-			var sliderGreen:Slider = _createSlider(xx, yy, g, 0, 1, 0.01, "GREEN   ", function(value:int):void{
+			var sliderGreen:Slider = _createSlider(xx, yy, g, 0, 1, 0.01, "GREEN   ", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.color = getColor();
 				}
 			});
 			yy += dy;
 
-			var sliderBlue:Slider = _createSlider(xx, yy, b, 0, 1, 0.01, "BLUE    ", function(value:int):void{
+			var sliderBlue:Slider = _createSlider(xx, yy, b, 0, 1, 0.01, "BLUE    ", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.color = getColor();
 				}
 			});
 			yy += dy;
 
-			var sliderAlpha:Slider = _createSlider(xx, yy, filters[0].alpha, 0, 1, 0.01, "ALPHA   ", function(value:int):void{
+			var sliderAlpha:Slider = _createSlider(xx, yy, filters[0].alpha, 0, 1, 0.01, "ALPHA   ", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.alpha = value;
 				}
