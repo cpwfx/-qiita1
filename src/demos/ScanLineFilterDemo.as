@@ -94,7 +94,7 @@ package demos {
 			_filterChain = new FilterChain(_filter2, _filter3);
 
 			var filter1Selected:Boolean = true;
-			var filter2Selected:Boolean = false;
+			var filter2Selected:Boolean = true;
 			var toggleFilters:Function = function():void {
 				_quad1.filter = filter1Selected ? _filter1 : null;
 				if(filter1Selected && filter2Selected) {
