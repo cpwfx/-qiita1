@@ -7,7 +7,6 @@ package demos {
 	import flash.geom.Rectangle;
 
 	import harayoki.colors.ColorRGBHSV;
-
 	import harayoki.starling2.FixedLayoutBitmapTextController;
 	import harayoki.starling2.filters.ScanLineFilter;
 	import harayoki.starling2.filters.SlashShadedFilter;
@@ -30,7 +29,7 @@ package demos {
 	public class ScanLineFilterDemo extends DemoBase {
 		
 		public static var  CONTENTS_SIZE:Rectangle = new Rectangle(0, 0, 320 *2, 240 * 2 * 2);
-		private static const PIC_NAMES:Array = ["PIC1","PIC2","PIC3","PIC4","QUAD"];
+		private static const PIC_NAMES:Array = ["PIC1","PIC2","PIC3","PIC4","QUAD1","QUAD2"];
 
 		private var _quad1:Quad;
 		private var _quad2:Quad;
@@ -79,51 +78,58 @@ package demos {
 			_textures.push(_assetManager.getTexture("manmaru240"));
 			_textures.push(_assetManager.getTexture("himawari240"));
 			_textures.push(null);
+			_textures.push(null);
 
 			var color:ColorRGBHSV = ColorRGBHSV.fromRGB(0, 0, 0, 128);
 
-			_quad1 = _addImage(56, 20, _textures[0], "Scanline Filter");
+			_quad1 = _addImage(56, 20, _textures[0], "Scanline Filter #1");
 			_quad2 = _addImage(
 				_quad1.x - _quad1.width * 0.5, _quad1.y + _quad1.height * 0.5 + 40,
-				_textures[0], "2 * Scanline Filter"
+				_textures[0], "Scanline Filter #1 + #2"
 			);
 			_quad3 = _addImage(_quad2.x - _quad2.width * 0.5, _quad2.y + _quad2.height * 0.5 + 40,
-				_textures[0], "SlashShade Filter");
+				_textures[0], "SlashShade Filter\n(45 degree fixed)");
 
 			_filter1  = _createScanLineFilter(color);
 			_filter2A = _createScanLineFilter(color);
 			_filter2B = _createScanLineFilter(color);
-			_filter2B.degree = 30;
+			_filter2B.degree = 60;
 			_filter2B.scale = 1.0;
-			_filter2B.strength = 2.0;
+			_filter2B.strength = 4.0;
 			_filterChain = new FilterChain(_filter2A, _filter2B);
 
 			var filter1Selected:Boolean = true;
-			var filter2Selected:Boolean = true;
-			var toggleFilters:Function = function():void {
+			var filter2ASelected:Boolean = true;
+			var filter2BSelected:Boolean = true;
+			var toggleFilter1:Function = function(isSelected:Boolean, index:int=0):void{
+				filter1Selected = isSelected;
 				_quad1.filter = filter1Selected ? _filter1 : null;
-				if(filter1Selected && filter2Selected) {
+			}
+			toggleFilter1(filter1Selected);
+
+			var toggleFilter2:Function = function(isSelected:Boolean, index:int=0):void{
+				if(index==0) {
+					filter2ASelected = isSelected;
+				} else {
+					filter2BSelected = isSelected;
+				}
+				toggleFilters();
+			}
+			var toggleFilters:Function = function():void {
+				if(filter2ASelected && filter2BSelected) {
 					_quad2.filter = _filterChain;
-				} else if(filter1Selected) {
+				} else if(filter2ASelected) {
 					_quad2.filter = _filter2A;
-				} else if(filter2Selected) {
+				} else if(filter2BSelected) {
 					_quad2.filter = _filter2B;
 				} else {
 					_quad2.filter = null;
 				}
 			}
 			toggleFilters();
-			var toggleFilter1:Function = function(isSelected:Boolean):void{
-				filter1Selected = isSelected;
-				toggleFilters();
-			}
-			var toggleFilter2:Function = function(isSelected:Boolean):void{
-				filter2Selected = isSelected;
-				toggleFilters();
-			}
 
-			_createUiSet1(_quad1, new <ScanLineFilter>[_filter1,_filter2A], filter1Selected, toggleFilter1, 0, color, 330, 16);
-			_createUiSet1(_quad2, new <ScanLineFilter>[_filter2B], filter2Selected, toggleFilter2, 1, color, 330, 16 + 280);
+			_createUiSet1(_quad1, new <ScanLineFilter>[_filter1,_filter2A], filter1Selected, false, toggleFilter1, 0, color, 330, 16);
+			_createUiSet1(_quad2, new <ScanLineFilter>[_filter2B], filter2ASelected, true, toggleFilter2, 1, color, 330, 16 + 280);
 
 			_filter3 = new SlashShadedFilter();
 			_quad3.filter = _filter3;
@@ -136,7 +142,7 @@ package demos {
 			toggleFilter3(filter3Selected);
 		}
 
-		private function _createUiSet1(quad:Quad, filters:Vector.<ScanLineFilter>, filterOn:Boolean, onToggle:Function, picIndex:int, color:ColorRGBHSV, xx:int, yy:int):void {
+		private function _createUiSet1(quad:Quad, filters:Vector.<ScanLineFilter>, filterOn:Boolean, doubleFilter:Boolean, onToggle:Function, picIndex:int, color:ColorRGBHSV, xx:int, yy:int):void {
 
 			color = color.clone();
 
@@ -150,14 +156,28 @@ package demos {
 			var xx2:int = xx;
 			var dxx2:int = 90;
 
+
+			if(doubleFilter) {
+				chk = createDemoCheckBox(function(chk:Check):void{
+					onToggle.apply(null, [chk.isSelected, 1]);
+				}, filterOn);
+				chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Filter #2")]);
+				addChild(chkSp);
+				chkSp.x = xx2;
+				chkSp.y = yy;
+				xx2 += 90;
+
+			}
+
 			chk = createDemoCheckBox(function(chk:Check):void{
-				onToggle.apply(null, [chk.isSelected]);
+				onToggle.apply(null, [chk.isSelected, 0]);
 			}, filterOn);
-			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("ApplyFilter")]);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Filter #1")]);
 			addChild(chkSp);
 			chkSp.x = xx2;
 			chkSp.y = yy;
 
+			xx2 = xx;
 			yy += dy;
 
 			chk = createDemoCheckBox(function(chk:Check):void{
@@ -195,10 +215,12 @@ package demos {
 			xx2 = xx;
 
 			var radioGroup:ToggleGroup;
-			radioGroup = _createRadio(xx, yy, 55, PIC_NAMES, picIndex, function(index:int):void {
+			radioGroup = _createRadio(xx, yy, 64, PIC_NAMES, picIndex, function(index:int):void {
 				_updateTexture(quad, index);
 			});
 			yy += dy;
+			yy += dy;
+			yy += dy*0.5;
 
 			var sliderStrength:Slider = _createSlider(xx, yy, filters[0].strength, -5, 5, 1, "STRENGTH", function(value:int):void{
 				for each(var filter:ScanLineFilter in filters) {
@@ -297,7 +319,7 @@ package demos {
 			chk = createDemoCheckBox(function(chk:Check):void{
 				onToggle.apply(null, [chk.isSelected]);
 			}, filterOn);
-			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("ApplyFilter")]);
+			chkSp = createDemoWrapSprite(new <DisplayObject>[chk, createDemoText("Filter #3")]);
 			addChild(chkSp);
 			chkSp.x = xx2;
 			chkSp.y = yy;
@@ -339,25 +361,27 @@ package demos {
 			xx2 = xx;
 
 			var radioGroup:ToggleGroup;
-			radioGroup = _createRadio(xx, yy, 55, PIC_NAMES, picIndex, function(index:int):void {
+			radioGroup = _createRadio(xx, yy, 64, PIC_NAMES, picIndex, function(index:int):void {
 				_updateTexture(quad, index);
 			});
 			yy += dy;
+			yy += dy;
+			yy += dy*0.5;
 
-			radioGroup = _createRadio(xx, yy, 100, ["DIR LOWER_RIGHT", "DIR LOWER_LEFT"], SlashShadedFilter.LOWER_RIGHT, function(index:int):void {
+			radioGroup = _createRadio(xx, yy, 64, ["SLASH", "BACK SLASH"], SlashShadedFilter.TYPE_SLASH, function(index:int):void {
 				for each(var filter:SlashShadedFilter in filters) {
-					if(index == SlashShadedFilter.LOWER_RIGHT) {
-						filter.direction = SlashShadedFilter.LOWER_RIGHT;
+					if(index == SlashShadedFilter.TYPE_SLASH) {
+						filter.type = SlashShadedFilter.TYPE_SLASH;
 					} else {
-						filter.direction = SlashShadedFilter.LOWER_LEFT;
+						filter.type = SlashShadedFilter.TYPE_BACK_SLASH;
 					}
 				}
 			});
 			yy += dy;
 
-			var sliderStrength:Slider = _createSlider(xx, yy, filters[0].strength, 0, 16, 1, "STRENGTH", function(value:int):void{
+			var sliderStrength:Slider = _createSlider(xx, yy, filters[0].distance, 0, 16, 1, "DISTANCE", function(value:int):void{
 				for each(var filter:SlashShadedFilter in filters) {
-					filter.strength = value;
+					filter.distance = value;
 				}
 			});
 			yy += dy;
@@ -448,7 +472,15 @@ package demos {
 
 			var group:ToggleGroup = new ToggleGroup();
 
+			var orgX:int = xx;
+			var orgY:int = yy;
+
 			for(var i:int=0; i< titles.length; i++) {
+
+				if((i % 4) == 0 && i!=0) {
+					xx = orgX;
+					yy += 20;
+				}
 
 				var radio:Radio = new Radio();
 				radio.x = xx;
@@ -463,6 +495,7 @@ package demos {
 				addChildAt(titleSp, 0);
 
 				xx += partWidth;
+
 			}
 
 			group.addEventListener(Event.CHANGE, function(ev:Event):void {
@@ -503,24 +536,25 @@ package demos {
 		}
 
 		private function _updateTexture(quad:Quad, index:int) {
+			quad.color = 0xffffff;
+			quad.setVertexColor(0, 0xffffff);
+			quad.setVertexColor(1, 0xffffff);
+			quad.setVertexColor(2, 0xffffff);
+			quad.setVertexColor(3, 0xffffff);
 			var texture:Texture = _textures[index];
 			quad.texture = texture;
 			if(texture) {
-				quad.color = 0xffffff;
-			} else {
-				quad.color = 0xff00ff;
+				return;
 			}
-			return;
-			if(texture) {
-				quad.setVertexColor(0, 0xffffff);
-				quad.setVertexColor(1, 0xffffff);
-				quad.setVertexColor(2, 0xffffff);
-				quad.setVertexColor(3, 0xffffff);
-			} else {
+			if((index % 2) == 0) {
 				quad.setVertexColor(0, 0xffffff);
 				quad.setVertexColor(1, 0xff0000);
 				quad.setVertexColor(2, 0x00ff00);
 				quad.setVertexColor(3, 0x0000ff);
-			}		}
+			} else {
+				quad.color = ColorRGBHSV.fromRGB(
+					255*Math.random(),255*Math.random(),255*Math.random(),128 + 127*Math.random()).toRGBNumber();
+			}
+		}
 	}
 }
