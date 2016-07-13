@@ -8,7 +8,7 @@ package demos {
 
 	import harayoki.starling2.FixedLayoutBitmapTextController;
 	import harayoki.starling2.filters.ScanLineFilter;
-	import harayoki.starling2.filters.SlashSadeFilter;
+	import harayoki.starling2.filters.SlashShadedFilter;
 	import harayoki.starling2.utils.AssetManager;
 
 	import misc.MyFontManager;
@@ -122,10 +122,10 @@ package demos {
 			}
 
 			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], filter1Selected, toggleFilter1, 0, defaultColor, 330, 16);
-			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], filter2Selected, toggleFilter2, 0, defaultColor, 330, 296);
+			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], filter2Selected, toggleFilter2, 1, defaultColor, 330, 296);
 
 			//temp
-			_quad3.filter = new SlashSadeFilter();
+			_quad3.filter = new SlashShadedFilter();
 
 		}
 
@@ -283,7 +283,7 @@ package demos {
 		}
 
 		private function _createScanLineFilter(color:uint):ScanLineFilter {
-			return new ScanLineFilter();
+			return new ScanLineFilter(2.0, 0.0, 1, 0, 0.5);
 		}
 
 		private function _addImage(xx:int, yy:int, texture:Texture, title:String=""):Quad {
@@ -335,7 +335,7 @@ package demos {
 			return group;
 		}
 
-		private function _createSlider(xx:int, yy:int, value:int, min:Number, max:Number, step:Number, title:String, onChange:Function):Slider {
+		private function _createSlider(xx:int, yy:int, value:Number, min:Number, max:Number, step:Number, title:String, onChange:Function):Slider {
 
 			var textWidth:int = 100;
 			var textControl:FixedLayoutBitmapTextController;
