@@ -8,6 +8,7 @@ package demos {
 
 	import harayoki.starling2.FixedLayoutBitmapTextController;
 	import harayoki.starling2.filters.ScanLineFilter;
+	import harayoki.starling2.filters.SlashSadeFilter;
 	import harayoki.starling2.utils.AssetManager;
 
 	import misc.MyFontManager;
@@ -31,6 +32,7 @@ package demos {
 
 		private var _quad1:Quad;
 		private var _quad2:Quad;
+		private var _quad3:Quad;
 		private var _filter1:ScanLineFilter;
 		private var _filter2:ScanLineFilter;
 		private var _filter3:ScanLineFilter;
@@ -79,18 +81,20 @@ package demos {
 			var b:Number = 0.0;
 			var defaultColor = ((r*255) << 16) + ((g*255) << 8) + ((b*255) << 0);
 
-			_quad1 = _addImage(40, 40, _textures[0], "Scanline filter");
+			_quad1 = _addImage(56, 20, _textures[0], "Scanline Filter");
 			_quad2 = _addImage(
-				_quad1.x + 320 - _quad1.width * 0.5, _quad1.y - _quad1.height * 0.5,
-				_textures[0], "Overlap another filter"
+				_quad1.x - _quad1.width * 0.5, _quad1.y + _quad1.height * 0.5 + 40,
+				_textures[0], "2 * Scanline Filter"
 			);
+			_quad3 = _addImage(_quad2.x - _quad2.width * 0.5, _quad2.y + _quad2.height * 0.5 + 40,
+				_textures[0], "SlashShade Filter");
 
 			_filter1 = _createScanLineFilter(defaultColor);
 			_filter2 = _createScanLineFilter(defaultColor);
 			_filter3 = _createScanLineFilter(defaultColor);
 			_filter3.degree = 90;
 			_filter3.scale = 1.0;
-			_filter3.strength = 1.0;
+			_filter3.strength = 2.0;
 			_filterChain = new FilterChain(_filter2, _filter3);
 
 			var filter1Selected:Boolean = true;
@@ -117,8 +121,11 @@ package demos {
 				toggleFilters();
 			}
 
-			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], filter1Selected, toggleFilter1, 0, defaultColor, 20, 310);
-			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], filter2Selected, toggleFilter2, 1, defaultColor, 340, 310);
+			_createUiSet(_quad1, new <ScanLineFilter>[_filter1,_filter2], filter1Selected, toggleFilter1, 0, defaultColor, 330, 16);
+			_createUiSet(_quad2, new <ScanLineFilter>[_filter3], filter2Selected, toggleFilter2, 0, defaultColor, 330, 296);
+
+			//temp
+			_quad3.filter = new SlashSadeFilter();
 
 		}
 
