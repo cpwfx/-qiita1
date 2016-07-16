@@ -95,7 +95,7 @@ package demos {
 			_filter2B = _createScanLineFilter(color);
 			_filter2B.degree = 60;
 			_filter2B.scale = 1.0;
-			_filter2B.strength = 4.0;
+			_filter2B.distance = 4.0;
 			_filterChain = new FilterChain(_filter2A, _filter2B);
 
 			var filter1Selected:Boolean = true;
@@ -222,21 +222,21 @@ package demos {
 			yy += dy;
 			yy += dy*0.5;
 
-			var sliderStrength:Slider = _createSlider(xx, yy, filters[0].strength, -5, 5, 1, "STRENGTH", function(value:int):void{
+			var sliderStrength:Slider = _createSlider(xx, yy, filters[0].distance, -5, 5, 1, "DISTANCE", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
-					filter.strength = value;
+					filter.distance = value;
 				}
 			});
 			yy += dy;
 
-			var sliderScale:Slider = _createSlider(xx, yy, filters[0].scale, 1, 16, 1, "SCALE   ", function(value:int):void{
+			var sliderScale:Slider = _createSlider(xx, yy, filters[0].scale, 1, 16, 0.1, "SCALE   ", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.scale = value;
 				}
 			});
 			yy += dy;
 
-			var sliderDegree:Slider = _createSlider(xx, yy, filters[0].degree, 0, 360, 5, "DIGREE  ", function(value:int):void{
+			var sliderDegree:Slider = _createSlider(xx, yy, filters[0].degree, 0, 360, 5, "DIGREE  ", function(value:Number):void{
 				for each(var filter:ScanLineFilter in filters) {
 					filter.degree = value;
 				}
