@@ -5,14 +5,11 @@
       <configuration name="forAir" target-platform="Desktop" pure-as="true" main-class="AirMain" output-file="Main.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
         <dependencies>
           <entries>
-            <entry library-name="starling" library-level="project">
-              <dependency linkage="Merged" />
-            </entry>
-            <entry library-name="lib" library-level="project">
+            <entry library-id="c41fb8f3-a488-41cc-b44d-644598d31c07">
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="AIRSDK_21" />
+          <sdk name="AIRSDK24" />
         </dependencies>
         <compiler-options>
           <map>
@@ -25,13 +22,13 @@
         <packaging-ios />
       </configuration>
       <configuration name="swfOnly" pure-as="true" main-class="WebMain" output-file="forweb.swf" output-folder="$MODULE_DIR$/out/production/qiita1" wrapper-template-path="$MODULE_DIR$/html-template">
-        <dependencies target-player="21.0">
+        <dependencies target-player="24.0">
           <entries>
             <entry library-id="3a63461d-b6ee-4fe1-88a8-498dfeed93ef">
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="AIRSDK_21" />
+          <sdk name="AIRSDK24" />
         </dependencies>
         <compiler-options>
           <option name="additionalOptions" value="-advanced-telemetry" />
@@ -41,13 +38,13 @@
         <packaging-ios />
       </configuration>
       <configuration name="withHtml" pure-as="true" main-class="WebMain" output-file="withHtml.swf" output-folder="$MODULE_DIR$/out/production/qiita1" use-html-wrapper="true" wrapper-template-path="$MODULE_DIR$/html-template">
-        <dependencies target-player="21.0">
+        <dependencies target-player="24.0">
           <entries>
             <entry library-id="1e457d32-5766-4f4c-a1d1-cf6f69ac9170">
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="AIRSDK_21" />
+          <sdk name="AIRSDK24" />
         </dependencies>
         <compiler-options>
           <option name="additionalOptions" value="-advanced-telemetry" />
@@ -56,9 +53,14 @@
         <packaging-android />
         <packaging-ios />
       </configuration>
-      <configuration name="FilterSample" target-platform="Desktop" pure-as="true" main-class="example.Example" output-file="FilterSample.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
+      <configuration name="FilterSample" target-platform="Desktop" pure-as="true" main-class="WebMain" output-file="FilterSample.swf" output-folder="$MODULE_DIR$/out/production/qiita1">
         <dependencies>
-          <sdk name="AIRSDK_21" />
+          <entries>
+            <entry library-id="718104bb-e06b-444e-a1a7-ba991da25a8b">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="AIRSDK24" />
         </dependencies>
         <compiler-options />
         <packaging-air-desktop package-file-name="FilterSample" />
@@ -73,12 +75,10 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/assets" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/_starling_src_" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Starling2FiltersAndStyles/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Starling2FiltersAndStyles/AGALCodePrinters/src" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/_starling_src_" />
     </content>
-    <orderEntry type="jdk" jdkName="AIRSDK_21" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="AIRSDK24" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="starling" level="project" />
     <orderEntry type="library" exported="" name="lib" level="project" />
@@ -96,6 +96,28 @@
     <orderEntry type="module-library" exported="">
       <library type="flex">
         <properties id="1e457d32-5766-4f4c-a1d1-cf6f69ac9170" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="c41fb8f3-a488-41cc-b44d-644598d31c07" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="718104bb-e06b-444e-a1a7-ba991da25a8b" />
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
         </CLASSES>
